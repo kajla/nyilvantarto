@@ -12,7 +12,7 @@
 <AnchorPane id="AnchorPane" prefHeight="345.0" prefWidth="308.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nyilvantarto.LoginController">
     <children>
         <Label fx:id="label" layoutX="126" layoutY="120" minHeight="16" minWidth="69" />
-      <ImageView fitHeight="140.0" fitWidth="324.0" layoutX="5.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="4.333343505859375">
+      <ImageView fitHeight="140.0" fitWidth="324.0" layoutX="5.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@im/logo.png" />
          </image>

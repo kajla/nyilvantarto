@@ -5,6 +5,7 @@
  */
 package nyilvantarto;
 
+import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,13 +17,13 @@ import javafx.stage.Stage;
  * @author Ádám
  */
 public class Nyilvantarto extends Application {
-    
+
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
-        
+
         Scene scene = new Scene(root);
-        
+
         stage.setScene(scene);
         stage.setTitle("Nyilvantartó - Belépés");
         stage.setResizable(false);
@@ -35,5 +36,5 @@ public class Nyilvantarto extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
+       
 }

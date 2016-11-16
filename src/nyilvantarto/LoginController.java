@@ -5,15 +5,22 @@
  */
 package nyilvantarto;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 /**
  *
@@ -47,6 +54,27 @@ public class LoginController implements Initializable {
             siker.setHeaderText("Sikeres belépés");
             siker.setContentText("Ön sikeresen bejelentkezett a szoftverbe.");
             siker.showAndWait();
+            Stage login = (Stage) lblHiba.getScene().getWindow();
+            login.close();
+            foAblak();
+        }
+    }
+
+    private void foAblak() {
+        try {
+            Parent root1 = FXMLLoader.load(getClass().getResource("Main.fxml"));
+            Stage stage = new Stage();
+//                stage.initModality(Modality.NONE);
+//                stage.initStyle(StageStyle.DECORATED);
+            stage.setTitle("Nyilvántartó");
+            stage.setScene(new Scene(root1));
+            stage.show();
+        } catch (IOException ex) {
+            Alert hiba = new Alert(Alert.AlertType.ERROR);
+            hiba.setTitle("Nyilvántartó");
+            hiba.setHeaderText("Kritikus hiba");
+            hiba.setContentText("Kiritikus hiba történt a bejelentkezés közben.\nKérem, jelezze a problémát a fejlesztők felé! (10)");
+            hiba.showAndWait();
         }
     }
 
