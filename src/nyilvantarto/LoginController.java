@@ -11,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
@@ -29,13 +30,14 @@ public class LoginController implements Initializable {
 
     @FXML
     private void belepes(ActionEvent event) {
+        // TODO: fókuszon legyen a gomb + enterrel is lehessen kattintani 
         if ("".equals(txtFelhasznalonev.getText())) {
             lblHiba.setText("A felhasználónév nem lehet üres!");
             lblHiba.setVisible(true);
         } else if ("".equals(txtJelszo.getText())) {
             lblHiba.setText("A jelszó nem lehet üres!");
             lblHiba.setVisible(true);
-        } else if (!"alma".equals(txtFelhasznalonev.getText()) && !"kisnyul".equals(txtJelszo.getText())) {
+        } else if (!"alma".equals(txtFelhasznalonev.getText()) || !"kisnyul".equals(txtJelszo.getText())) {
             lblHiba.setText("Hibás felhasználónév / jelszó!");
             lblHiba.setVisible(true);
         } else {

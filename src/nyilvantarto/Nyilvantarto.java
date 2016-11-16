@@ -25,6 +25,7 @@ public class Nyilvantarto extends Application {
         
         stage.setScene(scene);
         stage.setTitle("Nyilvantartó - Belépés");
+        stage.setResizable(false);
         stage.show();
     }
 
