@@ -7,8 +7,6 @@ package nyilvantarto;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -31,7 +29,7 @@ public class MainController implements Initializable {
     @FXML
     private void kilepes() {
         // talán legegyszerűbb rész... :D
-        Platform.exit();
+        System.exit(0);
     }
 
     @Override

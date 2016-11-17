@@ -26,7 +26,8 @@ public class Nyilvantarto extends Application {
 
         stage.setScene(scene);
         stage.setTitle("Nyilvantartó - Belépés");
-        stage.setResizable(false);
+        // FIXME: ha fixelem az ablakot, akkor szétesik
+        //stage.setResizable(false);
         stage.show();
     }
 

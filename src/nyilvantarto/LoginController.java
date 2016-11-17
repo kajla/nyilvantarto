@@ -18,6 +18,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -34,29 +35,29 @@ public class LoginController implements Initializable {
     private TextField txtFelhasznalonev;
     @FXML
     private TextField txtJelszo;
+    @FXML
+    private Button btBelepes;
 
     @FXML
     private void belepes(ActionEvent event) {
-        // TODO: fókuszon legyen a gomb + enterrel is lehessen kattintani 
-        if ("".equals(txtFelhasznalonev.getText())) {
-            lblHiba.setText("A felhasználónév nem lehet üres!");
-            lblHiba.setVisible(true);
-        } else if ("".equals(txtJelszo.getText())) {
-            lblHiba.setText("A jelszó nem lehet üres!");
-            lblHiba.setVisible(true);
-        } else if (!"alma".equals(txtFelhasznalonev.getText()) || !"kisnyul".equals(txtJelszo.getText())) {
-            lblHiba.setText("Hibás felhasználónév / jelszó!");
-            lblHiba.setVisible(true);
-        } else {
-            lblHiba.setVisible(false);
-            Alert siker = new Alert(Alert.AlertType.INFORMATION);
-            siker.setTitle("Nyilvántartó");
-            siker.setHeaderText("Sikeres belépés");
-            siker.setContentText("Ön sikeresen bejelentkezett a szoftverbe.");
-            siker.showAndWait();
-            Stage login = (Stage) lblHiba.getScene().getWindow();
-            login.close();
-            foAblak();
+        if (event.getSource() == btBelepes) {
+            // TODO: fókuszon legyen a gomb + enterrel is lehessen kattintani --> gomb típusa: default
+            // https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/Button.html#isFocusTraversable--
+            if (txtFelhasznalonev.getText().isEmpty()) {
+                lblHiba.setText("A felhasználónév nem lehet üres!");
+                lblHiba.setVisible(true);
+            } else if (txtJelszo.getText().isEmpty()) {
+                lblHiba.setText("A jelszó nem lehet üres!");
+                lblHiba.setVisible(true);
+            } else if (!"alma".equals(txtFelhasznalonev.getText()) || !"kisnyul".equals(txtJelszo.getText())) {
+                lblHiba.setText("Hibás felhasználónév / jelszó!");
+                lblHiba.setVisible(true);
+            } else {
+                lblHiba.setVisible(false);
+                Stage login = (Stage) lblHiba.getScene().getWindow();
+                login.close();
+                foAblak();
+            }
         }
     }
 
@@ -64,8 +65,6 @@ public class LoginController implements Initializable {
         try {
             Parent root1 = FXMLLoader.load(getClass().getResource("Main.fxml"));
             Stage stage = new Stage();
-//                stage.initModality(Modality.NONE);
-//                stage.initStyle(StageStyle.DECORATED);
             stage.setTitle("Nyilvántartó");
             stage.setScene(new Scene(root1));
             stage.show();
@@ -80,7 +79,8 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }
+        // Indításkor a felhasználónév mezőre teszem a fókuszt
+        Platform.runLater(txtFelhasznalonev::requestFocus);
+   }
 
 }
