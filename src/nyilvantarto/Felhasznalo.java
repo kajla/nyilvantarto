@@ -7,7 +7,6 @@ package nyilvantarto;
 
 import java.io.Serializable;
 import java.math.BigInteger;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
@@ -26,7 +25,6 @@ public class Felhasznalo implements Serializable {
     private String jelszo;
     private String nev;
     private int telefon;
-    MessageDigest md;
 
     public Felhasznalo(String fnev, String jelszo, String nev, int telefon) {
         try {
@@ -35,16 +33,55 @@ public class Felhasznalo implements Serializable {
             this.nev = nev;
             this.telefon = telefon;
 
-            String originalPassword = jelszo;
-            String generatedSecuredPasswordHash = generateStorngPasswordHash(originalPassword);
+            String generatedSecuredPasswordHash = generateStorngPasswordHash(jelszo);
             System.out.println(generatedSecuredPasswordHash);
             this.jelszo = generatedSecuredPasswordHash;
 
-        } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(Felhasznalo.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidKeySpecException ex) {
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
             Logger.getLogger(Felhasznalo.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public String getFnev() {
+        return fnev;
+    }
+
+    public void setFnev(String fnev) {
+        this.fnev = fnev;
+    }
+
+    public String getJelszo() {
+        return jelszo;
+    }
+
+    public void setJelszo(String jelszo) {
+        try {
+            String generatedSecuredPasswordHash = generateStorngPasswordHash(jelszo);
+            this.jelszo = generatedSecuredPasswordHash;
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
+            Logger.getLogger(Felhasznalo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public String getNev() {
+        return nev;
+    }
+
+    public void setNev(String nev) {
+        this.nev = nev;
+    }
+
+    public int getTelefon() {
+        return telefon;
+    }
+
+    public void setTelefon(int telefon) {
+        this.telefon = telefon;
+    }
+
+    @Override
+    public String toString() {
+        return "Felhasznalo{" + "fnev=" + fnev + ", jelszo=" + jelszo + ", nev=" + nev + ", telefon=" + telefon + '}';
     }
 
     private static String generateStorngPasswordHash(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
