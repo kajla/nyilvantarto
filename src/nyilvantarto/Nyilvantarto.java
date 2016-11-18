@@ -5,7 +5,6 @@
  */
 package nyilvantarto;
 
-import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -26,8 +25,9 @@ public class Nyilvantarto extends Application {
 
         stage.setScene(scene);
         stage.setTitle("Nyilvantartó - Belépés");
-        // FIXME: ha fixelem az ablakot, akkor szétesik
-        //stage.setResizable(false);
+        stage.setResizable(false);
+        // Ezzel megoldjuk az átméretezési hibát
+        stage.sizeToScene();
         stage.show();
     }
 
