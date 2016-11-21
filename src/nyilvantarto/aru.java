@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author kajla
  */
-public class aru implements Serializable {
+public class aru implements Serializable, Comparable<Object> {
 
     private String nev;
     private String mertekegyseg;
@@ -67,5 +67,15 @@ public class aru implements Serializable {
 
     public int getOsszErtek() {
         return ear * darab;
+    }
+    
+    @Override
+    public int compareTo(Object o) {
+        aru a = (aru) o;
+        int res = String.CASE_INSENSITIVE_ORDER.compare(nev, a.getNev());
+        if (res == 0) {
+            res = nev.compareTo(a.getNev());
+        }
+        return res;
     }
 }
