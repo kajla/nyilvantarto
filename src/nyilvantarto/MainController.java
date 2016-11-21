@@ -20,7 +20,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 
 /**
  *
@@ -28,9 +31,20 @@ import javafx.scene.control.ComboBox;
  */
 public class MainController implements Initializable {
 
+    ArrayList<aru> lista = new ArrayList<>();
+
     ObservableList<String> olTermék = FXCollections.observableArrayList();
     @FXML
     private ComboBox cbTermék = new ComboBox();
+
+    @FXML
+    private TextField txtMennyiseg;
+
+    @FXML
+    private TextField txtAr;
+
+    @FXML
+    private Button btSzerkesztes;
 
     @FXML
     private void kilepes() {
@@ -41,15 +55,34 @@ public class MainController implements Initializable {
     @FXML
     private void SelectedIndexChanged(ActionEvent e) {
         if (e.getSource() == cbTermék) {
-            System.out.println(cbTermék.valueProperty().getValue().toString());
+            String akt = cbTermék.valueProperty().getValue().toString();
+            System.out.println(akt);
+            for (aru termék : lista) {
+                if (termék.getNev() == akt) {
+                    txtMennyiseg.setText(termék.getDarab() + " " + termék.getMertekegyseg());
+                    txtAr.setText(termék.getEar() + "");
+                    btSzerkesztes.setDisable(false);
+                    txtAr.setEditable(false);
+                    txtMennyiseg.setEditable(false);
+                }
+            }
         }
 
+    }
+
+    @FXML
+    private void gombEsemenyek(ActionEvent e) {
+        if (e.getSource() == btSzerkesztes) {
+            txtAr.setEditable(true);
+            txtMennyiseg.setEditable(true);
+            btSzerkesztes.setDisable(true);
+        }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO code application logic here
-        ArrayList<aru> lista = new ArrayList<>();
+        //ArrayList<aru> lista = new ArrayList<>();
 
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("alma.dat")))) {
             while (true) {
@@ -70,4 +103,12 @@ public class MainController implements Initializable {
         cbTermék.setItems(olTermék);
     }
 
+    @FXML
+    private void nevjegy() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Névjegy");
+        alert.setHeaderText("Nyilvántartó alkalmazás");
+        alert.setContentText("Ez egy nyilvántartó alkalmazás.\n\nKészítők:\nSzabó Gábor\nRadovits Ádám.");
+        alert.showAndWait();
+    }
 }
