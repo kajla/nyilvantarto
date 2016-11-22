@@ -42,6 +42,9 @@ public class MainController implements Initializable {
 
     @FXML
     private TextField txtAr;
+    
+    @FXML
+    private TextField txtMEgyseg;
 
     @FXML
     private Button btSzerkesztes;
@@ -59,7 +62,8 @@ public class MainController implements Initializable {
             System.out.println(akt);
             for (aru termék : lista) {
                 if (termék.getNev() == akt) {
-                    txtMennyiseg.setText(termék.getDarab() + " " + termék.getMertekegyseg());
+                    txtMennyiseg.setText(termék.getDarab() + "");
+                    txtMEgyseg.setText(termék.getMertekegyseg());
                     txtAr.setText(termék.getEar() + "");
                     btSzerkesztes.setDisable(false);
                     txtAr.setEditable(false);
@@ -75,6 +79,7 @@ public class MainController implements Initializable {
         if (e.getSource() == btSzerkesztes) {
             txtAr.setEditable(true);
             txtMennyiseg.setEditable(true);
+            txtMEgyseg.setEditable(true);
             btSzerkesztes.setDisable(true);
         }
     }

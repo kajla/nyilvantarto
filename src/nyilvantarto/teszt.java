@@ -36,9 +36,10 @@ public class teszt {
 //        lista.add(new Lista("Mizo tej 1 liter "));
 //        lista.add(new Lista("Lada"));
         ArrayList<aru> lista = new ArrayList<>();
-        lista.add(new aru("körte", "kiló", 300, 20));
-        lista.add(new aru("alma", "kiló", 200, 2));
-        lista.add(new aru("banán", "kiló", 400, 1));
+        lista.add(new aru("körte", "kg", 300, 20));
+        lista.add(new aru("alma", "kg", 200, 2));
+        lista.add(new aru("banán", "kg", 400, 1));
+        //lista.add(new aru("mosógép", "db", 310000, 5));
     
     
     File file = new File("alma.dat");
@@ -48,6 +49,7 @@ public class teszt {
       try {    
             fos = new FileOutputStream(file);
             oos = new ObjectOutputStream(fos);
+            //oos.writeObject(lista);
             for (aru lista1 : lista) {
                 oos.writeObject(lista1);
               
