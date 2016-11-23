@@ -88,6 +88,7 @@
                         <Insets right="50.0" />
                      </GridPane.margin>
                   </TextField>
+                  <Button fx:id="btHozzaad" mnemonicParsing="false" onAction="#HozzaadMegnyom" text="Hozzáadás" GridPane.columnIndex="1" />
                </children>
             </GridPane>
          </center>
