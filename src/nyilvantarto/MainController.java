@@ -30,15 +30,20 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import nyilvantarto.modell.Fajlkezeles;
 
 /**
  *
  * @author Ádám
  */
 public class MainController implements Initializable {
+    Fajlkezeles asd = new Fajlkezeles();
 
-    ArrayList<aru> lista = new ArrayList<>();
+    //ArrayList<aru> lista = new ArrayList<>();
 
+    ArrayList<aru> lista = asd.aruOlvasas("alma");
+    
+    
     ObservableList<String> olTermék = FXCollections.observableArrayList();
     @FXML
     private ComboBox cbTermék = new ComboBox();
