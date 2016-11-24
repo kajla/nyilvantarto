@@ -128,6 +128,7 @@ public class Felhasznalo implements Serializable {
             diff |= hash[i] ^ testHash[i];
         }
         return diff == 0;
+
     }
 
     private static byte[] fromHex(String hex) throws NoSuchAlgorithmException {

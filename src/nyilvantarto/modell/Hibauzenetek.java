@@ -5,10 +5,20 @@
  */
 package nyilvantarto.modell;
 
+import javafx.scene.control.Alert;
+
 /**
  *
  * @author Ádám
  */
 public class Hibauzenetek {
-    
+
+    public void fajlHiba(String s) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Hiba");
+        alert.setHeaderText("Nem található a fájl!");
+        alert.setContentText("Sajnos nem találom a(z) " + s + " fájlt.\nAmennyiben a hiba továbbra is fennáll, kérjük, keresse fel a fejlesztőket!");
+        alert.showAndWait();
+    }
+
 }

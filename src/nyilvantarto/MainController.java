@@ -37,6 +37,7 @@ import nyilvantarto.modell.Fajlkezeles;
  * @author Ádám
  */
 public class MainController implements Initializable {
+    private Nyilvantarto nyilvantarto;
     Fajlkezeles asd = new Fajlkezeles();
 
     //ArrayList<aru> lista = new ArrayList<>();
@@ -154,5 +155,10 @@ public class MainController implements Initializable {
         alert.setHeaderText("Nyilvántartó alkalmazás");
         alert.setContentText("Ez egy nyilvántartó alkalmazás.\n\nKészítők:\nSzabó Gábor\nRadovits Ádám.");
         alert.showAndWait();
+    }
+    
+    public void initManager(final Nyilvantarto nyilvantarto) {
+        this.nyilvantarto = nyilvantarto;
+        System.out.println(nyilvantarto.getAlma());
     }
 }
