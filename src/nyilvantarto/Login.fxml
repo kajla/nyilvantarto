@@ -35,8 +35,8 @@
                <center>
                   <GridPane BorderPane.alignment="CENTER">
                     <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="167.5" minWidth="10.0" prefWidth="167.5" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="167.5" minWidth="10.0" prefWidth="167.5" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
@@ -46,12 +46,12 @@
                      <children>
                         <TextField fx:id="txtFelhasznalonev" GridPane.columnIndex="1">
                            <GridPane.margin>
-                              <Insets left="5.0" />
+                              <Insets left="5.0" right="10.0" />
                            </GridPane.margin>
                         </TextField>
                         <PasswordField fx:id="txtJelszo" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <GridPane.margin>
-                              <Insets left="5.0" />
+                              <Insets left="5.0" right="10.0" />
                            </GridPane.margin>
                         </PasswordField>
                         <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="175.0" text="Jelszó:" textAlignment="RIGHT" GridPane.rowIndex="1">

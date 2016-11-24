@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import nyilvantarto.Felhasznalo;
 import nyilvantarto.aru;
 
 /**
@@ -23,7 +24,7 @@ import nyilvantarto.aru;
 public class Fajlkezeles {
 
     public void aruMentes(String f, ArrayList<aru> al) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream( new File(f)))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(f)))) {
             for (aru termek : al) {
                 oos.writeObject(termek);
             }
@@ -47,8 +48,34 @@ public class Fajlkezeles {
         } catch (ClassNotFoundException e) {
             System.out.println("Az osztály nem található!");
         }
-        if (lista.isEmpty())
+        if (lista.isEmpty()) {
             System.out.println("A lista üres!");
+        }
+        return lista;
+    }
+
+    public ArrayList<Felhasznalo> felhasznaloOlvasas(String f) {
+        ArrayList<Felhasznalo> lista = new ArrayList<>();
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File(f)))) {
+            while (true) {
+                Object o = ois.readObject();
+                if (o instanceof Felhasznalo) {
+                    Felhasznalo júzer = (Felhasznalo) o;
+                    lista.add(júzer);
+                }
+            }
+        } catch (EOFException e) {
+            // Fájl vége
+        } catch (FileNotFoundException e) {
+            System.out.println("Nem találom a fájlt! Hova raktad?!");
+        } catch (IOException e) {
+            System.out.println("Váratlan I/O hiba történt!");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Az osztály nem található!");
+        }
+        if (lista.isEmpty()) {
+            System.out.println("A lista üres!");
+        }
         return lista;
     }
 }

@@ -22,55 +22,57 @@ import java.util.logging.Logger;
  * @author Ádám
  */
 public class teszt {
+
     public static void main(String[] args) {
-//        Felhasznalo emberek = new Felhasznalo("alma", "kisalma", "korte", 0210);
-//        Felhasznalo emberek2 = new Felhasznalo("alma", "kisalma", "korte", 0210);
-//        try {
-//            System.out.println(emberek.validatePassword("kisalma"));
-//        } catch (NoSuchAlgorithmException ex) {
-//            Logger.getLogger(teszt.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (InvalidKeySpecException ex) {
-//            Logger.getLogger(teszt.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        ArrayList <Lista> lista = new ArrayList<>();
-//        lista.add(new Lista("Mizo tej 1 liter "));
-//        lista.add(new Lista("Lada"));
+        Felhasznalo emberek = new Felhasznalo("alma", "kisnyul", "korte", 0210);
+        try {
+            //Felhasznalo emberek2 = new Felhasznalo("alma", "kisalma", "korte", 0210);
+
+            System.out.println(emberek.validatePassword("kisnyul"));
+            System.out.println(emberek.validatePassword("kisalma"));
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(teszt.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidKeySpecException ex) {
+            Logger.getLogger(teszt.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("felhasznalok.dat")))) {
+            oos.writeObject(emberek);
+        } catch (IOException ex) {
+            Logger.getLogger(teszt.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         ArrayList<aru> lista = new ArrayList<>();
         lista.add(new aru("körte", "kg", 300, 20));
         lista.add(new aru("alma", "kg", 200, 2));
         lista.add(new aru("banán", "kg", 400, 1));
         lista.add(new aru("mosógép", "db", 310000, 5));
-    
-    
-    File file = new File("alma.dat");
+
+        File file = new File("alma.dat");
         FileOutputStream fos = null;
         ObjectOutputStream oos = null;
-        
-      try {    
+
+        try {
             fos = new FileOutputStream(file);
             oos = new ObjectOutputStream(fos);
             //oos.writeObject(lista);
             for (aru lista1 : lista) {
                 oos.writeObject(lista1);
-              
-          }
-            
-} catch (FileNotFoundException ex) {
+
+            }
+
+        } catch (FileNotFoundException ex) {
             System.out.println("Lökd ide a fájlt!");
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
-        catch (IOException ex) {
-                ex.printStackTrace();
-        }
-      
-      
+
         System.out.println(lista);
         Collections.sort(lista);
         // 
         //Collections.s
         System.out.println(lista);
-        
-        
-         
-}
-    }
 
+    }
+}
