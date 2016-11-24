@@ -39,7 +39,7 @@ public class teszt {
         lista.add(new aru("körte", "kg", 300, 20));
         lista.add(new aru("alma", "kg", 200, 2));
         lista.add(new aru("banán", "kg", 400, 1));
-        //lista.add(new aru("mosógép", "db", 310000, 5));
+        lista.add(new aru("mosógép", "db", 310000, 5));
     
     
     File file = new File("alma.dat");
@@ -68,6 +68,7 @@ public class teszt {
         // 
         //Collections.s
         System.out.println(lista);
+        
         
          
 }

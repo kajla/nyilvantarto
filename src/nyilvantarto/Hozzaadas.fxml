@@ -32,7 +32,7 @@
       <TextField fx:id="txtDarab" layoutX="300.0" layoutY="101.0" />
       <TextField fx:id="txtAr" layoutX="300.0" layoutY="163.0" />
       <TextField fx:id="txtMertekegyseg" layoutX="300.0" layoutY="220.0" />
-      <Button fx:id="btOk" layoutX="408.0" layoutY="279.0" mnemonicParsing="false" text="OK" />
+      <Button fx:id="btOk" layoutX="408.0" layoutY="279.0" mnemonicParsing="false" onAction="#gombNyom" text="OK" />
       <Button fx:id="btMégse" layoutX="499.0" layoutY="279.0" mnemonicParsing="false" onAction="#CloseWindow" text="Mégse" />
    </children>
 </AnchorPane>
