@@ -37,14 +37,13 @@ import nyilvantarto.modell.Fajlkezeles;
  * @author Ádám
  */
 public class MainController implements Initializable {
+
     private Nyilvantarto nyilvantarto;
-    Fajlkezeles asd = new Fajlkezeles();
+    private Fajlkezeles asd = new Fajlkezeles();
 
     //ArrayList<aru> lista = new ArrayList<>();
+    ArrayList<aru> lista = new ArrayList<>(); //FIXME = asd.aruOlvasas("alma.dat");
 
-    ArrayList<aru> lista = asd.aruOlvasas("alma");
-    
-    
     ObservableList<String> olTermék = FXCollections.observableArrayList();
     @FXML
     private ComboBox cbTermék = new ComboBox();
@@ -63,8 +62,7 @@ public class MainController implements Initializable {
 
     @FXML
     private Button btHozzaad;
-    
-    
+
     @FXML
     public void HozzaadMegnyom(ActionEvent UgyanittBojlerElado /* byGabor */) {
         if (UgyanittBojlerElado.getSource() == btHozzaad) {
@@ -73,7 +71,7 @@ public class MainController implements Initializable {
         }
 
     }
-    
+
     @FXML
     private void HozzaadAblak() {
 
@@ -146,6 +144,7 @@ public class MainController implements Initializable {
             olTermék.add(termék.getNev());
         }
         cbTermék.setItems(olTermék);
+        // TODO: ezzel valamit kezdeni kellene
     }
 
     @FXML
@@ -156,7 +155,7 @@ public class MainController implements Initializable {
         alert.setContentText("Ez egy nyilvántartó alkalmazás.\n\nKészítők:\nSzabó Gábor\nRadovits Ádám.");
         alert.showAndWait();
     }
-    
+
     public void initManager(final Nyilvantarto nyilvantarto) {
         this.nyilvantarto = nyilvantarto;
         System.out.println(nyilvantarto.getAlma());

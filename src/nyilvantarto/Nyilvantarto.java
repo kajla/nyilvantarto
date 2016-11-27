@@ -12,8 +12,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -51,51 +49,61 @@ public class Nyilvantarto extends Application {
 //    }
 //     
     private Scene scene;
-    private Nyilvantarto nyilvantarto;
-    private int alma = 0;
+    private int alma;
     private String felhasznalonev;
     private Fajlkezeles fajlkezeles;
     private Hibauzenetek hiba;
     private ArrayList<Felhasznalo> felhasznalok;
-    
+    private ArrayList<aru> aruk;
+
     public String getFelhasznalonev() {
         return felhasznalonev;
     }
-    
+
     public void setFelhasznalonev(String felhasznalonev) {
         this.felhasznalonev = felhasznalonev;
     }
-    
+
     public int getAlma() {
         return alma;
     }
-    
+
     public void setAlma(int alma) {
         this.alma = alma;
     }
-    
-    public Nyilvantarto(Scene scene) {
-        this.scene = scene;
+
+    public ArrayList<Felhasznalo> getFelhasznalok() {
+        return felhasznalok;
     }
-    
+
+    public void setFelhasznalok(ArrayList<Felhasznalo> felhasznalok) {
+        this.felhasznalok = felhasznalok;
+    }
+
+    public ArrayList<aru> getAruk() {
+        return aruk;
+    }
+
+    public void setAruk(ArrayList<aru> aruk) {
+        this.aruk = aruk;
+    }
+
     public Nyilvantarto() {
+        this.scene = new Scene(new StackPane());
+        this.fajlkezeles = new Fajlkezeles();
+        this.hiba = new Hibauzenetek();
+        //this.felhasznalok = fajlkezeles.felhasznaloOlvasas("felhasznalok.dat"); //--> TODO
+        felhasznaloFeltolt();
+        this.alma = 0; //--> XXX TESZTHEZ! Objektum jól viszi-e át a változókat
     }
-    
+
     @Override
     public void start(Stage stage) throws IOException {
-        Scene scene = new Scene(new StackPane());
-        this.nyilvantarto = new Nyilvantarto(scene);
-        nyilvantarto.felhasznaloFeltolt();
-        nyilvantarto.showLoginScreen(stage);
-
-//        stage.setScene(scene);
-//        stage.setTitle("Nyilvantartó - Belépés");
-//        stage.setResizable(false);
-//        // Ezzel megoldjuk az átméretezési hibát
-//        stage.sizeToScene();
-//        stage.show();
+        // JavaFX hívja meg, itt csak annyi a dolgunk, hogy megjelenítsük a bejelentkező felületet;
+        // nem ide való kódok innen kiszervezésre kerültek
+        showLoginScreen(stage);
     }
-    
+
     public void showLoginScreen(Stage stage) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Login.fxml"));
@@ -110,13 +118,14 @@ public class Nyilvantarto extends Application {
             stage.show();
         } catch (IOException ex) {
             // Valaha is ezek meghívásra kerülnének?! /csak mert ezek a jar fájlban lesznek/
+            // FIXME: nem működik, hisz ha ez lefut, akkor már nagy gondok vannak...
             hiba.fajlHiba("Login.fxml");
         }
     }
-    
+
     public void showMainScreen() {
         try {
-            
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
             scene.setRoot((Parent) loader.load());
             MainController controller = loader.<MainController>getController();
@@ -129,8 +138,9 @@ public class Nyilvantarto extends Application {
             hiba.fajlHiba("Main.fxml");
         }
     }
-    
-    public void felhasznaloFeltolt() {
+
+    // TODO: Kiszervezendő?
+    private void felhasznaloFeltolt() {
         ArrayList<Felhasznalo> ideiglenes = new ArrayList<>();
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("felhasznalok.dat")))) {
             while (true) {
@@ -145,6 +155,7 @@ public class Nyilvantarto extends Application {
         } catch (FileNotFoundException e) {
             System.out.println("Nem találom a fájlt! Hova raktad?!");
             hiba.fajlHiba("felhasznalok.dat");
+            System.exit(1); // Ha bármi hiba van, lépjünk ki, hisz úgy is hibás lenne a programunk működése
         } catch (IOException e) {
             System.out.println("Váratlan I/O hiba történt!");
         } catch (ClassNotFoundException e) {
@@ -157,10 +168,41 @@ public class Nyilvantarto extends Application {
         }
     }
     
-    public void run(String[] args) {
-        this.launch(args);
+     // TODO: Kiszervezendő?
+    private void aruFeltolt() {
+        ArrayList<aru> ideiglenes = new ArrayList<>();
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("alma.dat")))) {
+            while (true) {
+                Object o = ois.readObject();
+                if (o instanceof aru) {
+                    aru termék = (aru) o;
+                    ideiglenes.add(termék);
+                }
+            }
+        } catch (EOFException e) {
+            // Fájl vége
+        } catch (FileNotFoundException e) {
+            System.out.println("Nem találom a fájlt! Hova raktad?!");
+            hiba.fajlHiba("felhasznalok.dat");
+            System.exit(1); // Ha bármi hiba van, lépjünk ki, hisz úgy is hibás lenne a programunk működése
+        } catch (IOException e) {
+            System.out.println("Váratlan I/O hiba történt!");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Az osztály nem található!");
+        }
+        if (ideiglenes.isEmpty()) {
+            System.out.println("A lista üres!");
+        } else {
+            this.aruk = ideiglenes;
+        }
     }
-    
+
+    public void run(String[] args) {
+        System.out.println("START");
+        this.launch(args);
+        System.out.println("END");
+    }
+
     public static void main(String[] args) {
         new Nyilvantarto().run(args);
     }

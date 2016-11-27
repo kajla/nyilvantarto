@@ -23,6 +23,9 @@ import nyilvantarto.aru;
  */
 public class Fajlkezeles {
 
+    public Fajlkezeles() {
+    }
+
     public void aruMentes(String f, ArrayList<aru> al) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(f)))) {
             for (aru termek : al) {
