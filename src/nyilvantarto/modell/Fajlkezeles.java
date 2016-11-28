@@ -22,12 +22,16 @@ import nyilvantarto.aru;
  * @author Ádám
  */
 public class Fajlkezeles {
-
+    private String aruFile;
+    private String userFile;
+    
     public Fajlkezeles() {
+        this.aruFile = "aruk.dat";
+        this.userFile = "felhasznalok.dat";
     }
 
-    public void aruMentes(String f, ArrayList<aru> al) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(f)))) {
+    public void aruMentes(ArrayList<aru> al) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(aruFile)))) {
             for (aru termek : al) {
                 oos.writeObject(termek);
             }
@@ -36,9 +40,9 @@ public class Fajlkezeles {
         }
     }
 
-    public ArrayList aruOlvasas(String f) {
-        ArrayList<Object> lista = new ArrayList<>();
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File(f)))) {
+    public ArrayList<aru> aruOlvasas() {
+        ArrayList<aru> lista = new ArrayList<>();
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File(aruFile)))) {
             while (true) {
                 lista.add((aru) ois.readObject());
             }
@@ -57,9 +61,9 @@ public class Fajlkezeles {
         return lista;
     }
 
-    public ArrayList<Felhasznalo> felhasznaloOlvasas(String f) {
+    public ArrayList<Felhasznalo> felhasznaloOlvasas() {
         ArrayList<Felhasznalo> lista = new ArrayList<>();
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File(f)))) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File(userFile)))) {
             while (true) {
                 Object o = ois.readObject();
                 if (o instanceof Felhasznalo) {

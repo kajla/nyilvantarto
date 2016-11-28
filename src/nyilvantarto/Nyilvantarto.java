@@ -88,12 +88,21 @@ public class Nyilvantarto extends Application {
         this.aruk = aruk;
     }
 
+    public Scene getScene() {
+        return scene;
+    }
+
+    public void setScene(Scene scene) {
+        this.scene = scene;
+    }
+
     public Nyilvantarto() {
         this.scene = new Scene(new StackPane());
         this.fajlkezeles = new Fajlkezeles();
         this.hiba = new Hibauzenetek();
         //this.felhasznalok = fajlkezeles.felhasznaloOlvasas("felhasznalok.dat"); //--> TODO
-        felhasznaloFeltolt();
+        this.felhasznalok = fajlkezeles.felhasznaloOlvasas();
+        this.aruk = fajlkezeles.aruOlvasas();
         this.alma = 0; //--> XXX TESZTHEZ! Objektum jól viszi-e át a változókat
     }
 
@@ -139,63 +148,63 @@ public class Nyilvantarto extends Application {
         }
     }
 
-    // TODO: Kiszervezendő?
-    private void felhasznaloFeltolt() {
-        ArrayList<Felhasznalo> ideiglenes = new ArrayList<>();
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("felhasznalok.dat")))) {
-            while (true) {
-                Object o = ois.readObject();
-                if (o instanceof Felhasznalo) {
-                    Felhasznalo júzer = (Felhasznalo) o;
-                    ideiglenes.add(júzer);
-                }
-            }
-        } catch (EOFException e) {
-            // Fájl vége
-        } catch (FileNotFoundException e) {
-            System.out.println("Nem találom a fájlt! Hova raktad?!");
-            hiba.fajlHiba("felhasznalok.dat");
-            System.exit(1); // Ha bármi hiba van, lépjünk ki, hisz úgy is hibás lenne a programunk működése
-        } catch (IOException e) {
-            System.out.println("Váratlan I/O hiba történt!");
-        } catch (ClassNotFoundException e) {
-            System.out.println("Az osztály nem található!");
-        }
-        if (ideiglenes.isEmpty()) {
-            System.out.println("A lista üres!");
-        } else {
-            this.felhasznalok = ideiglenes;
-        }
-    }
-    
-     // TODO: Kiszervezendő?
-    private void aruFeltolt() {
-        ArrayList<aru> ideiglenes = new ArrayList<>();
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("alma.dat")))) {
-            while (true) {
-                Object o = ois.readObject();
-                if (o instanceof aru) {
-                    aru termék = (aru) o;
-                    ideiglenes.add(termék);
-                }
-            }
-        } catch (EOFException e) {
-            // Fájl vége
-        } catch (FileNotFoundException e) {
-            System.out.println("Nem találom a fájlt! Hova raktad?!");
-            hiba.fajlHiba("felhasznalok.dat");
-            System.exit(1); // Ha bármi hiba van, lépjünk ki, hisz úgy is hibás lenne a programunk működése
-        } catch (IOException e) {
-            System.out.println("Váratlan I/O hiba történt!");
-        } catch (ClassNotFoundException e) {
-            System.out.println("Az osztály nem található!");
-        }
-        if (ideiglenes.isEmpty()) {
-            System.out.println("A lista üres!");
-        } else {
-            this.aruk = ideiglenes;
-        }
-    }
+//    // TODO: Kiszervezendő?
+//    private void felhasznaloFeltolt() {
+//        ArrayList<Felhasznalo> ideiglenes = new ArrayList<>();
+//        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("felhasznalok.dat")))) {
+//            while (true) {
+//                Object o = ois.readObject();
+//                if (o instanceof Felhasznalo) {
+//                    Felhasznalo júzer = (Felhasznalo) o;
+//                    ideiglenes.add(júzer);
+//                }
+//            }
+//        } catch (EOFException e) {
+//            // Fájl vége
+//        } catch (FileNotFoundException e) {
+//            System.out.println("Nem találom a fájlt! Hova raktad?!");
+//            hiba.fajlHiba("felhasznalok.dat");
+//            System.exit(1); // Ha bármi hiba van, lépjünk ki, hisz úgy is hibás lenne a programunk működése
+//        } catch (IOException e) {
+//            System.out.println("Váratlan I/O hiba történt!");
+//        } catch (ClassNotFoundException e) {
+//            System.out.println("Az osztály nem található!");
+//        }
+//        if (ideiglenes.isEmpty()) {
+//            System.out.println("A lista üres!");
+//        } else {
+//            this.felhasznalok = ideiglenes;
+//        }
+//    }
+//    
+//     // TODO: Kiszervezendő?
+//    private void aruFeltolt() {
+//        ArrayList<aru> ideiglenes = new ArrayList<>();
+//        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("alma.dat")))) {
+//            while (true) {
+//                Object o = ois.readObject();
+//                if (o instanceof aru) {
+//                    aru termék = (aru) o;
+//                    ideiglenes.add(termék);
+//                }
+//            }
+//        } catch (EOFException e) {
+//            // Fájl vége
+//        } catch (FileNotFoundException e) {
+//            System.out.println("Nem találom a fájlt! Hova raktad?!");
+//            hiba.fajlHiba("felhasznalok.dat");
+//            System.exit(1); // Ha bármi hiba van, lépjünk ki, hisz úgy is hibás lenne a programunk működése
+//        } catch (IOException e) {
+//            System.out.println("Váratlan I/O hiba történt!");
+//        } catch (ClassNotFoundException e) {
+//            System.out.println("Az osztály nem található!");
+//        }
+//        if (ideiglenes.isEmpty()) {
+//            System.out.println("A lista üres!");
+//        } else {
+//            this.aruk = ideiglenes;
+//        }
+//    }
 
     public void run(String[] args) {
         System.out.println("START");

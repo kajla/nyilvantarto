@@ -24,12 +24,12 @@ import java.util.logging.Logger;
 public class teszt {
 
     public static void main(String[] args) {
-        Felhasznalo emberek = new Felhasznalo("alma", "kisnyul", "korte", 0210);
+        Felhasznalo emberek = new Felhasznalo("alma", "alma", "korte", 0210);
         try {
             //Felhasznalo emberek2 = new Felhasznalo("alma", "kisalma", "korte", 0210);
 
             System.out.println(emberek.validatePassword("kisnyul"));
-            System.out.println(emberek.validatePassword("kisalma"));
+            System.out.println(emberek.validatePassword("alma"));
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(teszt.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InvalidKeySpecException ex) {
@@ -49,7 +49,7 @@ public class teszt {
         lista.add(new aru("banán", "kg", 400, 1));
         lista.add(new aru("mosógép", "db", 310000, 5));
 
-        File file = new File("alma.dat");
+        File file = new File("aruk.dat");
         FileOutputStream fos = null;
         ObjectOutputStream oos = null;
 

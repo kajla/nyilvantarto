@@ -5,32 +5,20 @@
  */
 package nyilvantarto;
 
-import java.io.EOFException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
-import nyilvantarto.modell.Fajlkezeles;
 
 /**
  *
@@ -39,10 +27,11 @@ import nyilvantarto.modell.Fajlkezeles;
 public class MainController implements Initializable {
 
     private Nyilvantarto nyilvantarto;
-    private Fajlkezeles asd = new Fajlkezeles();
+    private int x;
+    //private Fajlkezeles asd = new Fajlkezeles();
 
-    //ArrayList<aru> lista = new ArrayList<>();
-    ArrayList<aru> lista = new ArrayList<>(); //FIXME = asd.aruOlvasas("alma.dat");
+    ArrayList<aru> lista = new ArrayList<>();
+    //ArrayList<aru> lista = new ArrayList<>(); //FIXME = asd.aruOlvasas("alma.dat");
 
     ObservableList<String> olTermék = FXCollections.observableArrayList();
     @FXML
@@ -61,6 +50,9 @@ public class MainController implements Initializable {
     private Button btSzerkesztes;
 
     @FXML
+    private Button btTorles;
+
+    @FXML
     private Button btHozzaad;
 
     @FXML
@@ -75,29 +67,38 @@ public class MainController implements Initializable {
     @FXML
     private void HozzaadAblak() {
 
-        try {
-            Parent root2 = FXMLLoader.load(getClass().getResource("Hozzaadas.fxml"));
-            Stage stage = new Stage();
-            stage.setTitle("Áru hozzáadása");
-            stage.setScene(new Scene(root2));
-            stage.show();
-        } catch (IOException ex) {
-            Logger.getLogger(HozzaadasController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+//        try {            
+        //cbTermék.getItems().remove(cbTermék.getSelectionModel().selectedIndexProperty()); niet goed
+//            Parent root2 = FXMLLoader.load(getClass().getResource("Hozzaadas.fxml"));
+//            Stage stage = new Stage();
+//            stage.setTitle("Áru hozzáadása");
+//            stage.setScene(new Scene(root2));
+//            stage.show();
+//        } catch (IOException ex) {
+//            Logger.getLogger(HozzaadasController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
 
     @FXML
     private void kilepes() {
         // talán legegyszerűbb rész... :D
-        System.exit(0);
+        Platform.exit();
     }
 
     @FXML
     private void SelectedIndexChanged(ActionEvent e) {
         if (e.getSource() == cbTermék) {
-            String akt = cbTermék.valueProperty().getValue().toString();
+            String akt = lista.get(0).getNev();
+            try {
+                akt = cbTermék.valueProperty().getValue().toString();
+            } catch (Exception ex) {
+                System.out.println("eee");
+            }
+
+            //String akt = cbTermék.valueProperty().getValue().toString();
             System.out.println(akt);
+            int index = 0;
+//            x = 0;
             for (aru termék : lista) {
                 if (termék.getNev() == akt) {
                     txtMennyiseg.setText(termék.getDarab() + "");
@@ -106,8 +107,15 @@ public class MainController implements Initializable {
                     btSzerkesztes.setDisable(false);
                     txtAr.setEditable(false);
                     txtMennyiseg.setEditable(false);
+                    x = index;
+                    System.out.println(x);
+
+                    index++;
+                } else {
+                    index++;
                 }
             }
+
         }
 
     }
@@ -120,6 +128,10 @@ public class MainController implements Initializable {
             txtMEgyseg.setEditable(true);
             btSzerkesztes.setDisable(true);
         }
+        if (e.getSource() == btTorles) {
+            olTermék.remove(x);
+            System.out.println(x);
+        }
     }
 
     @Override
@@ -127,23 +139,18 @@ public class MainController implements Initializable {
         // TODO code application logic here
         //ArrayList<aru> lista = new ArrayList<>();
 
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("alma.dat")))) {
-            while (true) {
-                lista.add((aru) ois.readObject());
-            }
-        } catch (EOFException e) {
-        } catch (FileNotFoundException e) {
-            System.out.println("Nem találom a fájlt! Hova raktad?!");
-        } catch (IOException e) {
-            System.out.println(e.toString());
-        } catch (ClassNotFoundException e) {
-            System.out.println(e.toString());
-        }
-        Collections.sort(lista);
-        for (aru termék : lista) {
-            olTermék.add(termék.getNev());
-        }
-        cbTermék.setItems(olTermék);
+//        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("alma.dat")))) {
+//            while (true) {
+//                lista.add((aru) ois.readObject());
+//            }
+//        } catch (EOFException e) {
+//        } catch (FileNotFoundException e) {
+//            System.out.println("Nem találom a fájlt! Hova raktad?!");
+//        } catch (IOException e) {
+//            System.out.println(e.toString());
+//        } catch (ClassNotFoundException e) {
+//            System.out.println(e.toString());
+//        }
         // TODO: ezzel valamit kezdeni kellene
     }
 
@@ -158,6 +165,15 @@ public class MainController implements Initializable {
 
     public void initManager(final Nyilvantarto nyilvantarto) {
         this.nyilvantarto = nyilvantarto;
+        this.lista = nyilvantarto.getAruk();
+        System.out.println(lista);
+        Collections.sort(lista);
+        for (aru termék : lista) {
+            olTermék.add(termék.getNev());
+        }
+        //olTermék.setAll(lista.toString());
+        cbTermék.setItems(olTermék);
         System.out.println(nyilvantarto.getAlma());
+
     }
 }
