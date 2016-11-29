@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nyilvantarto.MainController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nyilvantarto.MainController">
    <children>
       <BorderPane layoutX="172.0" layoutY="89.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
@@ -91,7 +91,7 @@
                   </TextField>
                   <Button fx:id="btHozzaad" disable="true" mnemonicParsing="false" onAction="#gombEsemenyek" text="Hozzáadás" GridPane.rowIndex="5">
                      <GridPane.margin>
-                        <Insets left="150.0" />
+                        <Insets left="180.0" />
                      </GridPane.margin></Button>
                   <Button fx:id="btTorles" mnemonicParsing="false" onAction="#gombEsemenyek" text="Törlés" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                   <Label prefHeight="17.0" prefWidth="487.0" text="Név:" GridPane.rowIndex="1">
@@ -105,6 +105,11 @@
                      </GridPane.margin>
                   </TextField>
                   <Button fx:id="btUj" mnemonicParsing="false" onAction="#gombEsemenyek" text="Új" GridPane.columnIndex="1" />
+                  <Label fx:id="lbUj" text="Adja meg az új árucikk adatait" GridPane.columnIndex="1">
+                     <padding>
+                        <Insets left="50.0" />
+                     </padding>
+                  </Label>
                </children>
             </GridPane>
          </center>

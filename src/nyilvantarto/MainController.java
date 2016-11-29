@@ -18,6 +18,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 /**
@@ -58,6 +59,9 @@ public class MainController implements Initializable {
 
     @FXML
     private Button btUj;
+    
+    @FXML
+    private Label lbUj;
 
     // Bocsi :( @Ádám
 //    @FXML
@@ -172,6 +176,7 @@ public class MainController implements Initializable {
         }
         if (e.getSource() == btHozzaad) {
             //aruLista.add(e)
+            
             String nev = "";
             String megyseg = "";
             int ar = 0;
@@ -205,6 +210,7 @@ public class MainController implements Initializable {
             }
             // Ha bármi hiba van, NEM hajtjuk végre
             if (!hiba) {
+                lbUj.setVisible(false);
                 // Felvesszük az új elemet
                 aruLista.add(new aru(nev, megyseg, ar, darab));
                 // Egyből be is rendezzük ;)
@@ -240,6 +246,7 @@ public class MainController implements Initializable {
             txtMennyiseg.clear();
             txtNev.clear();
             cbTermék.getSelectionModel().clearSelection();
+            lbUj.setVisible(true);
         }
     }
 
@@ -283,6 +290,7 @@ public class MainController implements Initializable {
         //olTermék.setAll(aruLista.toString());
         cbTermék.setItems(olTermék);
         System.out.println(nyilvantarto.getAlma());
+        lbUj.setVisible(false);
 
     }
 }
