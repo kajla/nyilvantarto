@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -96,6 +97,10 @@ public class Nyilvantarto extends Application {
         this.scene = scene;
     }
 
+    public Hibauzenetek getHiba() {
+        return hiba;
+    }
+
     public Nyilvantarto() {
         this.scene = new Scene(new StackPane());
         this.fajlkezeles = new Fajlkezeles();
@@ -146,6 +151,14 @@ public class Nyilvantarto extends Application {
         } catch (IOException ex) {
             hiba.fajlHiba("Main.fxml");
         }
+    }
+
+    // Platform.exit hívja meg, ekkor mentünk fájlba
+    @Override
+    public void stop() {
+        fajlkezeles.aruMentes(this);
+        fajlkezeles.felhasznaloMentes(this);
+        System.exit(0);
     }
 
 //    // TODO: Kiszervezendő?
@@ -205,7 +218,6 @@ public class Nyilvantarto extends Application {
 //            this.aruk = ideiglenes;
 //        }
 //    }
-
     public void run(String[] args) {
         System.out.println("START");
         this.launch(args);

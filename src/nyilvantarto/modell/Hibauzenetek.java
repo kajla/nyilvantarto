@@ -31,5 +31,13 @@ public class Hibauzenetek {
         alert.setContentText("Sajnos nem találom a(z) " + s + " fájlt.\nAmennyiben a hiba továbbra is fennáll, kérjük, keresse fel a fejlesztőket!");
         alert.showAndWait();
     }
+    
+    public void nemszamHiba (String s) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Nyilvántartó - Hiba");
+        alert.setHeaderText("A bevitt érték hibás!");
+        alert.setContentText("Sajnos a(z) " + s + " bevitt érték nem szám.\nKérem, javítsa ki, hogy a bevitt érték szám legyen!");
+        alert.showAndWait();
+    }
 
 }

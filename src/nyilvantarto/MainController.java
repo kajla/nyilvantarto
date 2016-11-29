@@ -27,15 +27,16 @@ import javafx.scene.control.TextField;
 public class MainController implements Initializable {
 
     private Nyilvantarto nyilvantarto;
-    private int x;
-    //private Fajlkezeles asd = new Fajlkezeles();
 
-    ArrayList<aru> lista = new ArrayList<>();
-    //ArrayList<aru> lista = new ArrayList<>(); //FIXME = asd.aruOlvasas("alma.dat");
+    ArrayList<aru> aruLista = new ArrayList<>();
 
     ObservableList<String> olTermék = FXCollections.observableArrayList();
+
     @FXML
     private ComboBox cbTermék = new ComboBox();
+
+    @FXML
+    private TextField txtNev;
 
     @FXML
     private TextField txtMennyiseg;
@@ -56,19 +57,21 @@ public class MainController implements Initializable {
     private Button btHozzaad;
 
     @FXML
-    public void HozzaadMegnyom(ActionEvent UgyanittBojlerElado /* byGabor */) {
-        if (UgyanittBojlerElado.getSource() == btHozzaad) {
-            HozzaadAblak();
+    private Button btUj;
 
-        }
-
-    }
-
-    @FXML
-    private void HozzaadAblak() {
-
+    // Bocsi :( @Ádám
+//    @FXML
+//    public void HozzaadMegnyom(ActionEvent UgyanittBojlerElado /* byGabor */) {
+//        if (UgyanittBojlerElado.getSource() == btHozzaad) {
+//            HozzaadAblak();
+//
+//        }
+//
+//    }
+//    @FXML
+//    private void HozzaadAblak() {
 //        try {            
-        //cbTermék.getItems().remove(cbTermék.getSelectionModel().selectedIndexProperty()); niet goed
+    //cbTermék.getItems().remove(cbTermék.getSelectionModel().selectedIndexProperty()); niet goed
 //            Parent root2 = FXMLLoader.load(getClass().getResource("Hozzaadas.fxml"));
 //            Stage stage = new Stage();
 //            stage.setTitle("Áru hozzáadása");
@@ -77,45 +80,49 @@ public class MainController implements Initializable {
 //        } catch (IOException ex) {
 //            Logger.getLogger(HozzaadasController.class.getName()).log(Level.SEVERE, null, ex);
 //        }
-    }
-
+//    }
     @FXML
     private void kilepes() {
         // talán legegyszerűbb rész... :D
         Platform.exit();
+        // Átadjuk a módosított listát
+        //nyilvantarto.setAruk(aruLista);
+        //Plat
     }
+    
 
     @FXML
     private void SelectedIndexChanged(ActionEvent e) {
         if (e.getSource() == cbTermék) {
-            String akt = lista.get(0).getNev();
-            try {
-                akt = cbTermék.valueProperty().getValue().toString();
-            } catch (Exception ex) {
-                System.out.println("eee");
-            }
-
-            //String akt = cbTermék.valueProperty().getValue().toString();
-            System.out.println(akt);
-            int index = 0;
-//            x = 0;
-            for (aru termék : lista) {
-                if (termék.getNev() == akt) {
-                    txtMennyiseg.setText(termék.getDarab() + "");
-                    txtMEgyseg.setText(termék.getMertekegyseg());
-                    txtAr.setText(termék.getEar() + "");
-                    btSzerkesztes.setDisable(false);
-                    txtAr.setEditable(false);
-                    txtMennyiseg.setEditable(false);
-                    x = index;
-                    System.out.println(x);
-
-                    index++;
-                } else {
-                    index++;
+            // Ha üres, akkor SEMMIT se válasszunk ki, különben NullPointException... ;)
+            // Ilyenkor csak töröljük ki a mezők tartalmát (valószínűleg ekkor törlünk)
+            if (cbTermék.getSelectionModel().isEmpty()) {
+                txtNev.setEditable(false);
+                txtMEgyseg.setEditable(false);
+                txtAr.setEditable(false);
+                txtMennyiseg.setEditable(false);
+                txtNev.setText("");
+                txtMEgyseg.setText("");
+                txtAr.setText("");
+                txtMennyiseg.setText("");
+            } else {
+                String akt = cbTermék.getSelectionModel().getSelectedItem().toString();
+                System.out.println(akt);
+                for (aru termék : aruLista) {
+                    if (termék.getNev() == akt) {
+                        txtNev.setText(termék.getNev());
+                        txtMennyiseg.setText(termék.getDarab() + "");
+                        txtMEgyseg.setText(termék.getMertekegyseg());
+                        txtAr.setText(termék.getEar() + "");
+                        btSzerkesztes.setDisable(false);
+                        txtNev.setEditable(false);
+                        txtAr.setEditable(false);
+                        txtMennyiseg.setEditable(false);
+                        txtMEgyseg.setEditable(false);
+                    }
                 }
-            }
 
+            }
         }
 
     }
@@ -123,25 +130,122 @@ public class MainController implements Initializable {
     @FXML
     private void gombEsemenyek(ActionEvent e) {
         if (e.getSource() == btSzerkesztes) {
+            txtNev.setEditable(true);
             txtAr.setEditable(true);
             txtMennyiseg.setEditable(true);
             txtMEgyseg.setEditable(true);
             btSzerkesztes.setDisable(true);
+            btHozzaad.setDisable(true);
         }
         if (e.getSource() == btTorles) {
-            olTermék.remove(x);
-            System.out.println(x);
+            // Ha NEM üres ("Válasszon" is üres!!!)
+            if (!cbTermék.getSelectionModel().isEmpty()) {
+                String akt = cbTermék.getSelectionModel().getSelectedItem().toString(); //cbTermék.valueProperty().getValue().toString();
+                int törlendő = 0;
+                int i = 0;
+                for (aru termék : aruLista) {
+                    // Jobb megoldást nem találtam... mivel NINCS egyedi azonosító! :(
+                    if (termék.getNev() == akt) {//FIXME: && termék.getMertekegyseg() == txtMEgyseg.getText() && termék.getEar() == Integer.parseInt(txtAr.getText()) && termék.getDarab() == Integer.parseInt(txtMennyiseg.getText())) {
+                        // Ezt kell törölnünk majd...
+                        törlendő = i;
+                    }
+                    // Debug
+//                    System.out.println(termék.getNev() + " vs " + akt);
+//                    System.out.println(termék.getMertekegyseg() + " vs " + txtMEgyseg.getText());
+//                    System.out.println(termék.getEar() + " vs " + txtAr.getText());
+//                    System.out.println(termék.getDarab() + " vs " + txtMennyiseg.getText());
+                    i++;
+                }
+                // Töröljük a listából az elemet
+                aruLista.remove(törlendő);
+                // Kiválasztott elemet töröljük
+                cbTermék.getSelectionModel().select("Válasszon");
+                // Mindent kiírtunk...
+                olTermék.clear();
+                // Felülcsapjuk a globális listát
+                nyilvantarto.setAruk(aruLista);
+                // Újra feltöltjük, because erőforrás pazarlás most nem érdekel...
+                for (aru termék : aruLista) {
+                    olTermék.add(termék.getNev());
+                }
+            }
+        }
+        if (e.getSource() == btHozzaad) {
+            //aruLista.add(e)
+            String nev = "";
+            String megyseg = "";
+            int ar = 0;
+            int darab = 0;
+            Boolean hiba = false;
+            try {
+                ar = Integer.parseInt(txtAr.getText());
+            } catch (NumberFormatException nan) {
+                System.out.println("Ár nem szám!");
+                nyilvantarto.getHiba().nemszamHiba("ár");
+                hiba = true;
+
+            }
+            try {
+                darab = Integer.parseInt(txtMennyiseg.getText());
+            } catch (NumberFormatException nan) {
+                System.out.println("Darab nem szám!");
+                hiba = true;
+            }
+            if (txtNev.getText().isEmpty()) {
+                System.out.println("Név üres!");
+                hiba = true;
+            } else {
+                nev = txtNev.getText();
+            }
+            if (txtMEgyseg.getText().isEmpty()) {
+                System.out.println("Mértékegység üres!");
+                hiba = true;
+            } else {
+                megyseg = txtMEgyseg.getText();
+            }
+            // Ha bármi hiba van, NEM hajtjuk végre
+            if (!hiba) {
+                // Felvesszük az új elemet
+                aruLista.add(new aru(nev, megyseg, ar, darab));
+                // Egyből be is rendezzük ;)
+                Collections.sort(aruLista);
+                // Alapértelmezett, üres elem
+                cbTermék.getSelectionModel().select("Válasszon");
+                // Mindent kiírtunk, inkább nem kockáztatok, meg amúgy is lehetünk még pazarlók... TODO: optimalizálni!
+                olTermék.clear();
+                // Újra felvesszük.
+                for (aru termék : aruLista) {
+                    olTermék.add(termék.getNev());
+                }
+                // Jelenlegit kiválasztjuk
+                cbTermék.getSelectionModel().select(nev);
+                // Felülcsapjuk a globális listát
+                nyilvantarto.setAruk(aruLista);
+                btUj.setDisable(false);
+                btHozzaad.setDisable(true);
+                btTorles.setDisable(false);
+            }
+        }
+        if (e.getSource() == btUj) {
+            btUj.setDisable(true);
+            btHozzaad.setDisable(false);
+            btSzerkesztes.setDisable(true);
+            btTorles.setDisable(true);
+            txtNev.setEditable(true);
+            txtAr.setEditable(true);
+            txtMennyiseg.setEditable(true);
+            txtMEgyseg.setEditable(true);
         }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO code application logic here
-        //ArrayList<aru> lista = new ArrayList<>();
+        //ArrayList<aru> aruLista = new ArrayList<>();
 
 //        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("alma.dat")))) {
 //            while (true) {
-//                lista.add((aru) ois.readObject());
+//                aruLista.add((aru) ois.readObject());
 //            }
 //        } catch (EOFException e) {
 //        } catch (FileNotFoundException e) {
@@ -165,13 +269,13 @@ public class MainController implements Initializable {
 
     public void initManager(final Nyilvantarto nyilvantarto) {
         this.nyilvantarto = nyilvantarto;
-        this.lista = nyilvantarto.getAruk();
-        System.out.println(lista);
-        Collections.sort(lista);
-        for (aru termék : lista) {
+        this.aruLista = nyilvantarto.getAruk();
+        System.out.println(aruLista);
+        Collections.sort(aruLista);
+        for (aru termék : aruLista) {
             olTermék.add(termék.getNev());
         }
-        //olTermék.setAll(lista.toString());
+        //olTermék.setAll(aruLista.toString());
         cbTermék.setItems(olTermék);
         System.out.println(nyilvantarto.getAlma());
 

@@ -15,6 +15,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import nyilvantarto.Felhasznalo;
+import nyilvantarto.Nyilvantarto;
 import nyilvantarto.aru;
 
 /**
@@ -30,10 +31,20 @@ public class Fajlkezeles {
         this.userFile = "felhasznalok.dat";
     }
 
-    public void aruMentes(ArrayList<aru> al) {
+    public void aruMentes(Nyilvantarto nyilvantarto) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(aruFile)))) {
-            for (aru termek : al) {
+            for (aru termek : nyilvantarto.getAruk()) {
                 oos.writeObject(termek);
+            }
+        } catch (IOException e) {
+            System.out.println("Váratlan I/O hiba történt!");
+        }
+    }
+    
+    public void felhasznaloMentes(Nyilvantarto nyilvantarto) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(userFile)))) {
+            for (Felhasznalo júzer : nyilvantarto.getFelhasznalok()) {
+                oos.writeObject(júzer);
             }
         } catch (IOException e) {
             System.out.println("Váratlan I/O hiba történt!");
