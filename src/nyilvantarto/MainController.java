@@ -235,6 +235,11 @@ public class MainController implements Initializable {
             txtAr.setEditable(true);
             txtMennyiseg.setEditable(true);
             txtMEgyseg.setEditable(true);
+            txtAr.clear();
+            txtMEgyseg.clear();
+            txtMennyiseg.clear();
+            txtNev.clear();
+            cbTermék.getSelectionModel().clearSelection();
         }
     }
 
