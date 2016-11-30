@@ -59,7 +59,7 @@ public class MainController implements Initializable {
 
     @FXML
     private Button btUj;
-    
+
     @FXML
     private Label lbUj;
 
@@ -93,7 +93,6 @@ public class MainController implements Initializable {
         //nyilvantarto.setAruk(aruLista);
         //Plat
     }
-    
 
     @FXML
     private void SelectedIndexChanged(ActionEvent e) {
@@ -134,12 +133,87 @@ public class MainController implements Initializable {
     @FXML
     private void gombEsemenyek(ActionEvent e) {
         if (e.getSource() == btSzerkesztes) {
-            txtNev.setEditable(true);
-            txtAr.setEditable(true);
-            txtMennyiseg.setEditable(true);
-            txtMEgyseg.setEditable(true);
-            btSzerkesztes.setDisable(true);
-            btHozzaad.setDisable(true);
+            if (btUj.isDisabled()) {
+
+                String nev = "";
+                String megyseg = "";
+                int ar = 0;
+                int darab = 0;
+                Boolean hiba = false;
+                try {
+                    ar = Integer.parseInt(txtAr.getText());
+                } catch (NumberFormatException nan) {
+                    System.out.println("Ár nem szám!");
+                    nyilvantarto.getHiba().nemszamHiba("ár");
+                    hiba = true;
+
+                }
+                try {
+                    darab = Integer.parseInt(txtMennyiseg.getText());
+                } catch (NumberFormatException nan) {
+                    System.out.println("Darab nem szám!");
+                    hiba = true;
+                }
+                if (txtNev.getText().isEmpty()) {
+                    System.out.println("Név üres!");
+                    hiba = true;
+                } else {
+                    nev = txtNev.getText();
+                }
+                if (txtMEgyseg.getText().isEmpty()) {
+                    System.out.println("Mértékegység üres!");
+                    hiba = true;
+                } else {
+                    megyseg = txtMEgyseg.getText();
+                }
+                // Ha bármi hiba van, NEM hajtjuk végre
+                if (!hiba) {
+
+                    lbUj.setVisible(false);
+                    int i = 0;
+                    int szerkesztendő = 0;
+                    for (aru termék : aruLista) {
+                        // Jobb megoldást nem találtam... mivel NINCS egyedi azonosító! :(
+                        if (termék.getNev() == cbTermék.getSelectionModel().getSelectedItem().toString()) {//FIXME: && termék.getMertekegyseg() == txtMEgyseg.getText() && termék.getEar() == Integer.parseInt(txtAr.getText()) && termék.getDarab() == Integer.parseInt(txtMennyiseg.getText())) {
+                            szerkesztendő = i;
+                        }
+                        i++;
+                    }
+                    aruLista.remove(szerkesztendő);
+                    aruLista.add(new aru(nev, megyseg, ar, darab));
+                    // Alapértelmezett, üres elem
+                    cbTermék.getSelectionModel().select("Válasszon");
+                    // Egyből be is rendezzük ;)
+                    Collections.sort(aruLista);
+                    // Mindent kiírtunk, inkább nem kockáztatok, meg amúgy is lehetünk még pazarlók... TODO: optimalizálni!
+                    olTermék.clear();
+                    // Újra felvesszük.
+                    for (aru termék : aruLista) {
+                        olTermék.add(termék.getNev());
+                    }
+                    // Jelenlegit kiválasztjuk
+                    cbTermék.getSelectionModel().select(nev);
+                    // Felülcsapjuk a globális listát
+                    nyilvantarto.setAruk(aruLista);
+                    txtNev.setEditable(false);
+                    txtAr.setEditable(false);
+                    txtMennyiseg.setEditable(false);
+                    txtMEgyseg.setEditable(false);
+                    //btSzerkesztes.setDisable(true);
+                    //btHozzaad.setDisable(false);
+                    btUj.setDisable(false);
+                    btSzerkesztes.setText("Szerkesztés");
+                }
+            } else {
+                btSzerkesztes.setText("Mentés");
+                txtNev.setEditable(true);
+                txtAr.setEditable(true);
+                txtMennyiseg.setEditable(true);
+                txtMEgyseg.setEditable(true);
+                //btSzerkesztes.setDisable(true);
+                btHozzaad.setDisable(true);
+                btUj.setDisable(true);
+            }
         }
         if (e.getSource() == btTorles) {
             // Ha NEM üres ("Válasszon" is üres!!!)
@@ -176,7 +250,7 @@ public class MainController implements Initializable {
         }
         if (e.getSource() == btHozzaad) {
             //aruLista.add(e)
-            
+
             String nev = "";
             String megyseg = "";
             int ar = 0;
@@ -252,7 +326,8 @@ public class MainController implements Initializable {
     }
 
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize(URL url, ResourceBundle rb
+    ) {
         // TODO code application logic here
         //ArrayList<aru> aruLista = new ArrayList<>();
 
