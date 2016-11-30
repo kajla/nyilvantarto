@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 public class teszt {
 
     public static void main(String[] args) {
-        Felhasznalo emberek = new Felhasznalo("alma", "alma", "korte", 0210);
+        Felhasznalo emberek = new Felhasznalo("alma", "alma", "korte", 0210, 0);
         try {
             //Felhasznalo emberek2 = new Felhasznalo("alma", "kisalma", "korte", 0210);
 
@@ -43,36 +43,36 @@ public class teszt {
             Logger.getLogger(teszt.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        ArrayList<aru> lista = new ArrayList<>();
-        lista.add(new aru("körte", "kg", 300, 20));
-        lista.add(new aru("alma", "kg", 200, 2));
-        lista.add(new aru("banán", "kg", 400, 1));
-        lista.add(new aru("mosógép", "db", 310000, 5));
-
-        File file = new File("aruk.dat");
-        FileOutputStream fos = null;
-        ObjectOutputStream oos = null;
-
-        try {
-            fos = new FileOutputStream(file);
-            oos = new ObjectOutputStream(fos);
-            //oos.writeObject(lista);
-            for (aru lista1 : lista) {
-                oos.writeObject(lista1);
-
-            }
-
-        } catch (FileNotFoundException ex) {
-            System.out.println("Lökd ide a fájlt!");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        System.out.println(lista);
-        Collections.sort(lista);
-        // 
-        //Collections.s
-        System.out.println(lista);
+//        ArrayList<aru> lista = new ArrayList<>();
+//        lista.add(new aru("körte", "kg", 300, 20));
+//        lista.add(new aru("alma", "kg", 200, 2));
+//        lista.add(new aru("banán", "kg", 400, 1));
+//        lista.add(new aru("mosógép", "db", 310000, 5));
+//
+//        File file = new File("aruk.dat");
+//        FileOutputStream fos = null;
+//        ObjectOutputStream oos = null;
+//
+//        try {
+//            fos = new FileOutputStream(file);
+//            oos = new ObjectOutputStream(fos);
+//            //oos.writeObject(lista);
+//            for (aru lista1 : lista) {
+//                oos.writeObject(lista1);
+//
+//            }
+//
+//        } catch (FileNotFoundException ex) {
+//            System.out.println("Lökd ide a fájlt!");
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//        }
+//
+//        System.out.println(lista);
+//        Collections.sort(lista);
+//        // 
+//        //Collections.s
+//        System.out.println(lista);
 
     }
 }

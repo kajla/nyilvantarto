@@ -152,6 +152,25 @@ public class Nyilvantarto extends Application {
             hiba.fajlHiba("Main.fxml");
         }
     }
+    
+    // BETA
+    public void showAdminScreen() {
+        try {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("AdminPanel.fxml"));
+            Scene alma = new Scene((Parent) loader.load());
+            AdminPanelController controller = loader.<AdminPanelController>getController();
+            
+            Stage stage = new Stage();
+            controller.initManager(this, stage);
+            stage.setScene(alma);
+            stage.setTitle("Nyilvántartó");
+            stage.showAndWait();
+            
+        } catch (IOException ex) {
+            hiba.fajlHiba("AdminPanel.fxml");
+        }
+    }
 
     // Platform.exit hívja meg, ekkor mentünk fájlba
     @Override

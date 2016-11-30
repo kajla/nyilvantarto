@@ -19,6 +19,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 
 /**
@@ -62,6 +63,9 @@ public class MainController implements Initializable {
 
     @FXML
     private Label lbUj;
+    
+    @FXML
+    private Tab tbAdmin;
 
     // Bocsi :( @Ádám
 //    @FXML
@@ -100,14 +104,16 @@ public class MainController implements Initializable {
             // Ha üres, akkor SEMMIT se válasszunk ki, különben NullPointException... ;)
             // Ilyenkor csak töröljük ki a mezők tartalmát (valószínűleg ekkor törlünk)
             if (cbTermék.getSelectionModel().isEmpty()) {
-                txtNev.setEditable(false);
-                txtMEgyseg.setEditable(false);
-                txtAr.setEditable(false);
-                txtMennyiseg.setEditable(false);
-                txtNev.setText("");
-                txtMEgyseg.setText("");
-                txtAr.setText("");
-                txtMennyiseg.setText("");
+//                txtNev.setEditable(false);
+//                txtMEgyseg.setEditable(false);
+//                txtAr.setEditable(false);
+//                txtMennyiseg.setEditable(false);
+                txtNev.clear();
+                txtMEgyseg.clear();
+                txtAr.clear();
+                txtMennyiseg.clear();
+                btSzerkesztes.setDisable(true);
+                btTorles.setDisable(true);
             } else {
                 String akt = cbTermék.getSelectionModel().getSelectedItem().toString();
                 System.out.println(akt);
@@ -122,6 +128,8 @@ public class MainController implements Initializable {
                         txtAr.setEditable(false);
                         txtMennyiseg.setEditable(false);
                         txtMEgyseg.setEditable(false);
+                        btSzerkesztes.setDisable(false);
+                        btTorles.setDisable(false);
                     }
                 }
 
@@ -152,6 +160,7 @@ public class MainController implements Initializable {
                     darab = Integer.parseInt(txtMennyiseg.getText());
                 } catch (NumberFormatException nan) {
                     System.out.println("Darab nem szám!");
+                    nyilvantarto.getHiba().nemszamHiba("darab");
                     hiba = true;
                 }
                 if (txtNev.getText().isEmpty()) {
@@ -202,6 +211,7 @@ public class MainController implements Initializable {
                     //btSzerkesztes.setDisable(true);
                     //btHozzaad.setDisable(false);
                     btUj.setDisable(false);
+                    btTorles.setDisable(false);
                     btSzerkesztes.setText("Szerkesztés");
                 }
             } else {
@@ -213,6 +223,7 @@ public class MainController implements Initializable {
                 //btSzerkesztes.setDisable(true);
                 btHozzaad.setDisable(true);
                 btUj.setDisable(true);
+                btTorles.setDisable(true);
             }
         }
         if (e.getSource() == btTorles) {
@@ -326,8 +337,7 @@ public class MainController implements Initializable {
     }
 
     @Override
-    public void initialize(URL url, ResourceBundle rb
-    ) {
+    public void initialize(URL url, ResourceBundle rb) {
         // TODO code application logic here
         //ArrayList<aru> aruLista = new ArrayList<>();
 
@@ -346,6 +356,11 @@ public class MainController implements Initializable {
         // TODO: ezzel valamit kezdeni kellene
     }
 
+    @FXML
+    private void admin() {
+        nyilvantarto.showAdminScreen();
+    }
+    
     @FXML
     private void nevjegy() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -367,6 +382,6 @@ public class MainController implements Initializable {
         cbTermék.setItems(olTermék);
         System.out.println(nyilvantarto.getAlma());
         lbUj.setVisible(false);
-
+        //tbAdmin.
     }
 }

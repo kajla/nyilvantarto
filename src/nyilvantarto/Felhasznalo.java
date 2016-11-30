@@ -19,19 +19,21 @@ import javax.crypto.spec.PBEKeySpec;
  *
  * @author Ádám
  */
-public class Felhasznalo implements Serializable {
+public class Felhasznalo implements Serializable, Comparable<Object> {
 
     private String fnev;
     private String jelszo;
     private String nev;
     private int telefon;
+    private int tipus;
 
-    public Felhasznalo(String fnev, String jelszo, String nev, int telefon) {
+    public Felhasznalo(String fnev, String jelszo, String nev, int telefon, int tipus) {
         try {
             this.fnev = fnev;
             //this.jelszo = jelszo;
             this.nev = nev;
             this.telefon = telefon;
+            this.tipus = tipus;
 
             String generatedSecuredPasswordHash = generateStorngPasswordHash(jelszo);
             System.out.println(generatedSecuredPasswordHash);
@@ -77,6 +79,14 @@ public class Felhasznalo implements Serializable {
 
     public void setTelefon(int telefon) {
         this.telefon = telefon;
+    }
+
+    public int getTipus() {
+        return tipus;
+    }
+
+    public void setTipus(int tipus) {
+        this.tipus = tipus;
     }
 
     @Override
@@ -137,5 +147,15 @@ public class Felhasznalo implements Serializable {
             bytes[i] = (byte) Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
         }
         return bytes;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Felhasznalo a = (Felhasznalo) o;
+        int res = String.CASE_INSENSITIVE_ORDER.compare(nev, a.getNev());
+        if (res == 0) {
+            res = nev.compareTo(a.getNev());
+        }
+        return res;
     }
 }
