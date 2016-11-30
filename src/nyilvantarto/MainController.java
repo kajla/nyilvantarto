@@ -237,6 +237,7 @@ public class MainController implements Initializable {
             btHozzaad.setDisable(false);
             btSzerkesztes.setDisable(true);
             btTorles.setDisable(true);
+            txtNev.requestFocus();
             txtNev.setEditable(true);
             txtAr.setEditable(true);
             txtMennyiseg.setEditable(true);
