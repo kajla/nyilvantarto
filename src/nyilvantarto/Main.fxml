@@ -124,14 +124,14 @@
                         </GridPane>
                      </content>
                 </Tab>
-                <Tab disable="true" text="Lista">
+                <Tab fx:id="tbLista" text="Lista">
                      <content>
-                        <TableView prefHeight="200.0" prefWidth="200.0">
+                        <TableView fx:id="tvLista" prefHeight="200.0" prefWidth="200.0">
                           <columns>
-                            <TableColumn prefWidth="75.0" text="Név" />
-                            <TableColumn prefWidth="75.0" text="C2" />
-                              <TableColumn prefWidth="75.0" text="Column X" />
-                              <TableColumn prefWidth="75.0" text="Column X" />
+                            <TableColumn fx:id="tcNev" prefWidth="75.0" text="Név" />
+                            <TableColumn fx:id="tcDarab" prefWidth="75.0" text="Darab" />
+                              <TableColumn fx:id="tcMertekegyseg" prefWidth="92.0" text="Mértékegység" />
+                              <TableColumn fx:id="tcAr" prefWidth="58.0" text="Ár" />
                           </columns>
                         </TableView>
                      </content>

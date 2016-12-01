@@ -20,6 +20,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
 /**
@@ -64,8 +66,24 @@ public class MainController implements Initializable {
     @FXML
     private Label lbUj;
     
+    // Lista tab elemei
     @FXML
-    private Tab tbAdmin;
+    private Tab tbLista = new Tab();
+    
+    @FXML
+    TableView tvLista = new TableView();
+    
+    @FXML
+    TableColumn tcNev = new TableColumn();
+    
+    @FXML
+    TableColumn tcDarab = new TableColumn();
+    
+    @FXML
+    TableColumn tcMertekegyseg = new TableColumn();
+    
+    @FXML
+    TableColumn tcAr = new TableColumn();
 
     // Bocsi :( @Ádám
 //    @FXML
@@ -353,9 +371,15 @@ public class MainController implements Initializable {
 //        } catch (ClassNotFoundException e) {
 //            System.out.println(e.toString());
 //        }
-        // TODO: ezzel valamit kezdeni kellene
+        // TODO: ezzel valamit kezdeni kellene     
     }
 
+    @FXML
+    private void tabKivalaszt (ActionEvent e) {
+//        if (e.getSource() == tbLista)
+//            System.out.println("bojler");
+    }
+    
     @FXML
     private void admin() {
         nyilvantarto.showAdminScreen();
@@ -382,6 +406,14 @@ public class MainController implements Initializable {
         cbTermék.setItems(olTermék);
         System.out.println(nyilvantarto.getAlma());
         lbUj.setVisible(false);
-        //tbAdmin.
+        
+        // Ezek így nem lesznek jók... :(
+//        for (aru termék : aruLista) {
+//            tcNev.getColumns().add(termék.getNev());
+//            tcDarab.getColumns().add(termék.getDarab());
+//            tcMertekegyseg.getColumns().add(termék.getMertekegyseg());
+//            tcAr.getColumns().add(termék.getEar());
+//        }
+        tvLista.setItems(olTermék);
     }
 }
