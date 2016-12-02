@@ -13,6 +13,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -23,6 +24,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 /**
  *
@@ -84,6 +86,9 @@ public class MainController implements Initializable {
     
     @FXML
     TableColumn tcAr = new TableColumn();
+    
+    @FXML
+    ObservableList<aru> data = FXCollections.observableArrayList();
 
     // Bocsi :( @Ádám
 //    @FXML
@@ -375,7 +380,9 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    private void tabKivalaszt (ActionEvent e) {
+    private void tabKivalaszt (Event e) {
+        if(tbLista.isSelected())
+            System.out.println("bojler");
 //        if (e.getSource() == tbLista)
 //            System.out.println("bojler");
     }
@@ -414,6 +421,15 @@ public class MainController implements Initializable {
 //            tcMertekegyseg.getColumns().add(termék.getMertekegyseg());
 //            tcAr.getColumns().add(termék.getEar());
 //        }
-        tvLista.setItems(olTermék);
+        for (aru termék : aruLista) {
+            data.add(termék);
+        }
+        tcNev.setCellValueFactory(new PropertyValueFactory<aru, String>("nev"));
+        tcDarab.setCellValueFactory(new PropertyValueFactory<aru, String>("darab"));
+        tcMertekegyseg.setCellValueFactory(new PropertyValueFactory<aru, String>("mertekegyseg"));
+        tcAr.setCellValueFactory(new PropertyValueFactory<aru, String>("ear"));
+        tvLista.setItems(data);
+        //tvLista.getColumns().addAll(tcNev, tcDarab, tcMertekegyseg, tcAr);
+        System.out.println(olTermék);
     }
 }
