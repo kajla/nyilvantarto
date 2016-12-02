@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,6 +23,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -73,6 +76,9 @@ public class MainController implements Initializable {
     private Tab tbLista = new Tab();
     
     @FXML
+    private TabPane tpTab = new TabPane();
+    
+    @FXML
     TableView tvLista = new TableView();
     
     @FXML
@@ -89,6 +95,8 @@ public class MainController implements Initializable {
     
     @FXML
     ObservableList<aru> data = FXCollections.observableArrayList();
+    
+    
 
     // Bocsi :( @Ádám
 //    @FXML
@@ -381,10 +389,29 @@ public class MainController implements Initializable {
 
     @FXML
     private void tabKivalaszt (Event e) {
-        if(tbLista.isSelected())
+        if(tbLista.isSelected()) {
             System.out.println("bojler");
+        data.removeAll(data);
+        for (aru object : aruLista) {
+            data.add(object);
+            
+        }
+        }
 //        if (e.getSource() == tbLista)
 //            System.out.println("bojler");
+//        tpTab.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
+//            @Override
+//            public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
+//                if(newValue == tbLista)
+//                    data.rem
+//                    for (aru termék : aruLista) {
+//                        data.add(termék);
+//        }
+//                tvLista.setItems(data);
+//                System.out.println("bojler");
+//            }
+//        
+//            });
     }
     
     @FXML

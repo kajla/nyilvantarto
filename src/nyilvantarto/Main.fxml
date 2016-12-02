@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nyilvantarto.MainController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nyilvantarto.MainController">
    <children>
       <BorderPane layoutX="172.0" layoutY="89.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
@@ -43,7 +43,7 @@
             </MenuBar>
          </top>
          <center>
-            <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+            <TabPane fx:id="tpTab" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
               <tabs>
                 <Tab text="Árukészlet">
                      <content>
@@ -124,7 +124,7 @@
                         </GridPane>
                      </content>
                 </Tab>
-                <Tab fx:id="tbLista" text="Lista">
+                <Tab fx:id="tbLista" onSelectionChanged="#tabKivalaszt" text="Lista">
                      <content>
                         <TableView fx:id="tvLista" prefHeight="200.0" prefWidth="200.0">
                           <columns>
