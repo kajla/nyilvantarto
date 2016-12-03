@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -70,33 +70,34 @@ public class MainController implements Initializable {
 
     @FXML
     private Label lbUj;
-    
+
+    @FXML
+    private TextField tfSzures;
+
     // Lista tab elemei
     @FXML
     private Tab tbLista = new Tab();
-    
+
     @FXML
     private TabPane tpTab = new TabPane();
-    
+
     @FXML
     TableView tvLista = new TableView();
-    
+
     @FXML
     TableColumn tcNev = new TableColumn();
-    
+
     @FXML
     TableColumn tcDarab = new TableColumn();
-    
+
     @FXML
     TableColumn tcMertekegyseg = new TableColumn();
-    
+
     @FXML
     TableColumn tcAr = new TableColumn();
-    
+
     @FXML
     ObservableList<aru> data = FXCollections.observableArrayList();
-    
-    
 
     // Bocsi :( @Ádám
 //    @FXML
@@ -369,9 +370,9 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
         // TODO code application logic here
         //ArrayList<aru> aruLista = new ArrayList<>();
-
 //        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("alma.dat")))) {
 //            while (true) {
 //                aruLista.add((aru) ois.readObject());
@@ -388,14 +389,14 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    private void tabKivalaszt (Event e) {
-        if(tbLista.isSelected()) {
-            System.out.println("bojler");
-        data.removeAll(data);
-        for (aru object : aruLista) {
-            data.add(object);
-            
-        }
+    private void tabKivalaszt(Event e) {
+        if (tbLista.isSelected()) {
+            //System.out.println("bojler");            
+            data.removeAll(data);
+            for (aru object : aruLista) {
+                data.add(object);
+
+            }
         }
 //        if (e.getSource() == tbLista)
 //            System.out.println("bojler");
@@ -413,12 +414,12 @@ public class MainController implements Initializable {
 //        
 //            });
     }
-    
+
     @FXML
     private void admin() {
         nyilvantarto.showAdminScreen();
     }
-    
+
     @FXML
     private void nevjegy() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -440,7 +441,7 @@ public class MainController implements Initializable {
         cbTermék.setItems(olTermék);
         System.out.println(nyilvantarto.getAlma());
         lbUj.setVisible(false);
-        
+
         // Ezek így nem lesznek jók... :(
 //        for (aru termék : aruLista) {
 //            tcNev.getColumns().add(termék.getNev());
@@ -451,12 +452,40 @@ public class MainController implements Initializable {
         for (aru termék : aruLista) {
             data.add(termék);
         }
-        tcNev.setCellValueFactory(new PropertyValueFactory<aru, String>("nev"));
-        tcDarab.setCellValueFactory(new PropertyValueFactory<aru, String>("darab"));
-        tcMertekegyseg.setCellValueFactory(new PropertyValueFactory<aru, String>("mertekegyseg"));
-        tcAr.setCellValueFactory(new PropertyValueFactory<aru, String>("ear"));
+        tcNev.setCellValueFactory(new PropertyValueFactory("nev"));
+        tcDarab.setCellValueFactory(new PropertyValueFactory("darab"));
+        tcMertekegyseg.setCellValueFactory(new PropertyValueFactory("mertekegyseg"));
+        tcAr.setCellValueFactory(new PropertyValueFactory("ear"));
         tvLista.setItems(data);
         //tvLista.getColumns().addAll(tcNev, tcDarab, tcMertekegyseg, tcAr);
         System.out.println(olTermék);
+    }
+
+    @FXML
+    public void szures() {
+        FilteredList<aru> fList = new FilteredList<>(data, p -> true);
+        tfSzures.textProperty().addListener((observable, oldValue, newValue)
+                -> {
+            fList.setPredicate(tfSzures -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String lowerCaseFilter = newValue.toLowerCase();
+                if (tfSzures.toString().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                }
+                return false;
+
+            });
+        });
+        SortedList<aru> sortedData = new SortedList<>(fList);
+        sortedData.comparatorProperty().bind(tvLista.comparatorProperty());
+        tvLista.setItems(sortedData);
+    }
+
+    @FXML
+    public void tfSzuresFocus() {
+        tfSzures.requestFocus();
+        //Egyszerűbbnek találtam, hogy kiszervezem külön metódusba. Talán erőforráskímélőbb. Vagy nem. :D
     }
 }
