@@ -17,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -30,16 +31,19 @@ import javafx.stage.Stage;
  * @author Ádám
  */
 public class AdminPanelController implements Initializable {
-    
+
     private Nyilvantarto nyilvantarto;
     private Stage stage;
-    
+
     @FXML
     private Button btBezar;
-    
+
+    @FXML
+    private Label lblHiba;
+
     @FXML
     ObservableList<Felhasznalo> felhasznalok = FXCollections.observableArrayList();
-    
+
     @FXML
     TableView tvFelhasznalok = new TableView();
 
@@ -47,35 +51,34 @@ public class AdminPanelController implements Initializable {
     TableColumn tcFNev = new TableColumn();
 
     @FXML
-    TableColumn tcNev= new TableColumn();
+    TableColumn tcNev = new TableColumn();
 
     @FXML
     TableColumn tcJelszo = new TableColumn();
 
     @FXML
     TableColumn tcTelefon = new TableColumn();
-    
+
     @FXML
     TableColumn tcTipus = new TableColumn();
-    
+
     @FXML
     private TextField txtFNev;
-    
+
     @FXML
     private TextField txtNev;
-    
+
     @FXML
     private PasswordField pwJelszo;
-    
+
     @FXML
     private TextField txtTelefon;
-    
+
     @FXML
     private ComboBox cbTipus;
-    
+
     @FXML
     private Button btHozzaadas;
-    
 
     /**
      * Initializes the controller class.
@@ -83,7 +86,7 @@ public class AdminPanelController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    } 
+    }
 
     void initManager(Nyilvantarto aThis, Stage stage) {
         this.nyilvantarto = aThis;
@@ -97,13 +100,15 @@ public class AdminPanelController implements Initializable {
         tcTelefon.setCellValueFactory(new PropertyValueFactory("telefon"));
         tcTipus.setCellValueFactory(new PropertyValueFactory("tipus"));
         tvFelhasznalok.setItems(felhasznalok);
-        ObservableList<String> obTipusok = FXCollections.observableArrayList("Admin","Felhasználó");
+        ObservableList<String> obTipusok = FXCollections.observableArrayList("Admin", "Felhasználó");
         cbTipus.setItems(obTipusok);
     }
+
     @FXML
     public void gombEsemenyek(ActionEvent e) {
-        if (e.getSource() == btBezar)
+        if (e.getSource() == btBezar) {
             stage.close();
+        }
         if (e.getSource() == btHozzaadas) {
             String fnev = "";
             String nev = "";
@@ -111,33 +116,39 @@ public class AdminPanelController implements Initializable {
             int telefon = 0;
             int tipus = 0;
             Boolean hiba = false;
+            String hibauzenet = "";
+            if (txtFNev.getText().isEmpty()) {
+                System.out.println("Felhasználónév üres!");
+                hiba = true;
+                hibauzenet += "Felhasználónév üres! ";
+            } else {
+                fnev = txtFNev.getText();
+            }
+            if (txtNev.getText().isEmpty()) {
+                System.out.println("Név üres!");
+                hiba = true;
+                hibauzenet += "Név üres! ";
+            } else {
+                nev = txtNev.getText();
+            }
+            if (pwJelszo.getText().isEmpty()) {
+                System.out.println("Jelszó üres!");
+                hiba = true;
+                hibauzenet += "Jelszó üres! ";
+            } else {
+                jelszo = pwJelszo.getText();
+            }
             try {
                 telefon = Integer.parseInt(txtTelefon.getText());
             } catch (NumberFormatException nan) {
                 System.out.println("Telefon nem szám!");
                 hiba = true;
-            }
-            if (txtNev.getText().isEmpty()) {
-                System.out.println("Név üres!");
-                hiba = true;
-            } else {
-                nev = txtNev.getText();
-            }
-            if (txtFNev.getText().isEmpty()) {
-                System.out.println("Felhasználónév üres!");
-                hiba = true;
-            } else {
-                fnev = txtFNev.getText();
-            }
-            if (pwJelszo.getText().isEmpty()) {
-                System.out.println("Jelszó üres!");
-                hiba = true;
-            } else {
-                jelszo = pwJelszo.getText();
+                hibauzenet += "Telefon nem szám! ";
             }
             if (cbTipus.getSelectionModel().isEmpty()) {
                 System.out.println("Típus üres!");
                 hiba = true;
+                hibauzenet += "Típus üres! ";
             } else {
                 if (cbTipus.getSelectionModel().getSelectedItem().toString() == "Admin") {
                     tipus = 0;
@@ -158,9 +169,11 @@ public class AdminPanelController implements Initializable {
                 }
                 nyilvantarto.setFelhasznalok(ideiglenes);
 // TODO: naplózás!
+            } else {
+                lblHiba.setText(hibauzenet);
+                lblHiba.setVisible(true);
             }
         }
     }
-    
-    
+
 }
