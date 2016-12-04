@@ -40,14 +40,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 public class MainController implements Initializable {
 
     private Nyilvantarto nyilvantarto;
-    private nyilvantarto.modell.Fajlkezeles fajlkezeles;
+    //private nyilvantarto.modell.Fajlkezeles fajlkezeles;
 
-    ArrayList<aru> aruLista = new ArrayList<>();
+    ArrayList<aru> aruLista; // = new ArrayList<>();
 
     ObservableList<String> olTermék = FXCollections.observableArrayList();
 
     @FXML
-    private ComboBox cbTermék = new ComboBox();
+    private ComboBox cbTermék;
 
     @FXML
     private TextField txtNev;
@@ -87,10 +87,10 @@ public class MainController implements Initializable {
 
     // Lista tab elemei
     @FXML
-    private Tab tbLista = new Tab();
+    private Tab tbLista; // = new Tab();
 
     @FXML
-    private TabPane tpTab = new TabPane();
+    private TabPane tpTab; // = new TabPane();
 
     @FXML
     TableView tvLista = new TableView();
@@ -110,7 +110,7 @@ public class MainController implements Initializable {
     @FXML
     ObservableList<aru> data = FXCollections.observableArrayList();
 
-    private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd - kk:mm:ss");
+    private final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd - kk:mm:ss");
 
     // Bocsi :( @Ádám
 //    @FXML
