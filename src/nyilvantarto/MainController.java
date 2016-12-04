@@ -73,6 +73,9 @@ public class MainController implements Initializable {
 
     @FXML
     private Button btUj;
+    
+    @FXML
+    private Button btKilepes;
 
     @FXML
     private Button btLogTorles;
@@ -89,6 +92,9 @@ public class MainController implements Initializable {
     // Lista tab elemei
     @FXML
     private Tab tbLista; // = new Tab();
+    
+    @FXML
+    private Tab tbLog;
 
     @FXML
     private TabPane tpTab; // = new TabPane();
@@ -489,13 +495,15 @@ public class MainController implements Initializable {
         //tvLista.getColumns().addAll(tcNev, tcDarab, tcMertekegyseg, tcAr);
         System.out.println(olTermék);
 
-        // Csak adminisztrátor láthassa az adminisztrációs menüt
+        // Csak adminisztrátor láthassa az adminisztrációs menüt és a log tabot
         for (Felhasznalo felhasznalo : nyilvantarto.getFelhasznalok()) {
             if (nyilvantarto.getFelhasznalonev().equals(felhasznalo.getFnev())) {
                 if (felhasznalo.getTipus() == 0) {
                     mnAdmin.setVisible(true);
+                    tbLog.setDisable(false);
                 } else {
                     mnAdmin.setVisible(false);
+                    tbLog.setDisable(true);
                 }
                 System.out.println(nyilvantarto.getFelhasznalonev() + " vs " + felhasznalo.getFnev() );
             }
