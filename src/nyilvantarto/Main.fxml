@@ -11,6 +11,7 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -155,6 +156,16 @@
                         </VBox>
                      </content>
                 </Tab>
+                  <Tab text="Log">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <TextArea fx:id="txLog" editable="false" layoutX="-1.0" prefHeight="263.0" prefWidth="600.0" />
+                              <Button fx:id="btLogTorles" layoutX="105.0" layoutY="279.0" mnemonicParsing="false" onAction="#gombEsemenyek" text="Törlés" />
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </Tab>
               </tabs>
             </TabPane>
          </center>

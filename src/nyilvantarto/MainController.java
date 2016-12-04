@@ -6,8 +6,11 @@
 package nyilvantarto;
 
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -26,6 +29,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
@@ -69,10 +73,16 @@ public class MainController implements Initializable {
     private Button btUj;
 
     @FXML
+    private Button btLogTorles;
+
+    @FXML
     private Label lbUj;
 
     @FXML
     private TextField tfSzures;
+
+    @FXML
+    private TextArea txLog;
 
     // Lista tab elemei
     @FXML
@@ -98,6 +108,8 @@ public class MainController implements Initializable {
 
     @FXML
     ObservableList<aru> data = FXCollections.observableArrayList();
+
+    private DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd - kk:mm:ss");
 
     // Bocsi :( @Ádám
 //    @FXML
@@ -215,8 +227,11 @@ public class MainController implements Initializable {
                     int szerkesztendő = 0;
                     for (aru termék : aruLista) {
                         // Jobb megoldást nem találtam... mivel NINCS egyedi azonosító! :(
-                        if (termék.getNev() == cbTermék.getSelectionModel().getSelectedItem().toString()) {//FIXME: && termék.getMertekegyseg() == txtMEgyseg.getText() && termék.getEar() == Integer.parseInt(txtAr.getText()) && termék.getDarab() == Integer.parseInt(txtMennyiseg.getText())) {
+                        if (termék.getNev().equals(cbTermék.getSelectionModel().getSelectedItem().toString())) {//FIXME: && termék.getMertekegyseg() == txtMEgyseg.getText() && termék.getEar() == Integer.parseInt(txtAr.getText()) && termék.getDarab() == Integer.parseInt(txtMennyiseg.getText())) {
                             szerkesztendő = i;
+                            txLog.appendText(dateFormat.format(new Date()) + ": "
+                                    + cbTermék.getSelectionModel().getSelectedItem().toString()
+                                    + " szerkesztve\n"); //Ezt tovább lehet majd egyszer fejleszteni, hogy többet írjon ki
                         }
                         i++;
                     }
@@ -266,9 +281,10 @@ public class MainController implements Initializable {
                 int i = 0;
                 for (aru termék : aruLista) {
                     // Jobb megoldást nem találtam... mivel NINCS egyedi azonosító! :(
-                    if (termék.getNev() == akt) {//FIXME: && termék.getMertekegyseg() == txtMEgyseg.getText() && termék.getEar() == Integer.parseInt(txtAr.getText()) && termék.getDarab() == Integer.parseInt(txtMennyiseg.getText())) {
+                    if (termék.getNev().equals(akt)) {//FIXME: && termék.getMertekegyseg() == txtMEgyseg.getText() && termék.getEar() == Integer.parseInt(txtAr.getText()) && termék.getDarab() == Integer.parseInt(txtMennyiseg.getText())) {
                         // Ezt kell törölnünk majd...
                         törlendő = i;
+                        txLog.appendText(dateFormat.format(new Date()) + ": " + akt + " eltávolítva\n");
                     }
                     // Debug
 //                    System.out.println(termék.getNev() + " vs " + akt);
@@ -347,6 +363,7 @@ public class MainController implements Initializable {
                 btUj.setDisable(false);
                 btHozzaad.setDisable(true);
                 btTorles.setDisable(false);
+                txLog.appendText(dateFormat.format(new Date()) + ": " + nev + " hozzáadva\n");
             }
         }
         if (e.getSource() == btUj) {
@@ -365,6 +382,9 @@ public class MainController implements Initializable {
             txtNev.clear();
             cbTermék.getSelectionModel().clearSelection();
             lbUj.setVisible(true);
+        }
+        if (e.getSource() == btLogTorles) {
+            txLog.clear();
         }
     }
 
