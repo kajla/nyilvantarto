@@ -80,6 +80,9 @@ public class AdminPanelController implements Initializable {
     @FXML
     private Button btHozzaadas;
 
+    @FXML
+    private Button btTorles;
+
     /**
      * Initializes the controller class.
      */
@@ -173,6 +176,16 @@ public class AdminPanelController implements Initializable {
                 lblHiba.setText(hibauzenet);
                 lblHiba.setVisible(true);
             }
+        }
+        if (e.getSource() == btTorles) {
+            felhasznalok.remove((Felhasznalo) tvFelhasznalok.getSelectionModel().getSelectedItem());
+           
+            // Felülcsapjuk a globális listát
+            ArrayList<Felhasznalo> ideiglenes = new ArrayList<>();
+            for (Felhasznalo felhasznalo : felhasznalok) {
+                ideiglenes.add(felhasznalo);
+            }
+            nyilvantarto.setFelhasznalok(ideiglenes);
         }
     }
 
