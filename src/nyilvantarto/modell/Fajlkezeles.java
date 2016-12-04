@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import nyilvantarto.Felhasznalo;
 import nyilvantarto.Nyilvantarto;
 import nyilvantarto.aru;
@@ -23,12 +25,15 @@ import nyilvantarto.aru;
  * @author Ádám
  */
 public class Fajlkezeles {
+
     private String aruFile;
     private String userFile;
-    
+    private String logFile;
+
     public Fajlkezeles() {
         this.aruFile = "aruk.dat";
         this.userFile = "felhasznalok.dat";
+        this.logFile = "log.dat";
     }
 
     public void aruMentes(Nyilvantarto nyilvantarto) {
@@ -40,7 +45,7 @@ public class Fajlkezeles {
             System.out.println("Váratlan I/O hiba történt!");
         }
     }
-    
+
     public void felhasznaloMentes(Nyilvantarto nyilvantarto) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(userFile)))) {
             for (Felhasznalo júzer : nyilvantarto.getFelhasznalok()) {
@@ -96,4 +101,29 @@ public class Fajlkezeles {
         }
         return lista;
     }
+
+    public void logMentes(Nyilvantarto nyilvantarto) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(logFile)))) {
+            oos.writeObject(nyilvantarto.getLog());
+        } catch (IOException ex) {
+            System.out.println("Váratlan I/O hiba történt!");
+        }
+    }
+
+//    public String logOlvasas() {
+//        String logTartalom = new String();
+//        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File(logFile)))) {
+//            while (true) {
+//                logTartalom = (String) ois.readObject();
+//            }
+//        } catch (FileNotFoundException ex) {
+//            Logger.getLogger(Fajlkezeles.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (IOException ex) {
+//            Logger.getLogger(Fajlkezeles.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (ClassNotFoundException ex) {
+//            Logger.getLogger(Fajlkezeles.class.getName()).log(Level.SEVERE, null, ex);
+//        } if(logTartalom.isEmpty())
+//            System.out.println("baj van");
+//        return logTartalom;
+//    }
 }

@@ -40,6 +40,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 public class MainController implements Initializable {
 
     private Nyilvantarto nyilvantarto;
+    private nyilvantarto.modell.Fajlkezeles fajlkezeles;
 
     ArrayList<aru> aruLista = new ArrayList<>();
 
@@ -367,6 +368,8 @@ public class MainController implements Initializable {
                 txLog.appendText(dateFormat.format(new Date()) + ": " + nev + " hozzáadva " + nyilvantarto.getFelhasznalonev() + " által\n");
             }
         }
+        nyilvantarto.setLog(txLog.getText());
+        
         if (e.getSource() == btUj) {
             btUj.setDisable(true);
             btHozzaad.setDisable(false);
@@ -391,7 +394,7 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+     
         // TODO code application logic here
         //ArrayList<aru> aruLista = new ArrayList<>();
 //        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("alma.dat")))) {
@@ -462,6 +465,7 @@ public class MainController implements Initializable {
         cbTermék.setItems(olTermék);
         System.out.println(nyilvantarto.getAlma());
         lbUj.setVisible(false);
+        //txLog.setText(fajlkezeles.logOlvasas());
 
         // Ezek így nem lesznek jók... :(
 //        for (aru termék : aruLista) {

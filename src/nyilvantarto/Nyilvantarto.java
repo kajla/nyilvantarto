@@ -5,15 +5,9 @@
  */
 package nyilvantarto;
 
-import java.io.EOFException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -56,6 +50,15 @@ public class Nyilvantarto extends Application {
     private Hibauzenetek hiba;
     private ArrayList<Felhasznalo> felhasznalok;
     private ArrayList<aru> aruk;
+    private String log;
+
+    public String getLog() {
+        return log;
+    }
+
+    public void setLog(String log) {
+        this.log = log;
+    }
 
     public String getFelhasznalonev() {
         return felhasznalonev;
@@ -177,6 +180,7 @@ public class Nyilvantarto extends Application {
     public void stop() {
         fajlkezeles.aruMentes(this);
         fajlkezeles.felhasznaloMentes(this);
+        fajlkezeles.logMentes(this);
         System.exit(0);
     }
 
