@@ -21,7 +21,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nyilvantarto.MainController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nyilvantarto.MainController">
    <children>
       <BorderPane layoutX="172.0" layoutY="89.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
@@ -32,7 +32,7 @@
                     <MenuItem mnemonicParsing="false" onAction="#kilepes" text="Kilépés" />
                   </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Admin">
+                <Menu fx:id="mnAdmin" mnemonicParsing="false" text="Admin">
                   <items>
                     <MenuItem mnemonicParsing="false" onAction="#admin" text="Felhasználók" />
                   </items>

@@ -25,6 +25,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
@@ -111,6 +112,9 @@ public class MainController implements Initializable {
     ObservableList<aru> data = FXCollections.observableArrayList();
 
     private final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd - kk:mm:ss");
+
+    @FXML
+    private Menu mnAdmin;
 
     // Bocsi :( @Ádám
 //    @FXML
@@ -286,7 +290,7 @@ public class MainController implements Initializable {
                     if (termék.getNev().equals(akt)) {//FIXME: && termék.getMertekegyseg() == txtMEgyseg.getText() && termék.getEar() == Integer.parseInt(txtAr.getText()) && termék.getDarab() == Integer.parseInt(txtMennyiseg.getText())) {
                         // Ezt kell törölnünk majd...
                         törlendő = i;
-                        txLog.appendText(dateFormat.format(new Date()) + ": " + akt + " eltávolítva " + nyilvantarto.getFelhasznalonev() +" által\n");
+                        txLog.appendText(dateFormat.format(new Date()) + ": " + akt + " eltávolítva " + nyilvantarto.getFelhasznalonev() + " által\n");
                     }
                     // Debug
 //                    System.out.println(termék.getNev() + " vs " + akt);
@@ -369,7 +373,7 @@ public class MainController implements Initializable {
             }
         }
         nyilvantarto.setLog(txLog.getText());
-        
+
         if (e.getSource() == btUj) {
             btUj.setDisable(true);
             btHozzaad.setDisable(false);
@@ -394,7 +398,7 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-     
+
         // TODO code application logic here
         //ArrayList<aru> aruLista = new ArrayList<>();
 //        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("alma.dat")))) {
@@ -484,6 +488,18 @@ public class MainController implements Initializable {
         tvLista.setItems(data);
         //tvLista.getColumns().addAll(tcNev, tcDarab, tcMertekegyseg, tcAr);
         System.out.println(olTermék);
+
+        // Csak adminisztrátor láthassa az adminisztrációs menüt
+        for (Felhasznalo felhasznalo : nyilvantarto.getFelhasznalok()) {
+            if (nyilvantarto.getFelhasznalonev().equals(felhasznalo.getFnev())) {
+                if (felhasznalo.getTipus() == 0) {
+                    mnAdmin.setVisible(true);
+                } else {
+                    mnAdmin.setVisible(false);
+                }
+                System.out.println(nyilvantarto.getFelhasznalonev() + " vs " + felhasznalo.getFnev() );
+            }
+        }
     }
 
     @FXML
