@@ -13,12 +13,12 @@ import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -27,7 +27,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -131,6 +130,13 @@ public class AdminPanelController implements Initializable {
                 hibauzenet += "Felhasználónév üres! ";
             } else {
                 fnev = txtFNev.getText();
+                for (Felhasznalo felhasznalo : felhasznalok) {
+                    if (felhasznalo.getFnev().equals(fnev)) {
+                        //nyilvantarto.getHiba().marfoglaltHiba(fnev);
+                        hiba = true;
+                        hibauzenet += "Felhasználónév már foglalt! ";
+                    }
+                }
             }
             if (txtNev.getText().isEmpty()) {
                 System.out.println("Név üres!");
@@ -184,34 +190,51 @@ public class AdminPanelController implements Initializable {
         }
         if (e.getSource() == btTorles) {
             Felhasznalo törlendő = (Felhasznalo) tvFelhasznalok.getSelectionModel().getSelectedItem();
-            Alert biztosan = new Alert(AlertType.CONFIRMATION);
-            biztosan.setTitle("Nyilvántartó");
-            biztosan.setHeaderText(törlendő.getNev() + " (" + törlendő.getFnev() + ") törlésére készül.");
-            biztosan.setContentText("Valóban törölni szeretné a felhasználót?");
-            // IGEN - NEM gombok hozzáadása, sajnos az igen lesz az alapértelmezett... ezt meg miért...
-            biztosan.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+            if (nyilvantarto.getFelhasznalonev().equals(törlendő.getFnev())) {
+                nyilvantarto.getHiba().onmagunkHiba();
+            } else {
+                Alert biztosan = new Alert(AlertType.CONFIRMATION);
+                biztosan.setTitle("Nyilvántartó");
+                biztosan.setHeaderText(törlendő.getNev() + " (" + törlendő.getFnev() + ") törlésére készül.");
+                biztosan.setContentText("Valóban törölni szeretné a felhasználót?");
+                // IGEN - NEM gombok hozzáadása, sajnos az igen lesz az alapértelmezett... ezt meg miért...
+                biztosan.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
 
-            // Alapértelmezett gombok felcserélése + magyarítás
-            Button btIgen = (Button) biztosan.getDialogPane().lookupButton(ButtonType.YES);
-            Button btNem = (Button) biztosan.getDialogPane().lookupButton(ButtonType.NO);
-            btIgen.setDefaultButton(false);
-            btNem.setDefaultButton(true);
-            btIgen.setText("Igen");
-            btNem.setText("Nem");
+                // Alapértelmezett gombok felcserélése + magyarítás
+                Button btIgen = (Button) biztosan.getDialogPane().lookupButton(ButtonType.YES);
+                Button btNem = (Button) biztosan.getDialogPane().lookupButton(ButtonType.NO);
+                btIgen.setDefaultButton(false);
+                btNem.setDefaultButton(true);
+                btIgen.setText("Igen");
+                btNem.setText("Nem");
 
-            Optional<ButtonType> eredmeny = biztosan.showAndWait();
-            if (eredmeny.get() == ButtonType.YES) {
-                // Sajnos ezt a felhasználót elveszítettük...
-                felhasznalok.remove((Felhasznalo) tvFelhasznalok.getSelectionModel().getSelectedItem());
+                Optional<ButtonType> eredmeny = biztosan.showAndWait();
+                if (eredmeny.get() == ButtonType.YES) {
+                    // Sajnos ezt a felhasználót elveszítettük...
+                    felhasznalok.remove((Felhasznalo) tvFelhasznalok.getSelectionModel().getSelectedItem());
 
-                // Felülcsapjuk a globális listát
-                ArrayList<Felhasznalo> ideiglenes = new ArrayList<>();
-                for (Felhasznalo felhasznalo : felhasznalok) {
-                    ideiglenes.add(felhasznalo);
+                    // Felülcsapjuk a globális listát
+                    ArrayList<Felhasznalo> ideiglenes = new ArrayList<>();
+                    for (Felhasznalo felhasznalo : felhasznalok) {
+                        ideiglenes.add(felhasznalo);
+                    }
+                    nyilvantarto.setFelhasznalok(ideiglenes);
                 }
-                nyilvantarto.setFelhasznalok(ideiglenes);
             }
         }
+    }
+
+    public void szerkesztes(Event e) {
+//        Felhasznalo akt = (Felhasznalo) tvFelhasznalok.getSelectionModel().getSelectedItem();
+//        txtFNev.setText(akt.getFnev());
+//        txtNev.setText(akt.getNev());
+//        txtTelefon.setText(Integer.toString(akt.getTelefon()));
+//        if (akt.getTipus() == 0) {
+//            cbTipus.getSelectionModel().select("Admin");
+//        } else {
+//            cbTipus.getSelectionModel().select("Felhasználó");
+//        }
+
     }
 
 }
