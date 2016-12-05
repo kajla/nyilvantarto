@@ -399,6 +399,7 @@ public class MainController implements Initializable {
         }
         if (e.getSource() == btLogTorles) {
             txLog.clear();
+            nyilvantarto.setLog("");
         }
     }
 
