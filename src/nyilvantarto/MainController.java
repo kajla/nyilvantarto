@@ -508,6 +508,8 @@ public class MainController implements Initializable {
                 System.out.println(nyilvantarto.getFelhasznalonev() + " vs " + felhasznalo.getFnev() );
             }
         }
+        
+        txLog.setText(nyilvantarto.getLog());
     }
 
     @FXML

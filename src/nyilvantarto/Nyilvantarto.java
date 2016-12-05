@@ -111,6 +111,7 @@ public class Nyilvantarto extends Application {
         //this.felhasznalok = fajlkezeles.felhasznaloOlvasas("felhasznalok.dat"); //--> TODO
         this.felhasznalok = fajlkezeles.felhasznaloOlvasas();
         this.aruk = fajlkezeles.aruOlvasas();
+        this.log = fajlkezeles.logOlvasas();
         this.alma = 0; //--> XXX TESZTHEZ! Objektum jól viszi-e át a változókat
     }
 

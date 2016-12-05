@@ -14,8 +14,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import nyilvantarto.Felhasznalo;
 import nyilvantarto.Nyilvantarto;
 import nyilvantarto.aru;
@@ -26,9 +24,9 @@ import nyilvantarto.aru;
  */
 public class Fajlkezeles {
 
-    private String aruFile;
-    private String userFile;
-    private String logFile;
+    private final String aruFile;
+    private final String userFile;
+    private final String logFile;
 
     public Fajlkezeles() {
         this.aruFile = "aruk.dat";
@@ -110,20 +108,25 @@ public class Fajlkezeles {
         }
     }
 
-//    public String logOlvasas() {
-//        String logTartalom = new String();
-//        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File(logFile)))) {
-//            while (true) {
-//                logTartalom = (String) ois.readObject();
-//            }
-//        } catch (FileNotFoundException ex) {
-//            Logger.getLogger(Fajlkezeles.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (IOException ex) {
-//            Logger.getLogger(Fajlkezeles.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (ClassNotFoundException ex) {
-//            Logger.getLogger(Fajlkezeles.class.getName()).log(Level.SEVERE, null, ex);
-//        } if(logTartalom.isEmpty())
-//            System.out.println("baj van");
-//        return logTartalom;
-//    }
+    public String logOlvasas() {
+        String logTartalom = new String();
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File(logFile)))) {
+            while (true) {
+                logTartalom = (String) ois.readObject();
+            }
+        } catch (EOFException e) {
+            // Fájl vége
+        } catch (FileNotFoundException e) {
+            // Ha nincs meg a fájl, akkor szimplán kezdjünk egy üres naplót. :)
+            logTartalom = "";
+        } catch (IOException e) {
+            System.out.println("Váratlan I/O hiba történt!");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Az osztály nem található!");
+        }
+        if (logTartalom.isEmpty()) {
+            System.out.println("A napló még üres.");
+        }
+        return logTartalom;
+    }
 }
