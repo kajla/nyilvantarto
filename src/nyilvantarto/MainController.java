@@ -73,7 +73,7 @@ public class MainController implements Initializable {
 
     @FXML
     private Button btUj;
-    
+
     @FXML
     private Button btKilepes;
 
@@ -92,7 +92,7 @@ public class MainController implements Initializable {
     // Lista tab elemei
     @FXML
     private Tab tbLista; // = new Tab();
-    
+
     @FXML
     private Tab tbLog;
 
@@ -433,6 +433,9 @@ public class MainController implements Initializable {
 
             }
         }
+        if (tbLog.isSelected()) {
+            txLog.setText(nyilvantarto.getLog());
+        }
 //        if (e.getSource() == tbLista)
 //            System.out.println("bojler");
 //        tpTab.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
@@ -506,10 +509,10 @@ public class MainController implements Initializable {
                     mnAdmin.setVisible(false);
                     tbLog.setDisable(true);
                 }
-                System.out.println(nyilvantarto.getFelhasznalonev() + " vs " + felhasznalo.getFnev() );
+                System.out.println(nyilvantarto.getFelhasznalonev() + " vs " + felhasznalo.getFnev());
             }
         }
-        
+
         txLog.setText(nyilvantarto.getLog());
     }
 
