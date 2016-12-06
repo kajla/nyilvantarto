@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 public class teszt {
 
     public static void main(String[] args) {
-        Felhasznalo emberek = new Felhasznalo("alma", "alma", "korte", 0210, 0);
+        Felhasznalo emberek = new Felhasznalo("alma", "alma", "korte", "+36301234567", 0);
         try {
             //Felhasznalo emberek2 = new Felhasznalo("alma", "kisalma", "korte", 0210);
 
