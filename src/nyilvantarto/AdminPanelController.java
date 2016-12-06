@@ -12,6 +12,8 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -87,6 +89,9 @@ public class AdminPanelController implements Initializable {
     @FXML
     private Button btTorles;
 
+    @FXML
+    private TextField txtSzures;
+
     /**
      * Initializes the controller class.
      */
@@ -104,11 +109,12 @@ public class AdminPanelController implements Initializable {
         tcFNev.setCellValueFactory(new PropertyValueFactory("fnev"));
         tcNev.setCellValueFactory(new PropertyValueFactory("nev"));
         tcJelszo.setCellValueFactory(new PropertyValueFactory("*****"));
+        tcJelszo.setVisible(false);
         tcTelefon.setCellValueFactory(new PropertyValueFactory("telefon"));
         tcTipus.setCellValueFactory(new PropertyValueFactory("tipus"));
         tvFelhasznalok.setItems(felhasznalok);
         ObservableList<String> obTipusok = FXCollections.observableArrayList("Admin", "Felhasználó");
-        cbTipus.setItems(obTipusok);
+        cbTipus.setItems(obTipusok);;
     }
 
     @FXML
@@ -120,7 +126,7 @@ public class AdminPanelController implements Initializable {
             String fnev = "";
             String nev = "";
             String jelszo = "";
-            int telefon = 0;
+            String telefon = "";
             int tipus = 0;
             Boolean hiba = false;
             String hibauzenet = "";
@@ -152,12 +158,12 @@ public class AdminPanelController implements Initializable {
             } else {
                 jelszo = pwJelszo.getText();
             }
-            try {
-                telefon = Integer.parseInt(txtTelefon.getText());
-            } catch (NumberFormatException nan) {
-                System.out.println("Telefon nem szám!");
+            if (txtTelefon.getText().isEmpty()) {
+                System.out.println("Telefon üres!");
                 hiba = true;
-                hibauzenet += "Telefon nem szám! ";
+                hibauzenet += "Telefon üres! ";
+            } else {
+                telefon = txtTelefon.getText();
             }
             if (cbTipus.getSelectionModel().isEmpty()) {
                 System.out.println("Típus üres!");
@@ -183,6 +189,7 @@ public class AdminPanelController implements Initializable {
                 }
                 nyilvantarto.setFelhasznalok(ideiglenes);
 // TODO: naplózás!
+                nyilvantarto.addLog(nyilvantarto.getFelhasznalonev() + " hozzáadott egy új felhasználót: " + fnev);
             } else {
                 lblHiba.setText(hibauzenet);
                 lblHiba.setVisible(true);
@@ -219,6 +226,7 @@ public class AdminPanelController implements Initializable {
                         ideiglenes.add(felhasznalo);
                     }
                     nyilvantarto.setFelhasznalok(ideiglenes);
+                    nyilvantarto.addLog(nyilvantarto.getFelhasznalonev() + " törölt egy felhasználót: " + törlendő.getFnev());
                 }
             }
         }
@@ -235,6 +243,28 @@ public class AdminPanelController implements Initializable {
 //            cbTipus.getSelectionModel().select("Felhasználó");
 //        }
 
+    }
+
+    @FXML
+    public void szures() {
+        FilteredList<Felhasznalo> fList = new FilteredList<>(felhasznalok, p -> true);
+        txtSzures.textProperty().addListener((observable, oldValue, newValue)
+                -> {
+            fList.setPredicate(txtSzures -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String lowerCaseFilter = newValue.toLowerCase();
+                if (txtSzures.toString().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                }
+                return false;
+
+            });
+        });
+        SortedList<Felhasznalo> sortedData = new SortedList<>(fList);
+        sortedData.comparatorProperty().bind(tvFelhasznalok.comparatorProperty());
+        tvFelhasznalok.setItems(sortedData);
     }
 
 }
