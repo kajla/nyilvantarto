@@ -68,7 +68,7 @@ public class Nyilvantarto extends Application {
         if (this.log.isEmpty()) {
             this.log = sdf.format(new Date()) + ": " + log;
         } else {
-            this.log = this.log + "\n" + sdf.format(new Date()) + ": " + log;
+            this.log = this.log + "\n" + sdf.format(new Date()) + ": " + log + "\n";
         }
     }
 
