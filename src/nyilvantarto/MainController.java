@@ -240,10 +240,10 @@ public class MainController implements Initializable {
                         // Jobb megoldást nem találtam... mivel NINCS egyedi azonosító! :(
                         if (termék.getNev().equals(cbTermék.getSelectionModel().getSelectedItem().toString())) {//FIXME: && termék.getMertekegyseg() == txtMEgyseg.getText() && termék.getEar() == Integer.parseInt(txtAr.getText()) && termék.getDarab() == Integer.parseInt(txtMennyiseg.getText())) {
                             szerkesztendő = i;
-                            txLog.appendText(dateFormat.format(new Date()) + ": "
-                                    + cbTermék.getSelectionModel().getSelectedItem().toString()
+                            nyilvantarto.addLog(
+                                     cbTermék.getSelectionModel().getSelectedItem().toString()
                                     + " szerkesztve lett "
-                                    + nyilvantarto.getFelhasznalonev() + " által\n"); //Ezt tovább lehet majd egyszer fejleszteni, hogy többet írjon ki
+                                    + nyilvantarto.getFelhasznalonev() + " által"); //Ezt tovább lehet majd egyszer fejleszteni, hogy többet írjon ki
                         }
                         i++;
                     }
@@ -296,7 +296,7 @@ public class MainController implements Initializable {
                     if (termék.getNev().equals(akt)) {//FIXME: && termék.getMertekegyseg() == txtMEgyseg.getText() && termék.getEar() == Integer.parseInt(txtAr.getText()) && termék.getDarab() == Integer.parseInt(txtMennyiseg.getText())) {
                         // Ezt kell törölnünk majd...
                         törlendő = i;
-                        txLog.appendText(dateFormat.format(new Date()) + ": " + akt + " eltávolítva " + nyilvantarto.getFelhasznalonev() + " által\n");
+                        nyilvantarto.addLog(akt + " eltávolítva " + nyilvantarto.getFelhasznalonev() + " által");
                     }
                     // Debug
 //                    System.out.println(termék.getNev() + " vs " + akt);
@@ -375,10 +375,10 @@ public class MainController implements Initializable {
                 btUj.setDisable(false);
                 btHozzaad.setDisable(true);
                 btTorles.setDisable(false);
-                txLog.appendText(dateFormat.format(new Date()) + ": " + nev + " hozzáadva " + nyilvantarto.getFelhasznalonev() + " által\n");
+                nyilvantarto.addLog(nev + " hozzáadva " + nyilvantarto.getFelhasznalonev() + " által");
             }
         }
-        nyilvantarto.setLog(txLog.getText());
+        //nyilvantarto.setLog(txLog.getText());
 
         if (e.getSource() == btUj) {
             btUj.setDisable(true);
