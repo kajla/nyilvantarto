@@ -24,10 +24,10 @@ public class Felhasznalo implements Serializable, Comparable<Object> {
     private String fnev;
     private String jelszo;
     private String nev;
-    private int telefon;
+    private String telefon;
     private int tipus;
 
-    public Felhasznalo(String fnev, String jelszo, String nev, int telefon, int tipus) {
+    public Felhasznalo(String fnev, String jelszo, String nev, String telefon, int tipus) {
         try {
             this.fnev = fnev;
             //this.jelszo = jelszo;
@@ -36,7 +36,7 @@ public class Felhasznalo implements Serializable, Comparable<Object> {
             this.tipus = tipus;
 
             String generatedSecuredPasswordHash = generateStorngPasswordHash(jelszo);
-            System.out.println(generatedSecuredPasswordHash);
+            //System.out.println(generatedSecuredPasswordHash);
             this.jelszo = generatedSecuredPasswordHash;
 
         } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
@@ -73,11 +73,11 @@ public class Felhasznalo implements Serializable, Comparable<Object> {
         this.nev = nev;
     }
 
-    public int getTelefon() {
+    public String getTelefon() {
         return telefon;
     }
 
-    public void setTelefon(int telefon) {
+    public void setTelefon(String telefon) {
         this.telefon = telefon;
     }
 
@@ -91,7 +91,7 @@ public class Felhasznalo implements Serializable, Comparable<Object> {
 
     @Override
     public String toString() {
-        return "Felhasznalo{" + "fnev=" + fnev + ", jelszo=" + jelszo + ", nev=" + nev + ", telefon=" + telefon + '}';
+        return "Felhasználó{" + "felhasználónév=" + fnev + ", jelszó=" + jelszo + ", név=" + nev + ", telefon=" + telefon + '}';
     }
 
     private static String generateStorngPasswordHash(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
