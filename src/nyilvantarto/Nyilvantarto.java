@@ -6,7 +6,9 @@
 package nyilvantarto;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -58,6 +60,16 @@ public class Nyilvantarto extends Application {
 
     public void setLog(String log) {
         this.log = log;
+    }
+
+    public void addLog(String log) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd - kk:mm:ss");
+        sdf.format(new Date());
+        if (this.log.isEmpty()) {
+            this.log = sdf.format(new Date()) + ": " + log;
+        } else {
+            this.log = this.log + "\n" + sdf.format(new Date()) + ": " + log;
+        }
     }
 
     public String getFelhasznalonev() {
@@ -156,7 +168,7 @@ public class Nyilvantarto extends Application {
             hiba.fajlHiba("Main.fxml");
         }
     }
-    
+
     // BETA
     public void showAdminScreen() {
         try {
@@ -164,13 +176,13 @@ public class Nyilvantarto extends Application {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("AdminPanel.fxml"));
             Scene alma = new Scene((Parent) loader.load());
             AdminPanelController controller = loader.<AdminPanelController>getController();
-            
+
             Stage stage = new Stage();
             controller.initManager(this, stage);
             stage.setScene(alma);
             stage.setTitle("Nyilvántartó");
             stage.showAndWait();
-            
+
         } catch (IOException ex) {
             hiba.fajlHiba("AdminPanel.fxml");
         }
