@@ -114,7 +114,7 @@ public class AdminPanelController implements Initializable {
         tcTipus.setCellValueFactory(new PropertyValueFactory("tipus"));
         tvFelhasznalok.setItems(felhasznalok);
         ObservableList<String> obTipusok = FXCollections.observableArrayList("Admin", "Felhasználó");
-        cbTipus.setItems(obTipusok);;
+        cbTipus.setItems(obTipusok);
     }
 
     @FXML
