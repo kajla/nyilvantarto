@@ -188,6 +188,10 @@ public class AdminPanelController implements Initializable {
                     ideiglenes.add(felhasznalo);
                 }
                 nyilvantarto.setFelhasznalok(ideiglenes);
+                txtFNev.clear();
+                txtNev.clear();
+                pwJelszo.clear();
+                txtTelefon.clear();
 // TODO: naplózás!
                 nyilvantarto.addLog(nyilvantarto.getFelhasznalonev() + " hozzáadott egy új felhasználót: " + fnev);
             } else {
