@@ -1,7 +1,8 @@
 # Nyilvántartó szoftver
 
-A szoftver fejlesztés alatt áll.
+Egy árukészlet nyilvántartását tartja számon, felhasználókezeléssel. A szoftver fejlesztés alatt áll.
 
-Fejlesztők:
-Szabó Gábor
-Radovits Ádám
+####Fejlesztők:
+- Szabó Gábor
+- Radovits Ádám
+
