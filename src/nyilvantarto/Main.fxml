@@ -29,7 +29,7 @@
               <menus>
                 <Menu mnemonicParsing="false" text="Fájl">
                   <items>
-                        <MenuItem mnemonicParsing="false" text="Kijelentkezés" />
+                        <MenuItem mnemonicParsing="false" onAction="#kijelentkezes" text="Kijelentkezés" />
                     <MenuItem mnemonicParsing="false" onAction="#kilepes" text="Kilépés" />
                   </items>
                 </Menu>
