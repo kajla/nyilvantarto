@@ -33,6 +33,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
 /**
  *
@@ -152,6 +153,14 @@ public class MainController implements Initializable {
         //nyilvantarto.setAruk(aruLista);
         //Plat
     }
+    
+    @FXML
+    private void kijelentkezes() {
+        Stage main = (Stage) nyilvantarto.getScene().getWindow();
+        main.close();
+        nyilvantarto.setFelhasznalonev("");
+        nyilvantarto.showLoginScreen(main);
+    }
 
     @FXML
     private void SelectedIndexChanged(ActionEvent e) {
@@ -241,7 +250,7 @@ public class MainController implements Initializable {
                         if (termék.getNev().equals(cbTermék.getSelectionModel().getSelectedItem().toString())) {//FIXME: && termék.getMertekegyseg() == txtMEgyseg.getText() && termék.getEar() == Integer.parseInt(txtAr.getText()) && termék.getDarab() == Integer.parseInt(txtMennyiseg.getText())) {
                             szerkesztendő = i;
                             nyilvantarto.addLog(
-                                     cbTermék.getSelectionModel().getSelectedItem().toString()
+                                    cbTermék.getSelectionModel().getSelectedItem().toString()
                                     + " szerkesztve lett "
                                     + nyilvantarto.getFelhasznalonev() + " által"); //Ezt tovább lehet majd egyszer fejleszteni, hogy többet írjon ki
                         }
