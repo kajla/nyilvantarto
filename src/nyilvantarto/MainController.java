@@ -10,7 +10,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -21,8 +21,10 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -33,6 +35,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
@@ -77,6 +83,9 @@ public class MainController implements Initializable {
 
     @FXML
     private Button btKilepes;
+
+    @FXML
+    private Button btMegse;
 
     @FXML
     private Button btLogTorles;
@@ -153,7 +162,7 @@ public class MainController implements Initializable {
         //nyilvantarto.setAruk(aruLista);
         //Plat
     }
-    
+
     @FXML
     private void kijelentkezes() {
         Stage main = (Stage) nyilvantarto.getScene().getWindow();
@@ -206,7 +215,6 @@ public class MainController implements Initializable {
     private void gombEsemenyek(ActionEvent e) {
         if (e.getSource() == btSzerkesztes) {
             if (btUj.isDisabled()) {
-
                 String nev = "";
                 String megyseg = "";
                 int ar = 0;
@@ -298,33 +306,51 @@ public class MainController implements Initializable {
             // Ha NEM üres ("Válasszon" is üres!!!)
             if (!cbTermék.getSelectionModel().isEmpty()) {
                 String akt = cbTermék.getSelectionModel().getSelectedItem().toString(); //cbTermék.valueProperty().getValue().toString();
-                int törlendő = 0;
-                int i = 0;
-                for (aru termék : aruLista) {
-                    // Jobb megoldást nem találtam... mivel NINCS egyedi azonosító! :(
-                    if (termék.getNev().equals(akt)) {//FIXME: && termék.getMertekegyseg() == txtMEgyseg.getText() && termék.getEar() == Integer.parseInt(txtAr.getText()) && termék.getDarab() == Integer.parseInt(txtMennyiseg.getText())) {
-                        // Ezt kell törölnünk majd...
-                        törlendő = i;
-                        nyilvantarto.addLog(akt + " eltávolítva " + nyilvantarto.getFelhasznalonev() + " által");
-                    }
-                    // Debug
+                Alert biztosan = new Alert(Alert.AlertType.CONFIRMATION);
+                biztosan.setTitle("Nyilvántartó");
+                biztosan.setHeaderText(akt + " törlésére készül.");
+                biztosan.setContentText("Valóban törölni szeretné az árucikket?");
+                // IGEN - NEM gombok hozzáadása, sajnos az igen lesz az alapértelmezett... ezt meg miért...
+                biztosan.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+
+                // Alapértelmezett gombok felcserélése + magyarítás
+                Button btIgen = (Button) biztosan.getDialogPane().lookupButton(ButtonType.YES);
+                Button btNem = (Button) biztosan.getDialogPane().lookupButton(ButtonType.NO);
+                btIgen.setDefaultButton(false);
+                btNem.setDefaultButton(true);
+                btIgen.setText("Igen");
+                btNem.setText("Nem");
+
+                Optional<ButtonType> eredmeny = biztosan.showAndWait();
+                if (eredmeny.get() == ButtonType.YES) {
+                    int törlendő = 0;
+                    int i = 0;
+                    for (aru termék : aruLista) {
+                        // Jobb megoldást nem találtam... mivel NINCS egyedi azonosító! :(
+                        if (termék.getNev().equals(akt)) {//FIXME: && termék.getMertekegyseg() == txtMEgyseg.getText() && termék.getEar() == Integer.parseInt(txtAr.getText()) && termék.getDarab() == Integer.parseInt(txtMennyiseg.getText())) {
+                            // Ezt kell törölnünk majd...
+                            törlendő = i;
+                            nyilvantarto.addLog(akt + " eltávolítva " + nyilvantarto.getFelhasznalonev() + " által");
+                        }
+                        // Debug
 //                    System.out.println(termék.getNev() + " vs " + akt);
 //                    System.out.println(termék.getMertekegyseg() + " vs " + txtMEgyseg.getText());
 //                    System.out.println(termék.getEar() + " vs " + txtAr.getText());
 //                    System.out.println(termék.getDarab() + " vs " + txtMennyiseg.getText());
-                    i++;
-                }
-                // Töröljük a listából az elemet
-                aruLista.remove(törlendő);
-                // Kiválasztott elemet töröljük
-                cbTermék.getSelectionModel().select("Válasszon");
-                // Mindent kiírtunk...
-                olTermék.clear();
-                // Felülcsapjuk a globális listát
-                nyilvantarto.setAruk(aruLista);
-                // Újra feltöltjük, because erőforrás pazarlás most nem érdekel...
-                for (aru termék : aruLista) {
-                    olTermék.add(termék.getNev());
+                        i++;
+                    }
+                    // Töröljük a listából az elemet
+                    aruLista.remove(törlendő);
+                    // Kiválasztott elemet töröljük
+                    cbTermék.getSelectionModel().select("Válasszon");
+                    // Mindent kiírtunk...
+                    olTermék.clear();
+                    // Felülcsapjuk a globális listát
+                    nyilvantarto.setAruk(aruLista);
+                    // Újra feltöltjük, because erőforrás pazarlás most nem érdekel...
+                    for (aru termék : aruLista) {
+                        olTermék.add(termék.getNev());
+                    }
                 }
             }
         }
@@ -405,10 +431,23 @@ public class MainController implements Initializable {
             txtNev.clear();
             cbTermék.getSelectionModel().clearSelection();
             lbUj.setVisible(true);
+            btMegse.setDisable(false);
         }
         if (e.getSource() == btLogTorles) {
             txLog.clear();
             nyilvantarto.setLog("");
+        }
+        if (e.getSource() == btMegse) {
+            cbTermék.getSelectionModel().select("Válasszon");
+            btUj.setDisable(false);
+            btMegse.setDisable(true);
+            btHozzaad.setDisable(true);
+            btTorles.setDisable(true);
+            txtNev.setEditable(false);
+            txtAr.setEditable(false);
+            txtMennyiseg.setEditable(false);
+            txtMEgyseg.setEditable(false);
+            lbUj.setVisible(false);
         }
     }
 
