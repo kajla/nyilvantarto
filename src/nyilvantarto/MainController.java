@@ -506,7 +506,7 @@ public class MainController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Névjegy");
         alert.setHeaderText("Nyilvántartó alkalmazás");
-        alert.setContentText("Ez egy nyilvántartó alkalmazás.\n\nKészítők:\nSzabó Gábor\nRadovits Ádám.");
+        alert.setContentText("Ez egy nyilvántartó alkalmazás.\n\nKészítők:\nSzabó Gábor\nRadovits Ádám");
         alert.showAndWait();
     }
 
@@ -585,5 +585,29 @@ public class MainController implements Initializable {
     public void tfSzuresFocus() {
         tfSzures.requestFocus();
         //Egyszerűbbnek találtam, hogy kiszervezem külön metódusba. Talán erőforráskímélőbb. Vagy nem. :D
+    }
+    
+    @FXML
+    private void aruExport () {
+        nyilvantarto.getFajlkezeles().aruExport(nyilvantarto);
+        nyilvantarto.addLog(nyilvantarto.getFelhasznalonev() + " exportálta az árucikkeket");
+    }
+    
+    @FXML
+    private void aruImport () {
+        nyilvantarto.getFajlkezeles().aruImport(nyilvantarto);
+        nyilvantarto.addLog(nyilvantarto.getFelhasznalonev() + " importálta az árucikkeket");
+        
+        // Törlés és újrafelvétel
+        olTermék.clear();
+        this.aruLista = nyilvantarto.getAruk();
+        for (aru termék : nyilvantarto.getAruk()) {
+            olTermék.add(termék.getNev());
+        }
+        data.clear();
+        for (aru termék : nyilvantarto.getAruk()) {
+            data.add(termék);
+        }
+        lbUj.setVisible(false);
     }
 }

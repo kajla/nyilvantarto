@@ -29,8 +29,10 @@
               <menus>
                 <Menu mnemonicParsing="false" text="Fájl">
                   <items>
-                        <MenuItem mnemonicParsing="false" onAction="#kijelentkezes" text="Kijelentkezés" />
+                        <MenuItem mnemonicParsing="false" onAction="#aruImport" text="Importálás" />
+                        <MenuItem mnemonicParsing="false" onAction="#aruExport" text="Exportálás" />
                     <MenuItem mnemonicParsing="false" onAction="#kilepes" text="Kilépés" />
+                        <MenuItem mnemonicParsing="false" onAction="#kijelentkezes" text="Kijelentkezés" />
                   </items>
                 </Menu>
                 <Menu fx:id="mnAdmin" mnemonicParsing="false" text="Admin">

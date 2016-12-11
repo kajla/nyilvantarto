@@ -48,8 +48,8 @@ public class Nyilvantarto extends Application {
     private Scene scene;
     private int alma;
     private String felhasznalonev;
-    private Fajlkezeles fajlkezeles;
-    private Hibauzenetek hiba;
+    private final Fajlkezeles fajlkezeles;
+    private final Hibauzenetek hiba;
     private ArrayList<Felhasznalo> felhasznalok;
     private ArrayList<aru> aruk;
     private String log;
@@ -114,6 +114,10 @@ public class Nyilvantarto extends Application {
 
     public Hibauzenetek getHiba() {
         return hiba;
+    }
+
+    public Fajlkezeles getFajlkezeles() {
+        return fajlkezeles;
     }
 
     public Nyilvantarto() {
