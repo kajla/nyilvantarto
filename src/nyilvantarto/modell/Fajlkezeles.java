@@ -168,9 +168,9 @@ public class Fajlkezeles {
                 System.out.println("Váratlan I/O hiba történt!");
                 nyilvantarto.getHiba().fajlioHiba(fajl.getName());
             }
-        }
-        if (fajl.exists()) {
-            nyilvantarto.getHiba().exportSiker(fajl.getName());
+            if (fajl.exists()) {
+                nyilvantarto.getHiba().exportSiker(fajl.getName());
+            }
         }
     }
 
@@ -211,16 +211,15 @@ public class Fajlkezeles {
                 System.out.println("Váratlan I/O hiba történt!");
                 nyilvantarto.getHiba().fajlioHiba(fajl.getName());
             }
-        }
-        if (lista.isEmpty()) {
-            System.out.println("A lista üres!");
-            nyilvantarto.getHiba().importUres();
-        } else {
-            // Rendezzük a felvett listát
-            Collections.sort(lista);
-            nyilvantarto.setAruk(lista);
-            nyilvantarto.getHiba().importEredmeny(importDarab);
-            // TODO: csak azt töltsük be, ami új, illetve meglévőnek frissítsük az értékét
+            if (lista.isEmpty()) {
+                System.out.println("A lista üres!");
+                nyilvantarto.getHiba().importUres();
+            } else {
+                // Rendezzük a felvett listát
+                Collections.sort(lista);
+                nyilvantarto.setAruk(lista);
+                nyilvantarto.getHiba().importEredmeny(importDarab);
+                // TODO: csak azt töltsük be, ami új, illetve meglévőnek frissítsük az értékét
 //            for (aru termékImport : lista) {
 //                for (aru termék : nyilvantarto.getAruk()) {
 //                    if (termék.equals(termékImport)) {
@@ -230,6 +229,7 @@ public class Fajlkezeles {
 //                    }
 //                }
 //            }
+            }
         }
     }
 }
