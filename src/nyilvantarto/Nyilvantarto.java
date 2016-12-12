@@ -125,7 +125,7 @@ public class Nyilvantarto extends Application {
         this.fajlkezeles = new Fajlkezeles();
         this.hiba = new Hibauzenetek();
         //this.felhasznalok = fajlkezeles.felhasznaloOlvasas("felhasznalok.dat"); //--> TODO
-        this.felhasznalok = fajlkezeles.felhasznaloOlvasas();
+        fajlkezeles.felhasznaloOlvasas(this);
         fajlkezeles.aruOlvasas(this);
         this.log = fajlkezeles.logOlvasas();
     }
@@ -150,6 +150,9 @@ public class Nyilvantarto extends Application {
             // Ezzel megoldjuk az átméretezési hibát
             stage.sizeToScene();
             stage.show();
+            if (getaktFelhasznalo() != null) {
+                getHiba().elsoInditas();
+            }
         } catch (IOException ex) {
             // Valaha is ezek meghívásra kerülnének?! /csak mert ezek a jar fájlban lesznek/
             // FIXME: nem működik, hisz ha ez lefut, akkor már nagy gondok vannak...

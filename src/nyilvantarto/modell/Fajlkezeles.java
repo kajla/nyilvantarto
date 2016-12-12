@@ -17,7 +17,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import javafx.stage.FileChooser;
@@ -93,7 +92,7 @@ public class Fajlkezeles {
         nyilvantarto.setAruk(lista);
     }
 
-    public ArrayList<Felhasznalo> felhasznaloOlvasas() {
+    public void felhasznaloOlvasas(Nyilvantarto nyilvantarto) {
         ArrayList<Felhasznalo> lista = new ArrayList<>();
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File(userFile)))) {
             while (true) {
@@ -113,9 +112,11 @@ public class Fajlkezeles {
             System.out.println("Az osztály nem található!");
         }
         if (lista.isEmpty()) {
-            System.out.println("A lista üres!");
+//            System.out.println("A lista üres!");
+            lista.add(new Felhasznalo("admin", "admin", "Admin Felhasználó", "+36 1 123 4567", 0));
+            nyilvantarto.setaktFelhasznalo(lista.get(0));
         }
-        return lista;
+        nyilvantarto.setFelhasznalok(lista);
     }
 
     public void logMentes(Nyilvantarto nyilvantarto) {

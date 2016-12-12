@@ -63,7 +63,7 @@ public class Hibauzenetek {
         alert.setContentText("Sikeresen exportáltuk a árucikkeket!\nFájl neve: " + s);
         alert.showAndWait();
     }
-    
+
     public void importNemSzamHiba() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Nyilvántartó");
@@ -79,12 +79,20 @@ public class Hibauzenetek {
         alert.setContentText("A megadott CSV fájl egyetlen árut sem tartalmaz!");
         alert.showAndWait();
     }
-    
+
     public void importEredmeny(int db) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Nyilvántartó");
         alert.setHeaderText("Az importálás sikeres.");
         alert.setContentText("Sikeresen beimportáltuk a CSV fájlt!\nFelvett elemek száma: " + db);
+        alert.showAndWait();
+    }
+
+    public void elsoInditas() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Nyilvántartó");
+        alert.setHeaderText("Az alkalmazást feltehetően először indítják.");
+        alert.setContentText("Nem található a felhasznalok.dat fájl, ami arra enged következtetni, hogy ez a program első indítása.\nAlapértelmezett belépés engedélyezve: admin / admin");
         alert.showAndWait();
     }
 
