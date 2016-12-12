@@ -167,9 +167,9 @@ public class MainController implements Initializable {
     @FXML
     private void SelectedIndexChanged(ActionEvent e) {
         if (e.getSource() == cbTermék) {
-            // Ha üres, akkor SEMMIT se válasszunk ki, különben NullPointException... ;)
+            // Ha üres vagy alapértelmezett, akkor SEMMIT se válasszunk ki, különben NullPointException... ;)
             // Ilyenkor csak töröljük ki a mezők tartalmát (valószínűleg ekkor törlünk)
-            if (cbTermék.getSelectionModel().isEmpty()) {
+            if (cbTermék.getSelectionModel().isEmpty() || cbTermék.getSelectionModel().getSelectedItem().equals("Válasszon")) {
 //                txtNev.setEditable(false);
 //                txtMEgyseg.setEditable(false);
 //                txtAr.setEditable(false);
@@ -181,10 +181,10 @@ public class MainController implements Initializable {
                 btSzerkesztes.setDisable(true);
                 btTorles.setDisable(true);
             } else {
-                String akt = cbTermék.getSelectionModel().getSelectedItem().toString();
-                System.out.println(akt);
+                aru akt = (aru) cbTermék.getSelectionModel().getSelectedItem();
+                System.out.println("DEBUG: " + akt.getId() + " - " + akt.getNev());
                 for (aru termék : aruLista) {
-                    if (termék.getNev() == akt) {
+                    if (termék.equals(akt)) {
                         txtNev.setText(termék.getNev());
                         txtMennyiseg.setText(termék.getDarab() + "");
                         txtMEgyseg.setText(termék.getMertekegyseg());
@@ -196,7 +196,11 @@ public class MainController implements Initializable {
                         txtMEgyseg.setEditable(false);
                         btSzerkesztes.setDisable(false);
                         btTorles.setDisable(false);
-                        System.out.println("DEBUG: " + termék.getId());
+                        // FIX: Ha "Új" hozzáadása közben váltottunk, akkor aktívak maradtak a gombok
+                        btUj.setDisable(false);
+                        btHozzaad.setDisable(true);
+                        btMegse.setDisable(true);
+                        lbUj.setVisible(false);
                     }
                 }
 
@@ -243,38 +247,29 @@ public class MainController implements Initializable {
                 }
                 // Ha bármi hiba van, NEM hajtjuk végre
                 if (!hiba) {
+                    //lbUj.setVisible(false); //-->ez mit keresett itt?
+                    aru elozo = (aru) cbTermék.getSelectionModel().getSelectedItem();
+                    nyilvantarto.addLog(
+                            elozo.getNev()
+                            + " szerkesztve lett "
+                            + nyilvantarto.getFelhasznalonev() + " által"); //Ezt tovább lehet majd egyszer fejleszteni, hogy többet írjon ki
 
-                    lbUj.setVisible(false);
-                    int i = 0;
-                    int szerkesztendő = 0;
-                    for (aru termék : aruLista) {
-                        // Jobb megoldást nem találtam... mivel NINCS egyedi azonosító! :(
-                        if (termék.getNev().equals(cbTermék.getSelectionModel().getSelectedItem().toString())) {//FIXME: && termék.getMertekegyseg() == txtMEgyseg.getText() && termék.getEar() == Integer.parseInt(txtAr.getText()) && termék.getDarab() == Integer.parseInt(txtMennyiseg.getText())) {
-                            szerkesztendő = i;
-                            nyilvantarto.addLog(
-                                    cbTermék.getSelectionModel().getSelectedItem().toString()
-                                    + " szerkesztve lett "
-                                    + nyilvantarto.getFelhasznalonev() + " által"); //Ezt tovább lehet majd egyszer fejleszteni, hogy többet írjon ki
-                        }
-                        i++;
-                    }
-                    aruLista.remove(szerkesztendő);
-                    aruLista.add(new aru(nyilvantarto.getMaxID(), nev, megyseg, ar, darab));
                     // Alapértelmezett, üres elem
                     cbTermék.getSelectionModel().select("Válasszon");
-                    // Egyből be is rendezzük ;)
+                    // Előző termék törlése
+                    aruLista.remove(elozo);
+                    // Régi termék újrafelvétele, azonos azonosítóval
+                    aruLista.add(new aru(elozo.getId(), nev, megyseg, ar, darab));
+
+                    // Egyből be is rendezzük ;) ... hátha változott a neve :)
                     Collections.sort(aruLista);
-                    // Mindent kiírtunk, inkább nem kockáztatok, meg amúgy is lehetünk még pazarlók... TODO: optimalizálni!
-//                    olTermék.clear();
-//                    // Újra felvesszük.
-//                    for (aru termék : aruLista) {
-//                        olTermék.add(termék.getNev());
-//                    }
-                    obListaFrissit();
-                    // Jelenlegit kiválasztjuk
-                    cbTermék.getSelectionModel().select(nev);
                     // Felülcsapjuk a globális listát
                     nyilvantarto.setAruk(aruLista);
+                    // OB lista frissítése
+                    obListaFrissit();
+                    // Előzőt kiválasztjuk
+                    cbTermék.getSelectionModel().select(elozo);
+
                     txtNev.setEditable(false);
                     txtAr.setEditable(false);
                     txtMennyiseg.setEditable(false);
@@ -298,9 +293,9 @@ public class MainController implements Initializable {
             }
         }
         if (e.getSource() == btTorles) {
-            // Ha NEM üres ("Válasszon" is üres!!!)
-            if (!cbTermék.getSelectionModel().isEmpty()) {
-                String akt = cbTermék.getSelectionModel().getSelectedItem().toString(); //cbTermék.valueProperty().getValue().toString();
+            // Ha NEM üres vagy ha NEM "Válasszon"
+            if (!cbTermék.getSelectionModel().isEmpty() || !cbTermék.getSelectionModel().getSelectedItem().equals("Válasszon")) {
+                aru akt = (aru) cbTermék.getSelectionModel().getSelectedItem(); //cbTermék.valueProperty().getValue().toString();
                 Alert biztosan = new Alert(Alert.AlertType.CONFIRMATION);
                 biztosan.setTitle("Nyilvántartó");
                 biztosan.setHeaderText(akt + " törlésére készül.");
@@ -318,34 +313,17 @@ public class MainController implements Initializable {
 
                 Optional<ButtonType> eredmeny = biztosan.showAndWait();
                 if (eredmeny.get() == ButtonType.YES) {
-                    int törlendő = 0;
-                    int i = 0;
-                    for (aru termék : aruLista) {
-                        // Jobb megoldást nem találtam... mivel NINCS egyedi azonosító! :(
-                        if (termék.getNev().equals(akt)) {//FIXME: && termék.getMertekegyseg() == txtMEgyseg.getText() && termék.getEar() == Integer.parseInt(txtAr.getText()) && termék.getDarab() == Integer.parseInt(txtMennyiseg.getText())) {
-                            // Ezt kell törölnünk majd...
-                            törlendő = i;
-                            nyilvantarto.addLog(akt + " eltávolítva " + nyilvantarto.getFelhasznalonev() + " által");
-                        }
-                        // Debug
-//                    System.out.println(termék.getNev() + " vs " + akt);
-//                    System.out.println(termék.getMertekegyseg() + " vs " + txtMEgyseg.getText());
-//                    System.out.println(termék.getEar() + " vs " + txtAr.getText());
-//                    System.out.println(termék.getDarab() + " vs " + txtMennyiseg.getText());
-                        i++;
-                    }
-                    // Töröljük a listából az elemet
-                    aruLista.remove(törlendő);
                     // Kiválasztott elemet töröljük
                     cbTermék.getSelectionModel().select("Válasszon");
-                    // Mindent kiírtunk...
-//                    olTermék.clear();
+
+                    // Töröljük a listából az elemet
+                    aruLista.remove(akt);
+
+                    nyilvantarto.addLog(akt.getNev() + " eltávolítva " + nyilvantarto.getFelhasznalonev() + " által");
+
                     // Felülcsapjuk a globális listát
                     nyilvantarto.setAruk(aruLista);
-                    // Újra feltöltjük, because erőforrás pazarlás most nem érdekel...
-//                    for (aru termék : aruLista) {
-//                        olTermék.add(termék.getNev());
-//                    }
+
                     obListaFrissit();
                 }
             }
@@ -386,28 +364,31 @@ public class MainController implements Initializable {
             }
             // Ha bármi hiba van, NEM hajtjuk végre
             if (!hiba) {
+                aru akt = new aru(nyilvantarto.getMaxID(), nev, megyseg, ar, darab);
                 lbUj.setVisible(false);
-                // Felvesszük az új elemet
-                aruLista.add(new aru(nyilvantarto.getMaxID(), nev, megyseg, ar, darab));
-                // Egyből be is rendezzük ;)
-                Collections.sort(aruLista);
+
                 // Alapértelmezett, üres elem
                 cbTermék.getSelectionModel().select("Válasszon");
-                // Mindent kiírtunk, inkább nem kockáztatok, meg amúgy is lehetünk még pazarlók... TODO: optimalizálni!
-//                olTermék.clear();
-//                // Újra felvesszük.
-//                for (aru termék : aruLista) {
-//                    olTermék.add(termék.getNev());
-//                }
-                obListaFrissit();
-                // Jelenlegit kiválasztjuk
-                cbTermék.getSelectionModel().select(nev);
+
+                // Felvesszük az új elemet
+                aruLista.add(akt);
+
+                // Egyből be is rendezzük ;)
+                Collections.sort(aruLista);
+
                 // Felülcsapjuk a globális listát
                 nyilvantarto.setAruk(aruLista);
+
+                // OB lista frissítése
+                obListaFrissit();
+
+                // Jelenlegit kiválasztjuk
+                cbTermék.getSelectionModel().select(akt); //cbTermék.getSelectionModel().select(nev);
+
                 btUj.setDisable(false);
                 btHozzaad.setDisable(true);
                 btTorles.setDisable(false);
-                nyilvantarto.addLog(nev + " hozzáadva " + nyilvantarto.getFelhasznalonev() + " által");
+                nyilvantarto.addLog(akt.getNev() + " hozzáadva " + nyilvantarto.getFelhasznalonev() + " által");
             }
         }
         //nyilvantarto.setLog(txLog.getText());
@@ -450,22 +431,7 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
-        // TODO code application logic here
-        //ArrayList<aru> aruLista = new ArrayList<>();
-//        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("alma.dat")))) {
-//            while (true) {
-//                aruLista.add((aru) ois.readObject());
-//            }
-//        } catch (EOFException e) {
-//        } catch (FileNotFoundException e) {
-//            System.out.println("Nem találom a fájlt! Hova raktad?!");
-//        } catch (IOException e) {
-//            System.out.println(e.toString());
-//        } catch (ClassNotFoundException e) {
-//            System.out.println(e.toString());
-//        }
-        // TODO: ezzel valamit kezdeni kellene     
+        // TODO: ide kell valami?
     }
 
     @FXML
