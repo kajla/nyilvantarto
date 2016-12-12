@@ -79,6 +79,7 @@ public class Fajlkezeles {
         }
         if (lista.isEmpty()) {
             System.out.println("A lista üres!");
+            nyilvantarto.setMaxID(0);
         } else {
             int max = lista.get(0).getId();
             for (int i = 1; i < lista.size(); i++) {
@@ -87,8 +88,8 @@ public class Fajlkezeles {
                 }
             }
             max++;
+            nyilvantarto.setMaxID(max);
         }
-        nyilvantarto.setMaxID(0);
         nyilvantarto.setAruk(lista);
     }
 
