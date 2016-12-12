@@ -53,6 +53,15 @@ public class Nyilvantarto extends Application {
     private ArrayList<Felhasznalo> felhasznalok;
     private ArrayList<aru> aruk;
     private String log;
+    private int maxID = 0;
+
+    public int getMaxID() {
+        return maxID++;
+    }
+
+    public void setMaxID(int maxID) {
+        this.maxID = maxID;
+    }
 
     public String getLog() {
         return log;
@@ -126,7 +135,7 @@ public class Nyilvantarto extends Application {
         this.hiba = new Hibauzenetek();
         //this.felhasznalok = fajlkezeles.felhasznaloOlvasas("felhasznalok.dat"); //--> TODO
         this.felhasznalok = fajlkezeles.felhasznaloOlvasas();
-        this.aruk = fajlkezeles.aruOlvasas();
+        fajlkezeles.aruOlvasas(this);
         this.log = fajlkezeles.logOlvasas();
         this.alma = 0; //--> XXX TESZTHEZ! Objektum jól viszi-e át a változókat
     }
@@ -135,6 +144,7 @@ public class Nyilvantarto extends Application {
     public void start(Stage stage) throws IOException {
         // JavaFX hívja meg, itt csak annyi a dolgunk, hogy megjelenítsük a bejelentkező felületet;
         // nem ide való kódok innen kiszervezésre kerültek
+        
         showLoginScreen(stage);
     }
 

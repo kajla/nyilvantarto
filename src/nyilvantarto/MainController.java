@@ -47,8 +47,6 @@ public class MainController implements Initializable {
 
     ArrayList<aru> aruLista; // = new ArrayList<>();
 
-    ObservableList<String> olTermék = FXCollections.observableArrayList();
-
     @FXML
     private ComboBox cbTermék;
 
@@ -198,6 +196,7 @@ public class MainController implements Initializable {
                         txtMEgyseg.setEditable(false);
                         btSzerkesztes.setDisable(false);
                         btTorles.setDisable(false);
+                        System.out.println("DEBUG: " + termék.getId());
                     }
                 }
 
@@ -260,17 +259,18 @@ public class MainController implements Initializable {
                         i++;
                     }
                     aruLista.remove(szerkesztendő);
-                    aruLista.add(new aru(nev, megyseg, ar, darab));
+                    aruLista.add(new aru(nyilvantarto.getMaxID(), nev, megyseg, ar, darab));
                     // Alapértelmezett, üres elem
                     cbTermék.getSelectionModel().select("Válasszon");
                     // Egyből be is rendezzük ;)
                     Collections.sort(aruLista);
                     // Mindent kiírtunk, inkább nem kockáztatok, meg amúgy is lehetünk még pazarlók... TODO: optimalizálni!
-                    olTermék.clear();
-                    // Újra felvesszük.
-                    for (aru termék : aruLista) {
-                        olTermék.add(termék.getNev());
-                    }
+//                    olTermék.clear();
+//                    // Újra felvesszük.
+//                    for (aru termék : aruLista) {
+//                        olTermék.add(termék.getNev());
+//                    }
+                    obListaFrissit();
                     // Jelenlegit kiválasztjuk
                     cbTermék.getSelectionModel().select(nev);
                     // Felülcsapjuk a globális listát
@@ -339,13 +339,14 @@ public class MainController implements Initializable {
                     // Kiválasztott elemet töröljük
                     cbTermék.getSelectionModel().select("Válasszon");
                     // Mindent kiírtunk...
-                    olTermék.clear();
+//                    olTermék.clear();
                     // Felülcsapjuk a globális listát
                     nyilvantarto.setAruk(aruLista);
                     // Újra feltöltjük, because erőforrás pazarlás most nem érdekel...
-                    for (aru termék : aruLista) {
-                        olTermék.add(termék.getNev());
-                    }
+//                    for (aru termék : aruLista) {
+//                        olTermék.add(termék.getNev());
+//                    }
+                    obListaFrissit();
                 }
             }
         }
@@ -387,17 +388,18 @@ public class MainController implements Initializable {
             if (!hiba) {
                 lbUj.setVisible(false);
                 // Felvesszük az új elemet
-                aruLista.add(new aru(nev, megyseg, ar, darab));
+                aruLista.add(new aru(nyilvantarto.getMaxID(), nev, megyseg, ar, darab));
                 // Egyből be is rendezzük ;)
                 Collections.sort(aruLista);
                 // Alapértelmezett, üres elem
                 cbTermék.getSelectionModel().select("Válasszon");
                 // Mindent kiírtunk, inkább nem kockáztatok, meg amúgy is lehetünk még pazarlók... TODO: optimalizálni!
-                olTermék.clear();
-                // Újra felvesszük.
-                for (aru termék : aruLista) {
-                    olTermék.add(termék.getNev());
-                }
+//                olTermék.clear();
+//                // Újra felvesszük.
+//                for (aru termék : aruLista) {
+//                    olTermék.add(termék.getNev());
+//                }
+                obListaFrissit();
                 // Jelenlegit kiválasztjuk
                 cbTermék.getSelectionModel().select(nev);
                 // Felülcsapjuk a globális listát
@@ -470,11 +472,7 @@ public class MainController implements Initializable {
     private void tabKivalaszt(Event e) {
         if (tbLista.isSelected()) {
             //System.out.println("bojler");            
-            data.removeAll(data);
-            for (aru object : aruLista) {
-                data.add(object);
-
-            }
+            obListaFrissit();
         }
         if (tbLog.isSelected()) {
             txLog.setText(nyilvantarto.getLog());
@@ -513,13 +511,13 @@ public class MainController implements Initializable {
     public void initManager(final Nyilvantarto nyilvantarto) {
         this.nyilvantarto = nyilvantarto;
         this.aruLista = nyilvantarto.getAruk();
-        System.out.println(aruLista);
-        Collections.sort(aruLista);
-        for (aru termék : aruLista) {
-            olTermék.add(termék.getNev());
-        }
+//        System.out.println(aruLista);
+//        Collections.sort(aruLista);
+//        for (aru termék : aruLista) {
+//            olTermék.add(termék.getNev());
+//        }
         //olTermék.setAll(aruLista.toString());
-        cbTermék.setItems(olTermék);
+//        cbTermék.setItems(olTermék);
         System.out.println(nyilvantarto.getAlma());
         lbUj.setVisible(false);
         //txLog.setText(fajlkezeles.logOlvasas());
@@ -531,16 +529,17 @@ public class MainController implements Initializable {
 //            tcMertekegyseg.getColumns().add(termék.getMertekegyseg());
 //            tcAr.getColumns().add(termék.getEar());
 //        }
-        for (aru termék : aruLista) {
-            data.add(termék);
-        }
+//        for (aru termék : nyilvantarto.getAruk()) {
+//            data.add(termék);
+//        }
+        obListaFrissit();
+        cbTermék.setItems(data);
         tcNev.setCellValueFactory(new PropertyValueFactory("nev"));
         tcDarab.setCellValueFactory(new PropertyValueFactory("darab"));
         tcMertekegyseg.setCellValueFactory(new PropertyValueFactory("mertekegyseg"));
         tcAr.setCellValueFactory(new PropertyValueFactory("ear"));
         tvLista.setItems(data);
         //tvLista.getColumns().addAll(tcNev, tcDarab, tcMertekegyseg, tcAr);
-        System.out.println(olTermék);
 
         // Csak adminisztrátor láthassa az adminisztrációs menüt és a log tabot
         for (Felhasznalo felhasznalo : nyilvantarto.getFelhasznalok()) {
@@ -586,28 +585,32 @@ public class MainController implements Initializable {
         tfSzures.requestFocus();
         //Egyszerűbbnek találtam, hogy kiszervezem külön metódusba. Talán erőforráskímélőbb. Vagy nem. :D
     }
-    
+
     @FXML
-    private void aruExport () {
+    private void aruExport() {
         nyilvantarto.getFajlkezeles().aruExport(nyilvantarto);
         nyilvantarto.addLog(nyilvantarto.getFelhasznalonev() + " exportálta az árucikkeket");
     }
-    
+
     @FXML
-    private void aruImport () {
+    private void aruImport() {
         nyilvantarto.getFajlkezeles().aruImport(nyilvantarto);
         nyilvantarto.addLog(nyilvantarto.getFelhasznalonev() + " importálta az árucikkeket");
-        
+
         // Törlés és újrafelvétel
-        olTermék.clear();
+//        olTermék.clear();
         this.aruLista = nyilvantarto.getAruk();
-        for (aru termék : nyilvantarto.getAruk()) {
-            olTermék.add(termék.getNev());
-        }
-        data.clear();
-        for (aru termék : nyilvantarto.getAruk()) {
-            data.add(termék);
-        }
+//        for (aru termék : nyilvantarto.getAruk()) {
+//            olTermék.add(termék.getNev());
+//        }
+        obListaFrissit();
         lbUj.setVisible(false);
+    }
+
+    private void obListaFrissit() {
+        data.removeAll(data);
+        for (aru object : nyilvantarto.getAruk()) {
+            data.add(object);
+        }
     }
 }

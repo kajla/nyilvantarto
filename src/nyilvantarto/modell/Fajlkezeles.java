@@ -62,7 +62,7 @@ public class Fajlkezeles {
         }
     }
 
-    public ArrayList<aru> aruOlvasas() {
+    public void aruOlvasas(Nyilvantarto nyilvantarto) {
         ArrayList<aru> lista = new ArrayList<>();
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File(aruFile)))) {
             while (true) {
@@ -79,8 +79,17 @@ public class Fajlkezeles {
         }
         if (lista.isEmpty()) {
             System.out.println("A lista üres!");
+        } else {
+            int max = lista.get(0).getId();
+            for (int i = 1; i < lista.size(); i++) {
+                if (lista.get(i).getId() > max) {
+                    max = lista.get(i).getId();
+                }
+            }
+            max++;
         }
-        return lista;
+        nyilvantarto.setMaxID(0);
+        nyilvantarto.setAruk(lista);
     }
 
     public ArrayList<Felhasznalo> felhasznaloOlvasas() {
@@ -188,7 +197,7 @@ public class Fajlkezeles {
                     int db = Integer.parseInt(daraboltSor[1]); // 1. elem darab (szám)
                     String mertekegyseg = daraboltSor[2];  // 2. elem mértékegység
                     int ear = Integer.parseInt(daraboltSor[3]); // 3. elem egység ár (szám)
-                    lista.add(new aru(nev, mertekegyseg, ear, db));
+                    lista.add(new aru(nyilvantarto.getMaxID(), nev, mertekegyseg, ear, db));
                     importDarab++;
                 }
             } catch (NumberFormatException ex) {   // ha a beolvasott szám valóban nem szám

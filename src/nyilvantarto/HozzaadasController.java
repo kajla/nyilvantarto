@@ -46,6 +46,8 @@ public class HozzaadasController extends Application implements Initializable {
 
     @FXML
     private Button btMégse;
+    
+    private Nyilvantarto nyilvantarto;
 
     @FXML
     private void gombNyom(ActionEvent e) {
@@ -58,7 +60,7 @@ public class HozzaadasController extends Application implements Initializable {
             int Db = Integer.parseInt(DbString);
 
             ArrayList<aru> lista = new ArrayList<>();
-            lista.add(new aru(Nev, Me, Ar, Db));
+            lista.add(new aru(nyilvantarto.getMaxID(), Nev, Me, Ar, Db));
 
             File file = new File("alma.dat");
             FileOutputStream fos = null;

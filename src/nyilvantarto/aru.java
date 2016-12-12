@@ -17,12 +17,18 @@ public class aru implements Serializable, Comparable<Object> {
     private String mertekegyseg;
     private int ear;
     private int darab;
+    private int id;
 
-    public aru(String nev, String mertekegyseg, int ear, int darab) {
+    public aru(int id, String nev, String mertekegyseg, int ear, int darab) {
+        this.id = id;
         this.nev = nev;
         this.mertekegyseg = mertekegyseg;
         this.ear = ear;
         this.darab = darab;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getNev() {
@@ -59,10 +65,8 @@ public class aru implements Serializable, Comparable<Object> {
 
     @Override
     public String toString() {
-        return "Áru{" + "név=" + nev
-                + ", mértékegység=" + mertekegyseg
-                + ", egységár=" + ear
-                + ", darab=" + darab + '}';
+        return nev;
+                
     }
 
     public int getOsszErtek() {
@@ -77,5 +81,30 @@ public class aru implements Serializable, Comparable<Object> {
             res = nev.compareTo(a.getNev());
         }
         return res;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 97 * hash + this.id;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final aru other = (aru) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        return true;
     }
 }
