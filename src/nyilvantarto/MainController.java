@@ -160,7 +160,7 @@ public class MainController implements Initializable {
     private void kijelentkezes() {
         Stage main = (Stage) nyilvantarto.getScene().getWindow();
         main.close();
-        nyilvantarto.setFelhasznalonev("");
+        nyilvantarto.setaktFelhasznalo(null);
         nyilvantarto.showLoginScreen(main);
     }
 
@@ -252,7 +252,7 @@ public class MainController implements Initializable {
                     nyilvantarto.addLog(
                             elozo.getNev()
                             + " szerkesztve lett "
-                            + nyilvantarto.getFelhasznalonev() + " által"); //Ezt tovább lehet majd egyszer fejleszteni, hogy többet írjon ki
+                            + nyilvantarto.getaktFelhasznalo().getFnev() + " által"); //Ezt tovább lehet majd egyszer fejleszteni, hogy többet írjon ki
 
                     // Alapértelmezett, üres elem
                     cbTermék.getSelectionModel().select("Válasszon");
@@ -319,7 +319,7 @@ public class MainController implements Initializable {
                     // Töröljük a listából az elemet
                     aruLista.remove(akt);
 
-                    nyilvantarto.addLog(akt.getNev() + " eltávolítva " + nyilvantarto.getFelhasznalonev() + " által");
+                    nyilvantarto.addLog(akt.getNev() + " eltávolítva " + nyilvantarto.getaktFelhasznalo().getFnev() + " által");
 
                     // Felülcsapjuk a globális listát
                     nyilvantarto.setAruk(aruLista);
@@ -388,7 +388,7 @@ public class MainController implements Initializable {
                 btUj.setDisable(false);
                 btHozzaad.setDisable(true);
                 btTorles.setDisable(false);
-                nyilvantarto.addLog(akt.getNev() + " hozzáadva " + nyilvantarto.getFelhasznalonev() + " által");
+                nyilvantarto.addLog(akt.getNev() + " hozzáadva " + nyilvantarto.getaktFelhasznalo().getFnev() + " által");
             }
         }
         //nyilvantarto.setLog(txLog.getText());
@@ -484,7 +484,6 @@ public class MainController implements Initializable {
 //        }
         //olTermék.setAll(aruLista.toString());
 //        cbTermék.setItems(olTermék);
-        System.out.println(nyilvantarto.getAlma());
         lbUj.setVisible(false);
         //txLog.setText(fajlkezeles.logOlvasas());
 
@@ -508,17 +507,12 @@ public class MainController implements Initializable {
         //tvLista.getColumns().addAll(tcNev, tcDarab, tcMertekegyseg, tcAr);
 
         // Csak adminisztrátor láthassa az adminisztrációs menüt és a log tabot
-        for (Felhasznalo felhasznalo : nyilvantarto.getFelhasznalok()) {
-            if (nyilvantarto.getFelhasznalonev().equals(felhasznalo.getFnev())) {
-                if (felhasznalo.getTipus() == 0) {
-                    mnAdmin.setVisible(true);
-                    tbLog.setDisable(false);
-                } else {
-                    mnAdmin.setVisible(false);
-                    tbLog.setDisable(true);
-                }
-                System.out.println(nyilvantarto.getFelhasznalonev() + " vs " + felhasznalo.getFnev());
-            }
+        if (nyilvantarto.getaktFelhasznalo().getTipus() == 0) {
+            mnAdmin.setVisible(true);
+            tbLog.setDisable(false);
+        } else {
+            mnAdmin.setVisible(false);
+            tbLog.setDisable(true);
         }
 
         txLog.setText(nyilvantarto.getLog());
@@ -555,13 +549,13 @@ public class MainController implements Initializable {
     @FXML
     private void aruExport() {
         nyilvantarto.getFajlkezeles().aruExport(nyilvantarto);
-        nyilvantarto.addLog(nyilvantarto.getFelhasznalonev() + " exportálta az árucikkeket");
+        nyilvantarto.addLog(nyilvantarto.getaktFelhasznalo().getFnev() + " exportálta az árucikkeket");
     }
 
     @FXML
     private void aruImport() {
         nyilvantarto.getFajlkezeles().aruImport(nyilvantarto);
-        nyilvantarto.addLog(nyilvantarto.getFelhasznalonev() + " importálta az árucikkeket");
+        nyilvantarto.addLog(nyilvantarto.getaktFelhasznalo().getFnev() + " importálta az árucikkeket");
 
         // Törlés és újrafelvétel
 //        olTermék.clear();

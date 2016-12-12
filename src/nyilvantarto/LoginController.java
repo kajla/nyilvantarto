@@ -7,7 +7,6 @@ package nyilvantarto;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -25,7 +24,6 @@ import javafx.stage.Stage;
 public class LoginController {
 
     private Nyilvantarto nyilvantarto;
-    private ArrayList<Felhasznalo> felhasznalok;
 
     @FXML
     private Label lblHiba;
@@ -48,19 +46,18 @@ public class LoginController {
                 lblHiba.setText("A jelszó nem lehet üres!");
                 lblHiba.setVisible(true);
             } else {
-                if (felhasznalok == null || felhasznalok.isEmpty()) {
+                if (nyilvantarto.getFelhasznalok() == null || nyilvantarto.getFelhasznalok().isEmpty()) {
                     lblHiba.setText("Végzetes hiba történt!");
                     lblHiba.setVisible(true);
                 } else {
-                    for (Felhasznalo felhasznalo : felhasznalok) {
+                    for (Felhasznalo felhasznalo : nyilvantarto.getFelhasznalok()) {
                         if (txtFelhasznalonev.getText().equals(felhasznalo.getFnev())) {
                             try {
                                 if (felhasznalo.validatePassword(txtJelszo.getText())) {
                                     lblHiba.setVisible(false);
                                     Stage login = (Stage) lblHiba.getScene().getWindow();
                                     login.close();
-                                    nyilvantarto.setFelhasznalonev(txtFelhasznalonev.getText());
-                                    nyilvantarto.setAlma(10);
+                                    nyilvantarto.setaktFelhasznalo(felhasznalo);
                                     nyilvantarto.showMainScreen();
                                 } else {
                                     // Biztonsági okokból ne írjuk ki, hogy pontosan melyik volt a hibás
@@ -98,9 +95,8 @@ public class LoginController {
         Platform.runLater(txtFelhasznalonev::requestFocus);
     }
 
-    public void initManager(final Nyilvantarto nyilvantarto, ArrayList<Felhasznalo> felhasznalok) {
+    public void initManager(final Nyilvantarto nyilvantarto) {
         this.nyilvantarto = nyilvantarto;
-        this.felhasznalok = felhasznalok;
 
     }
 }

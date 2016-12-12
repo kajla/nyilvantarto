@@ -46,8 +46,7 @@ public class Nyilvantarto extends Application {
 //    }
 //     
     private Scene scene;
-    private int alma;
-    private String felhasznalonev;
+    private Felhasznalo aktFelhasznalo;
     private final Fajlkezeles fajlkezeles;
     private final Hibauzenetek hiba;
     private ArrayList<Felhasznalo> felhasznalok;
@@ -81,20 +80,12 @@ public class Nyilvantarto extends Application {
         }
     }
 
-    public String getFelhasznalonev() {
-        return felhasznalonev;
+    public Felhasznalo getaktFelhasznalo() {
+        return aktFelhasznalo;
     }
 
-    public void setFelhasznalonev(String felhasznalonev) {
-        this.felhasznalonev = felhasznalonev;
-    }
-
-    public int getAlma() {
-        return alma;
-    }
-
-    public void setAlma(int alma) {
-        this.alma = alma;
+    public void setaktFelhasznalo(Felhasznalo aktFelhasznalo) {
+        this.aktFelhasznalo = aktFelhasznalo;
     }
 
     public ArrayList<Felhasznalo> getFelhasznalok() {
@@ -137,14 +128,13 @@ public class Nyilvantarto extends Application {
         this.felhasznalok = fajlkezeles.felhasznaloOlvasas();
         fajlkezeles.aruOlvasas(this);
         this.log = fajlkezeles.logOlvasas();
-        this.alma = 0; //--> XXX TESZTHEZ! Objektum jól viszi-e át a változókat
     }
 
     @Override
     public void start(Stage stage) throws IOException {
         // JavaFX hívja meg, itt csak annyi a dolgunk, hogy megjelenítsük a bejelentkező felületet;
         // nem ide való kódok innen kiszervezésre kerültek
-        
+
         showLoginScreen(stage);
     }
 
@@ -153,7 +143,7 @@ public class Nyilvantarto extends Application {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Login.fxml"));
             scene.setRoot((Parent) loader.load());
             LoginController controller = loader.<LoginController>getController();
-            controller.initManager(this, felhasznalok);
+            controller.initManager(this);
             stage.setScene(scene);
             stage.setTitle("Nyilvántartó - Belépés");
             stage.setResizable(false);

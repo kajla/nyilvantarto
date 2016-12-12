@@ -193,7 +193,7 @@ public class AdminPanelController implements Initializable {
                 pwJelszo.clear();
                 txtTelefon.clear();
 // TODO: naplózás!
-                nyilvantarto.addLog(nyilvantarto.getFelhasznalonev() + " hozzáadott egy új felhasználót: " + fnev);
+                nyilvantarto.addLog(nyilvantarto.getaktFelhasznalo().getFnev() + " hozzáadott egy új felhasználót: " + fnev);
             } else {
                 lblHiba.setText(hibauzenet);
                 lblHiba.setVisible(true);
@@ -201,7 +201,7 @@ public class AdminPanelController implements Initializable {
         }
         if (e.getSource() == btTorles) {
             Felhasznalo törlendő = (Felhasznalo) tvFelhasznalok.getSelectionModel().getSelectedItem();
-            if (nyilvantarto.getFelhasznalonev().equals(törlendő.getFnev())) {
+            if (nyilvantarto.getaktFelhasznalo().getFnev().equals(törlendő.getFnev())) {
                 nyilvantarto.getHiba().onmagunkHiba();
             } else {
                 Alert biztosan = new Alert(AlertType.CONFIRMATION);
@@ -230,7 +230,7 @@ public class AdminPanelController implements Initializable {
                         ideiglenes.add(felhasznalo);
                     }
                     nyilvantarto.setFelhasznalok(ideiglenes);
-                    nyilvantarto.addLog(nyilvantarto.getFelhasznalonev() + " törölt egy felhasználót: " + törlendő.getFnev());
+                    nyilvantarto.addLog(nyilvantarto.getaktFelhasznalo().getFnev() + " törölt egy felhasználót: " + törlendő.getFnev());
                 }
             }
         }
