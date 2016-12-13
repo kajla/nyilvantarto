@@ -287,6 +287,7 @@ public class MainController implements Initializable {
                     btUj.setDisable(false);
                     btTorles.setDisable(false);
                     btSzerkesztes.setText("Szerkesztés");
+                    btMegse.setVisible(false);
                 }
             } else {
                 btSzerkesztes.setText("Mentés");
@@ -298,6 +299,8 @@ public class MainController implements Initializable {
                 btHozzaad.setDisable(true);
                 btUj.setDisable(true);
                 btTorles.setDisable(true);
+                btMegse.setDisable(false);
+                btMegse.setVisible(true);
             }
         }
         if (e.getSource() == btTorles) {
@@ -408,6 +411,7 @@ public class MainController implements Initializable {
                 // Jelenlegit kiválasztjuk
                 cbTermék.getSelectionModel().select(akt); //cbTermék.getSelectionModel().select(nev);
 
+                btMegse.setVisible(false);
                 btUj.setDisable(false);
                 btHozzaad.setDisable(true);
                 btTorles.setDisable(false);
@@ -433,6 +437,7 @@ public class MainController implements Initializable {
             cbTermék.getSelectionModel().clearSelection();
             lbUj.setVisible(true);
             btMegse.setDisable(false);
+            btMegse.setVisible(true);
         }
         if (e.getSource() == btLogTorles) {
             txLog.clear();
@@ -441,7 +446,7 @@ public class MainController implements Initializable {
         if (e.getSource() == btMegse) {
             cbTermék.getSelectionModel().select("Válasszon");
             btUj.setDisable(false);
-            btMegse.setDisable(true);
+            btMegse.setVisible(false);
             btHozzaad.setDisable(true);
             btTorles.setDisable(true);
             txtNev.setEditable(false);
@@ -449,12 +454,15 @@ public class MainController implements Initializable {
             txtMennyiseg.setEditable(false);
             txtMEgyseg.setEditable(false);
             lbUj.setVisible(false);
+            btSzerkesztes.setText("Szerkesztés");
+            
         }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO: ide kell valami?
+        btMegse.setVisible(false);
     }
 
     @FXML
