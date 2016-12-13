@@ -6,8 +6,6 @@
 package nyilvantarto;
 
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
@@ -34,6 +32,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 /**
@@ -455,7 +454,7 @@ public class MainController implements Initializable {
             txtMEgyseg.setEditable(false);
             lbUj.setVisible(false);
             btSzerkesztes.setText("Szerkesztés");
-            
+
         }
     }
 
@@ -602,6 +601,22 @@ public class MainController implements Initializable {
         data.removeAll(data);
         for (aru object : nyilvantarto.getAruk()) {
             data.add(object);
+        }
+    }
+
+    @FXML
+    public void szamEllenorzes(KeyEvent e) {
+
+        TextField txtMezo = (TextField) e.getSource();
+
+        // Maximum 9 karakter lehet, ez azért kell, mert integert tárolunk, ami max: 2 147 483 647 ... azaz biztonságosan 9 karakter
+        if (txtMezo.getText().length() >= 9) {
+            e.consume();
+        }
+
+        // A bevitt érték ellenőrzése, hogy az csak szám lehessen, ha nem az, töröljük
+        if (!e.getCharacter().matches("[0-9]")) {
+            e.consume();
         }
     }
 }

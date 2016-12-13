@@ -88,12 +88,12 @@
                                     <Insets right="50.0" />
                                  </GridPane.margin>
                               </TextField>
-                              <TextField fx:id="txtMennyiseg" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                              <TextField fx:id="txtMennyiseg" editable="false" onKeyTyped="#szamEllenorzes" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                  <GridPane.margin>
                                     <Insets right="50.0" />
                                  </GridPane.margin>
                               </TextField>
-                              <TextField fx:id="txtAr" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                              <TextField fx:id="txtAr" editable="false" onKeyTyped="#szamEllenorzes" GridPane.columnIndex="1" GridPane.rowIndex="4">
                                  <GridPane.margin>
                                     <Insets right="50.0" />
                                  </GridPane.margin>
