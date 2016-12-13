@@ -120,8 +120,6 @@ public class MainController implements Initializable {
     @FXML
     ObservableList<aru> data = FXCollections.observableArrayList();
 
-    private final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd - kk:mm:ss");
-
     @FXML
     private Menu mnAdmin;
 
@@ -218,29 +216,39 @@ public class MainController implements Initializable {
                 int ar = 0;
                 int darab = 0;
                 Boolean hiba = false;
-                try {
-                    ar = Integer.parseInt(txtAr.getText());
-                } catch (NumberFormatException nan) {
-                    System.out.println("Ár nem szám!");
-                    nyilvantarto.getHiba().nemszamHiba("ár");
-                    hiba = true;
+                if (txtAr.getText().isEmpty()) {
+                    nyilvantarto.getHiba().UresMezoHiba("ár");
+                } else {
+                    try {
+                        ar = Integer.parseInt(txtAr.getText());
+                    } catch (NumberFormatException nan) {
+                        System.out.println("Ár nem szám!");
+                        nyilvantarto.getHiba().nemszamHiba("ár");
+                        hiba = true;
 
+                    }
                 }
-                try {
-                    darab = Integer.parseInt(txtMennyiseg.getText());
-                } catch (NumberFormatException nan) {
-                    System.out.println("Darab nem szám!");
-                    nyilvantarto.getHiba().nemszamHiba("darab");
-                    hiba = true;
+                if (txtMennyiseg.getText().isEmpty()) {
+                    nyilvantarto.getHiba().UresMezoHiba("mennyiség");
+                } else {
+                    try {
+                        darab = Integer.parseInt(txtMennyiseg.getText());
+                    } catch (NumberFormatException nan) {
+                        System.out.println("Darab nem szám!");
+                        nyilvantarto.getHiba().nemszamHiba("darab");
+                        hiba = true;
+                    }
                 }
                 if (txtNev.getText().isEmpty()) {
                     System.out.println("Név üres!");
+                    nyilvantarto.getHiba().UresMezoHiba("név");
                     hiba = true;
                 } else {
                     nev = txtNev.getText();
                 }
                 if (txtMEgyseg.getText().isEmpty()) {
                     System.out.println("Mértékegység üres!");
+                    nyilvantarto.getHiba().UresMezoHiba("mértékegység");
                     hiba = true;
                 } else {
                     megyseg = txtMEgyseg.getText();
@@ -336,28 +344,43 @@ public class MainController implements Initializable {
             int ar = 0;
             int darab = 0;
             Boolean hiba = false;
-            try {
-                ar = Integer.parseInt(txtAr.getText());
-            } catch (NumberFormatException nan) {
-                System.out.println("Ár nem szám!");
-                nyilvantarto.getHiba().nemszamHiba("ár");
-                hiba = true;
 
-            }
-            try {
-                darab = Integer.parseInt(txtMennyiseg.getText());
-            } catch (NumberFormatException nan) {
-                System.out.println("Darab nem szám!");
-                hiba = true;
-            }
             if (txtNev.getText().isEmpty()) {
                 System.out.println("Név üres!");
+                nyilvantarto.getHiba().UresMezoHiba("név");
                 hiba = true;
             } else {
                 nev = txtNev.getText();
+
             }
+
+            if (txtAr.getText().isEmpty()) {
+                nyilvantarto.getHiba().UresMezoHiba("ár");
+            } else {
+                try {
+                    ar = Integer.parseInt(txtAr.getText());
+                } catch (NumberFormatException nan) {
+                    System.out.println("Ár nem szám!");
+                    nyilvantarto.getHiba().nemszamHiba("ár");
+                    hiba = true;
+
+                }
+            }
+            if (txtMennyiseg.getText().isEmpty()) {
+                nyilvantarto.getHiba().UresMezoHiba("mennyiség");
+            } else {
+                try {
+                    darab = Integer.parseInt(txtMennyiseg.getText());
+                } catch (NumberFormatException nan) {
+                    System.out.println("Darab nem szám!");
+                    nyilvantarto.getHiba().nemszamHiba("mennyiség");
+                    hiba = true;
+                }
+            }
+
             if (txtMEgyseg.getText().isEmpty()) {
                 System.out.println("Mértékegység üres!");
+                nyilvantarto.getHiba().UresMezoHiba("mértékegység");
                 hiba = true;
             } else {
                 megyseg = txtMEgyseg.getText();

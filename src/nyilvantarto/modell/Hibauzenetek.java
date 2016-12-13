@@ -40,6 +40,14 @@ public class Hibauzenetek {
         alert.showAndWait();
     }
 
+    public void UresMezoHiba(String s) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Nyilvántartó");
+        alert.setHeaderText("Üres mező.");
+        alert.setContentText("Sajnos a(z) " + s + " mező üres.\nKérem, töltse ki a mezőt.");
+        alert.showAndWait();
+    }
+
     public void onmagunkHiba() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Nyilvántartó");
