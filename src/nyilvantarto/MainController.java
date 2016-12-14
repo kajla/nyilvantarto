@@ -217,6 +217,7 @@ public class MainController implements Initializable {
                 Boolean hiba = false;
                 if (txtAr.getText().isEmpty()) {
                     nyilvantarto.getHiba().UresMezoHiba("ár");
+                    hiba = true;
                 } else {
                     try {
                         ar = Integer.parseInt(txtAr.getText());
@@ -229,6 +230,7 @@ public class MainController implements Initializable {
                 }
                 if (txtMennyiseg.getText().isEmpty()) {
                     nyilvantarto.getHiba().UresMezoHiba("mennyiség");
+                    hiba = true;
                 } else {
                     try {
                         darab = Integer.parseInt(txtMennyiseg.getText());
@@ -358,6 +360,7 @@ public class MainController implements Initializable {
 
             if (txtAr.getText().isEmpty()) {
                 nyilvantarto.getHiba().UresMezoHiba("ár");
+                hiba = true;
             } else {
                 try {
                     ar = Integer.parseInt(txtAr.getText());
@@ -370,6 +373,7 @@ public class MainController implements Initializable {
             }
             if (txtMennyiseg.getText().isEmpty()) {
                 nyilvantarto.getHiba().UresMezoHiba("mennyiség");
+                hiba = true;
             } else {
                 try {
                     darab = Integer.parseInt(txtMennyiseg.getText());
