@@ -24,27 +24,6 @@ import nyilvantarto.modell.Hibauzenetek;
  */
 public class Nyilvantarto extends Application {
 
-//    @Override
-//    public void start(Stage stage) throws Exception {
-//        Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
-//
-//        Scene scene = new Scene(root);
-//
-//        stage.setScene(scene);
-//        stage.setTitle("Nyilvantartó - Belépés");
-//        stage.setResizable(false);
-//        // Ezzel megoldjuk az átméretezési hibát
-//        stage.sizeToScene();
-//        stage.show();
-//    }
-//
-//    /**
-//     * @param args the command line arguments
-//     */
-//    public static void main(String[] args) {
-//        new Nyilvantarto().launch();
-//    }
-//     
     private Scene scene;
     private Felhasznalo aktFelhasznalo;
     private final Fajlkezeles fajlkezeles;
@@ -123,8 +102,7 @@ public class Nyilvantarto extends Application {
     public Nyilvantarto() {
         this.scene = new Scene(new StackPane());
         this.fajlkezeles = new Fajlkezeles();
-        this.hiba = new Hibauzenetek();
-        //this.felhasznalok = fajlkezeles.felhasznaloOlvasas("felhasznalok.dat"); //--> TODO
+        this.hiba = new Hibauzenetek();        
         fajlkezeles.felhasznaloOlvasas(this);
         fajlkezeles.aruOlvasas(this);
         this.log = fajlkezeles.logOlvasas();
@@ -132,8 +110,6 @@ public class Nyilvantarto extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        // JavaFX hívja meg, itt csak annyi a dolgunk, hogy megjelenítsük a bejelentkező felületet;
-        // nem ide való kódok innen kiszervezésre kerültek
 
         showLoginScreen(stage);
     }
@@ -153,9 +129,7 @@ public class Nyilvantarto extends Application {
             if (getaktFelhasznalo() != null) {
                 getHiba().elsoInditas();
             }
-        } catch (IOException ex) {
-            // Valaha is ezek meghívásra kerülnének?! /csak mert ezek a jar fájlban lesznek/
-            // FIXME: nem működik, hisz ha ez lefut, akkor már nagy gondok vannak...
+        } catch (IOException ex) {            
             hiba.fajlHiba("Login.fxml");
         }
     }
@@ -204,7 +178,6 @@ public class Nyilvantarto extends Application {
         System.exit(0);
     }
 
-//    // TODO: Kiszervezendő?
 //    private void felhasznaloFeltolt() {
 //        ArrayList<Felhasznalo> ideiglenes = new ArrayList<>();
 //        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("felhasznalok.dat")))) {

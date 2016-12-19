@@ -192,7 +192,6 @@ public class AdminPanelController implements Initializable {
                 txtNev.clear();
                 pwJelszo.clear();
                 txtTelefon.clear();
-// TODO: naplózás!
                 nyilvantarto.addLog(nyilvantarto.getaktFelhasznalo().getFnev() + " hozzáadott egy új felhasználót: " + fnev);
             } else {
                 lblHiba.setText(hibauzenet);

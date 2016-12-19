@@ -122,35 +122,12 @@ public class MainController implements Initializable {
     @FXML
     private Menu mnAdmin;
 
-    // Bocsi :( @Ádám
-//    @FXML
-//    public void HozzaadMegnyom(ActionEvent UgyanittBojlerElado /* byGabor */) {
-//        if (UgyanittBojlerElado.getSource() == btHozzaad) {
-//            HozzaadAblak();
-//
-//        }
-//
-//    }
-//    @FXML
-//    private void HozzaadAblak() {
-//        try {            
-    //cbTermék.getItems().remove(cbTermék.getSelectionModel().selectedIndexProperty()); niet goed
-//            Parent root2 = FXMLLoader.load(getClass().getResource("Hozzaadas.fxml"));
-//            Stage stage = new Stage();
-//            stage.setTitle("Áru hozzáadása");
-//            stage.setScene(new Scene(root2));
-//            stage.show();
-//        } catch (IOException ex) {
-//            Logger.getLogger(HozzaadasController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//    }
     @FXML
     private void kilepes() {
         // talán legegyszerűbb rész... :D
         Platform.exit();
         // Átadjuk a módosított listát
-        //nyilvantarto.setAruk(aruLista);
-        //Plat
+        //nyilvantarto.setAruk(aruLista);        
     }
 
     @FXML
@@ -464,8 +441,7 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO: ide kell valami?
-        btMegse.setVisible(false);
+        //btMegse.setVisible(false);
     }
 
     @FXML
@@ -521,16 +497,6 @@ public class MainController implements Initializable {
         lbUj.setVisible(false);
         //txLog.setText(fajlkezeles.logOlvasas());
 
-        // Ezek így nem lesznek jók... :(
-//        for (aru termék : aruLista) {
-//            tcNev.getColumns().add(termék.getNev());
-//            tcDarab.getColumns().add(termék.getDarab());
-//            tcMertekegyseg.getColumns().add(termék.getMertekegyseg());
-//            tcAr.getColumns().add(termék.getEar());
-//        }
-//        for (aru termék : nyilvantarto.getAruk()) {
-//            data.add(termék);
-//        }
         obListaFrissit();
         cbTermék.setItems(data);
         tcNev.setCellValueFactory(new PropertyValueFactory("nev"));
