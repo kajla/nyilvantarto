@@ -15,8 +15,10 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import javafx.stage.FileChooser;
@@ -160,7 +162,7 @@ public class Fajlkezeles {
         fajlValaszto.setInitialDirectory(new File(System.getProperty("user.home")));
         File fajl = fajlValaszto.showSaveDialog((Stage) nyilvantarto.getScene().getWindow());
         if (fajl != null) {
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter(fajl))) {
+            try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fajl), "UTF-8"))) {
                 bw.write("Név (szöveg);Darabszám (szám);Mértékegység (szöveg);Ár (szám)\n");
                 for (aru termék : nyilvantarto.getAruk()) {
                     bw.write(termék.getNev() + ";" + termék.getDarab() + ";" + termék.getMertekegyseg() + ";" + termék.getEar() + "\n");
@@ -189,7 +191,7 @@ public class Fajlkezeles {
         fajlValaszto.setInitialDirectory(new File(System.getProperty("user.home")));
         File fajl = fajlValaszto.showOpenDialog((Stage) nyilvantarto.getScene().getWindow());
         if (fajl != null) {
-            try (BufferedReader br = new BufferedReader(new FileReader(fajl))) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(fajl), "UTF-8"))) {
                 // Első sor kihagyása
                 br.readLine();
                 String sor = "";
