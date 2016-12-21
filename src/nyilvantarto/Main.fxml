@@ -21,7 +21,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nyilvantarto.MainController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nyilvantarto.MainController">
    <children>
       <BorderPane layoutX="172.0" layoutY="89.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
@@ -157,9 +157,9 @@
                               <TableView fx:id="tvLista" prefHeight="302.0" prefWidth="600.0">
                                 <columns>
                                   <TableColumn fx:id="tcNev" prefWidth="75.0" text="Név" />
-                                  <TableColumn fx:id="tcDarab" prefWidth="75.0" text="Darab" />
+                                  <TableColumn fx:id="tcDarab" prefWidth="75.0" style="-fx-alignment: CENTER-RIGHT;" text="Darab" />
                                     <TableColumn fx:id="tcMertekegyseg" prefWidth="92.0" text="Mértékegység" />
-                                    <TableColumn fx:id="tcAr" prefWidth="58.0" text="Ár" />
+                                    <TableColumn fx:id="tcAr" prefWidth="58.0" style="-fx-alignment: CENTER-RIGHT;" text="Ár" />
                                 </columns>
                                  <columnResizePolicy>
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
