@@ -175,9 +175,10 @@ public class Fajlkezeles {
         }
     }
 
-    public void aruImport(Nyilvantarto nyilvantarto) {
+    public Integer aruImport(Nyilvantarto nyilvantarto) {
         ArrayList<aru> lista = new ArrayList<>();
         int importDarab = 0;
+        int aktID = nyilvantarto.getCurrentID();
 
         FileChooser fajlValaszto = new FileChooser();
         fajlValaszto.setTitle("Árucikkek importálása");
@@ -193,6 +194,8 @@ public class Fajlkezeles {
                 // Első sor kihagyása
                 br.readLine();
                 String sor = "";
+                // Azonosító újraindítása
+                nyilvantarto.setMaxID(1);
                 while ((sor = br.readLine()) != null) {
                     String[] daraboltSor = sor.split(";");     // ;-nél darabolunk
                     String nev = daraboltSor[0]; // 0. elem név
@@ -214,12 +217,13 @@ public class Fajlkezeles {
             }
             if (lista.isEmpty()) {
                 System.out.println("A lista üres!");
+                nyilvantarto.setMaxID(aktID);
                 nyilvantarto.getHiba().importUres();
             } else {
                 // Rendezzük a felvett listát
                 Collections.sort(lista);
                 nyilvantarto.setAruk(lista);
-                nyilvantarto.getHiba().importEredmeny(importDarab);
+
                 // TODO: csak azt töltsük be, ami új, illetve meglévőnek frissítsük az értékét
 //            for (aru termékImport : lista) {
 //                for (aru termék : nyilvantarto.getAruk()) {
@@ -232,5 +236,6 @@ public class Fajlkezeles {
 //            }
             }
         }
+        return importDarab;
     }
 }

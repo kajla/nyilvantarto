@@ -15,6 +15,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import nyilvantarto.modell.Adatbaziskezeles;
 import nyilvantarto.modell.Fajlkezeles;
 import nyilvantarto.modell.Hibauzenetek;
 
@@ -27,6 +28,7 @@ public class Nyilvantarto extends Application {
     private Scene scene;
     private Felhasznalo aktFelhasznalo;
     private final Fajlkezeles fajlkezeles;
+    private final Adatbaziskezeles adatbaziskezeles;
     private final Hibauzenetek hiba;
     private ArrayList<Felhasznalo> felhasznalok;
     private ArrayList<aru> aruk;
@@ -35,6 +37,10 @@ public class Nyilvantarto extends Application {
 
     public int getMaxID() {
         return maxID++;
+    }
+
+    public int getCurrentID() {
+        return maxID;
     }
 
     public void setMaxID(int maxID) {
@@ -99,12 +105,32 @@ public class Nyilvantarto extends Application {
         return fajlkezeles;
     }
 
+    public Adatbaziskezeles getAdatbaziskezeles() {
+        return adatbaziskezeles;
+    }
+
+    public void aruImport() {
+        // Ha sikerült az importálás (tehát többet importáltunk, mint 0), töltsük be az adatbázisba
+        Integer importdb = fajlkezeles.aruImport(this);
+        if (importdb > 0) {
+            // Ha nem volt probléma az adatbázis import közben, írjuk ki, hogy sikeres
+            if (!adatbaziskezeles.aruImport(this)) {
+                addLog(getaktFelhasznalo().getFnev() + " importálta az árucikkeket");
+                hiba.importEredmeny(importdb);
+            } else {
+                hiba.adatbazisHiba();
+            }
+        }
+    }
+
     public Nyilvantarto() {
         this.scene = new Scene(new StackPane());
         this.fajlkezeles = new Fajlkezeles();
-        this.hiba = new Hibauzenetek();        
+        this.hiba = new Hibauzenetek();
+        this.adatbaziskezeles = new Adatbaziskezeles();
         fajlkezeles.felhasznaloOlvasas(this);
-        fajlkezeles.aruOlvasas(this);
+        adatbaziskezeles.adatbazisInicializalas();
+        adatbaziskezeles.aruOlvasas(this);
         this.log = fajlkezeles.logOlvasas();
     }
 
@@ -129,7 +155,7 @@ public class Nyilvantarto extends Application {
             if (getaktFelhasznalo() != null) {
                 getHiba().elsoInditas();
             }
-        } catch (IOException ex) {            
+        } catch (IOException ex) {
             hiba.fajlHiba("Login.fxml");
         }
     }
@@ -172,68 +198,12 @@ public class Nyilvantarto extends Application {
     // Platform.exit hívja meg, ekkor mentünk fájlba
     @Override
     public void stop() {
-        fajlkezeles.aruMentes(this);
+//        fajlkezeles.aruMentes(this);
         fajlkezeles.felhasznaloMentes(this);
         fajlkezeles.logMentes(this);
         System.exit(0);
     }
 
-//    private void felhasznaloFeltolt() {
-//        ArrayList<Felhasznalo> ideiglenes = new ArrayList<>();
-//        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("felhasznalok.dat")))) {
-//            while (true) {
-//                Object o = ois.readObject();
-//                if (o instanceof Felhasznalo) {
-//                    Felhasznalo júzer = (Felhasznalo) o;
-//                    ideiglenes.add(júzer);
-//                }
-//            }
-//        } catch (EOFException e) {
-//            // Fájl vége
-//        } catch (FileNotFoundException e) {
-//            System.out.println("Nem találom a fájlt! Hova raktad?!");
-//            hiba.fajlHiba("felhasznalok.dat");
-//            System.exit(1); // Ha bármi hiba van, lépjünk ki, hisz úgy is hibás lenne a programunk működése
-//        } catch (IOException e) {
-//            System.out.println("Váratlan I/O hiba történt!");
-//        } catch (ClassNotFoundException e) {
-//            System.out.println("Az osztály nem található!");
-//        }
-//        if (ideiglenes.isEmpty()) {
-//            System.out.println("A lista üres!");
-//        } else {
-//            this.felhasznalok = ideiglenes;
-//        }
-//    }
-//    
-//     // TODO: Kiszervezendő?
-//    private void aruFeltolt() {
-//        ArrayList<aru> ideiglenes = new ArrayList<>();
-//        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("alma.dat")))) {
-//            while (true) {
-//                Object o = ois.readObject();
-//                if (o instanceof aru) {
-//                    aru termék = (aru) o;
-//                    ideiglenes.add(termék);
-//                }
-//            }
-//        } catch (EOFException e) {
-//            // Fájl vége
-//        } catch (FileNotFoundException e) {
-//            System.out.println("Nem találom a fájlt! Hova raktad?!");
-//            hiba.fajlHiba("felhasznalok.dat");
-//            System.exit(1); // Ha bármi hiba van, lépjünk ki, hisz úgy is hibás lenne a programunk működése
-//        } catch (IOException e) {
-//            System.out.println("Váratlan I/O hiba történt!");
-//        } catch (ClassNotFoundException e) {
-//            System.out.println("Az osztály nem található!");
-//        }
-//        if (ideiglenes.isEmpty()) {
-//            System.out.println("A lista üres!");
-//        } else {
-//            this.aruk = ideiglenes;
-//        }
-//    }
     public void run(String[] args) {
         System.out.println("START");
         this.launch(args);

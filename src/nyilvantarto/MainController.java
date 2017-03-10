@@ -244,8 +244,17 @@ public class MainController implements Initializable {
                     cbTermék.getSelectionModel().select("Válasszon");
                     // Előző termék törlése
                     aruLista.remove(elozo);
-                    // Régi termék újrafelvétele, azonos azonosítóval
-                    aruLista.add(new aru(elozo.getId(), nev, megyseg, ar, darab));
+
+                    // Új áru készítése, azonos azonosítóval
+                    aru mod = new aru(elozo.getId(), nev, megyseg, ar, darab);
+
+                    // Régi termék újrafelvétele
+                    aruLista.add(mod);
+
+                    // Adatbázis módosítás
+                    if (nyilvantarto.getAdatbaziskezeles().aruModosit(mod)) {
+                        nyilvantarto.getHiba().adatbazisHiba();
+                    }
 
                     // Egyből be is rendezzük ;) ... hátha változott a neve :)
                     Collections.sort(aruLista);
@@ -304,6 +313,11 @@ public class MainController implements Initializable {
                 if (eredmeny.get() == ButtonType.YES) {
                     // Kiválasztott elemet töröljük
                     cbTermék.getSelectionModel().select("Válasszon");
+
+                    // Adatbázis törlés
+                    if (nyilvantarto.getAdatbaziskezeles().aruTorol(akt)) {
+                        nyilvantarto.getHiba().adatbazisHiba();
+                    }
 
                     // Töröljük a listából az elemet
                     aruLista.remove(akt);
@@ -372,6 +386,11 @@ public class MainController implements Initializable {
             if (!hiba) {
                 aru akt = new aru(nyilvantarto.getMaxID(), nev, megyseg, ar, darab);
                 lbUj.setVisible(false);
+
+                // Adatbáziskezelés
+                if (nyilvantarto.getAdatbaziskezeles().aruHozzaad(akt)) {
+                    nyilvantarto.getHiba().adatbazisHiba();
+                }
 
                 // Alapértelmezett, üres elem
                 cbTermék.getSelectionModel().select("Válasszon");
@@ -554,8 +573,9 @@ public class MainController implements Initializable {
 
     @FXML
     private void aruImport() {
-        nyilvantarto.getFajlkezeles().aruImport(nyilvantarto);
-        nyilvantarto.addLog(nyilvantarto.getaktFelhasznalo().getFnev() + " importálta az árucikkeket");
+//        nyilvantarto.getFajlkezeles().aruImport(nyilvantarto);
+//        nyilvantarto.addLog(nyilvantarto.getaktFelhasznalo().getFnev() + " importálta az árucikkeket");
+        nyilvantarto.aruImport();
 
         // Törlés és újrafelvétel
 //        olTermék.clear();

@@ -104,4 +104,12 @@ public class Hibauzenetek {
         alert.showAndWait();
     }
 
+    public void adatbazisHiba() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Nyilvántartó");
+        alert.setHeaderText("Adatbázis hiba történt");
+        alert.setContentText("A kérés végrehajtása közben váratlan adatbázis hiba történt.\nKérjük, ellenőrizze, hogy elérhető-e az adatbázis!");
+        alert.showAndWait();
+    }
+
 }
