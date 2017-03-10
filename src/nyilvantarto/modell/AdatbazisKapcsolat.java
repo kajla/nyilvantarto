@@ -15,7 +15,7 @@ public interface AdatbazisKapcsolat {
     String URL = "jdbc:derby://localhost:1527/nyilvantarto;create=true;collation=TERRITORY_BASED";
     String USER = "nyilvantarto";
     String PASSWORD = "dbjelszo";
-    String TABLAK[] = {"ARUK", "NAPLO"};
+    String TABLAK[] = {"ARUK", "NAPLO", "FELHASZNALOK"};
 
     String SQLARUKELDOBAS = "DROP TABLE ARUK";
     String SQLARUKLETREHOZ = "CREATE TABLE ARUK (\n"
@@ -33,7 +33,19 @@ public interface AdatbazisKapcsolat {
             + "mikor TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,\n"
             + "felhasznalo VARCHAR(120) NOT NULL,\n"
             + "muvelet VARCHAR(255) NOT NULL)";
+    String SQLNAPLOELDOBAS = "DROP TABLE NAPLO";
     String SQLNAPLOHOZZAAD = "INSERT INTO NAPLO (MIKOR, FELHASZNALO, MUVELET) \n"
             + "	VALUES (DEFAULT, ?, ?)";
     String SQLNAPLOK = "SELECT * FROM NAPLO ORDER BY azon";
+    String SQLFELHASZNALOKELDOBAS = "DROP TABLE FELHASZNALOK";
+    String SQLFELHASZNALOKLETREHOZAS = "CREATE TABLE FELHASZNALOK (\n"
+            + "fnev VARCHAR(120) NOT NULL PRIMARY KEY,\n"
+            + "jelszo VARCHAR(166) NOT NULL,\n"
+            + "nev VARCHAR(160) NOT NULL,\n"
+            + "telefon VARCHAR(20),\n"
+            + "tipus NUMERIC(1) NOT NULL)";
+    String SQLFELHASZNALOK = "SELECT * FROM FELHASZNALOK ORDER BY fnev";
+    String SQLFELHASZNALOHOZZAAD = "INSERT INTO FELHASZNALOK VALUES (?, ?, ?, ?, ?)";
+    String SQLFELHASZNALOMODOSIT = "UPDATE FELHASZNALOK SET jelszo = ?, nev = ?, telefon = ?, tipus = ? WHERE fnev = ?"; // fnév nem változhat!
+    String SQLFELHASZNALOTOROL = "DELETE FROM FELHASZNALOK WHERE fnev = ?";
 }

@@ -128,9 +128,10 @@ public class Nyilvantarto extends Application {
         this.fajlkezeles = new Fajlkezeles();
         this.hiba = new Hibauzenetek();
         this.adatbaziskezeles = new Adatbaziskezeles();
-        fajlkezeles.felhasznaloOlvasas(this);
+        //fajlkezeles.felhasznaloOlvasas(this);
         adatbaziskezeles.adatbazisInicializalas();
         adatbaziskezeles.aruOlvasas(this);
+        adatbaziskezeles.felhasznaloOlvasas(this);
         this.log = fajlkezeles.logOlvasas();
     }
 
@@ -152,7 +153,7 @@ public class Nyilvantarto extends Application {
             // Ezzel megoldjuk az átméretezési hibát
             stage.sizeToScene();
             stage.show();
-            if (getaktFelhasznalo() != null) {
+            if (getFelhasznalok().size() == 1 && getFelhasznalok().get(0).getFnev().equals("admin")) {
                 getHiba().elsoInditas();
             }
         } catch (IOException ex) {
@@ -199,7 +200,7 @@ public class Nyilvantarto extends Application {
     @Override
     public void stop() {
 //        fajlkezeles.aruMentes(this);
-        fajlkezeles.felhasznaloMentes(this);
+//        fajlkezeles.felhasznaloMentes(this);
         fajlkezeles.logMentes(this);
         System.exit(0);
     }

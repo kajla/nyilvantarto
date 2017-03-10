@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import nyilvantarto.Felhasznalo;
 import nyilvantarto.Nyilvantarto;
 import nyilvantarto.aru;
 
@@ -34,6 +35,10 @@ public class Adatbaziskezeles implements AdatbazisKapcsolat {
 
                     case "NAPLO":
                         naploLetrehozas();
+                        break;
+
+                    case "FELHASZNALOK":
+                        felhasznalokLetrehozas();
                         break;
 
                     default:
@@ -111,7 +116,7 @@ public class Adatbaziskezeles implements AdatbazisKapcsolat {
     }
 
     public boolean aruTorol(aru ujAru) {
-        // Törli az árut az adatbázishoz.
+        // Törli az árut az adatbázisban.
         // Ha nem sikerülne törölni, true értékkel tér vissza
         try (Connection kapcsolat = DriverManager.getConnection(URL, USER, PASSWORD)) {
             PreparedStatement ps = kapcsolat.prepareStatement(SQLARUTOROL);
@@ -125,7 +130,7 @@ public class Adatbaziskezeles implements AdatbazisKapcsolat {
     }
 
     public boolean aruModosit(aru ujAru) {
-        // Módosítja az árut az adatbázishoz.
+        // Módosítja az árut az adatbázisban.
         // Ha nem sikerülne módosítani, true értékkel tér vissza
         try (Connection kapcsolat = DriverManager.getConnection(URL, USER, PASSWORD)) {
             PreparedStatement ps = kapcsolat.prepareStatement(SQLARUMODOSIT);
@@ -187,7 +192,7 @@ public class Adatbaziskezeles implements AdatbazisKapcsolat {
     }
 
     private boolean naploLetrehozas() {
-        // Áruk tábla létrehozása, kívülről nem meghívható!
+        // NAPLO tábla létrehozása, kívülről nem meghívható!
         boolean allapot = false;
         try (Connection kapcsolat = DriverManager.getConnection(URL, USER, PASSWORD)) {
             PreparedStatement ps = kapcsolat.prepareStatement(SQLNAPLOLETREHOZ);
@@ -199,6 +204,18 @@ public class Adatbaziskezeles implements AdatbazisKapcsolat {
         return allapot;
     }
 
+    private boolean naploEldobas() {
+        // NAPLO tábla eldobása, kívülről nem meghívható!
+        boolean allapot = false;
+        try (Connection kapcsolat = DriverManager.getConnection(URL, USER, PASSWORD)) {
+            PreparedStatement ps = kapcsolat.prepareStatement(SQLNAPLOELDOBAS);
+            ps.execute();
+        } catch (SQLException ex) {
+            System.out.println(ex.getLocalizedMessage());
+            return true;
+        }
+        return allapot;
+    }
     // TODO: NAPLÓ újragondolása
 //    public boolean naploHozzaad(Naplo naplo) {
 //        // Hozzáadja az újonnan felvitt árut az adatbázishoz.
@@ -214,4 +231,107 @@ public class Adatbaziskezeles implements AdatbazisKapcsolat {
 //        }
 //        return false;
 //    }
+
+    private boolean felhasznalokLetrehozas() {
+        // FELHASZNALOK tábla létrehozása, kívülről nem meghívható!
+        boolean allapot = false;
+        try (Connection kapcsolat = DriverManager.getConnection(URL, USER, PASSWORD)) {
+            PreparedStatement ps = kapcsolat.prepareStatement(SQLFELHASZNALOKLETREHOZAS);
+            ps.execute();
+        } catch (SQLException ex) {
+            System.out.println(ex.getLocalizedMessage());
+            return true;
+        }
+        return allapot;
+    }
+
+    private boolean felhasznalokEldobas() {
+        // Esetleges tisztítás végett
+        // FELHASZNALOK tábla eldobása, kívülről nem meghívható!
+        boolean allapot = false;
+        try (Connection kapcsolat = DriverManager.getConnection(URL, USER, PASSWORD)) {
+            PreparedStatement ps = kapcsolat.prepareStatement(SQLFELHASZNALOKELDOBAS);
+            ps.execute();
+        } catch (SQLException ex) {
+            System.out.println(ex.getLocalizedMessage());
+            return true;
+        }
+        return allapot;
+    }
+
+    public void felhasznaloOlvasas(Nyilvantarto nyilvantarto) {
+        // Feltölti a felhasználókat az adatbázisból
+        ArrayList<Felhasznalo> lista = new ArrayList<>();
+        try (Connection kapcsolat = DriverManager.getConnection(URL, USER, PASSWORD)) {
+            ResultSet eredmeny = kapcsolat.createStatement().executeQuery(SQLFELHASZNALOK);
+            while (eredmeny.next()) {
+                // felhasznalok (fnev, nev, telefon, tipus, elhashelt_jelszo)
+                lista.add(new Felhasznalo(eredmeny.getString("fnev"), eredmeny.getString("nev"), eredmeny.getString("telefon"), eredmeny.getInt("tipus"), eredmeny.getString("jelszo")));
+            }
+        } catch (SQLException ex) {
+            System.out.println("Végzetes adatbázis hiba történt!");
+            System.out.println(ex.getLocalizedMessage());
+        }
+        if (lista.isEmpty()) {
+            Felhasznalo kezdetiFelh = new Felhasznalo("admin", "admin", "Admin Felhasználó", "+36 1 123 4567", 0);
+            if (!felhasznaloHozzaad(kezdetiFelh)) {
+                System.out.println("Admin felhasználó hozzáadva az adatbázishoz!");
+            }
+            lista.add(kezdetiFelh);
+            nyilvantarto.setaktFelhasznalo(kezdetiFelh);
+        }
+        nyilvantarto.setFelhasznalok(lista);
+    }
+
+    public boolean felhasznaloHozzaad(Felhasznalo ujFelhasznalo) {
+        // Hozzáadja az újonnan felvitt felhasználót az adatbázishoz.
+        // Ha nem sikerülne felvinni, true értékkel tér vissza
+        try (Connection kapcsolat = DriverManager.getConnection(URL, USER, PASSWORD)) {
+            PreparedStatement ps = kapcsolat.prepareStatement(SQLFELHASZNALOHOZZAAD);
+            // felhasznalo SQL(fnev, jelszo, nev, telefon, tipus)
+            ps.setString(1, ujFelhasznalo.getFnev());
+            ps.setString(2, ujFelhasznalo.getJelszo());
+            ps.setString(3, ujFelhasznalo.getNev());
+            ps.setString(4, ujFelhasznalo.getTelefon());
+            ps.setInt(5, ujFelhasznalo.getTipus());
+            ps.execute();
+        } catch (SQLException ex) {
+            System.out.println(ex.getLocalizedMessage());
+            return true;
+        }
+        return false;
+    }
+
+    public boolean felhasznaloTorol(Felhasznalo toroltFelhasznalo) {
+        // Törli a felhasználót az adatbázisban.
+        // Ha nem sikerülne törölni, true értékkel tér vissza
+        try (Connection kapcsolat = DriverManager.getConnection(URL, USER, PASSWORD)) {
+            PreparedStatement ps = kapcsolat.prepareStatement(SQLFELHASZNALOTOROL);
+            ps.setString(1, toroltFelhasznalo.getFnev());
+            ps.execute();
+        } catch (SQLException ex) {
+            System.out.println(ex.getLocalizedMessage());
+            return true;
+        }
+        return false;
+    }
+
+    public boolean felhasznaloModosit(Felhasznalo modositottFelhasznalo) {
+        // Módosítja a felhasználót az adatbázisban.
+        // Ha nem sikerülne módosítani, true értékkel tér vissza
+        try (Connection kapcsolat = DriverManager.getConnection(URL, USER, PASSWORD)) {
+            PreparedStatement ps = kapcsolat.prepareStatement(SQLFELHASZNALOMODOSIT);
+            // SQL bemenő értékek: jelszo, nev, telefon, tipus, fnev
+            ps.setString(1, modositottFelhasznalo.getJelszo());
+            ps.setString(2, modositottFelhasznalo.getNev());
+            ps.setString(3, modositottFelhasznalo.getTelefon());
+            ps.setInt(4, modositottFelhasznalo.getTipus());
+            ps.setString(5, modositottFelhasznalo.getFnev());
+            ps.execute();
+        } catch (SQLException ex) {
+            System.out.println(ex.getLocalizedMessage());
+            return true;
+        }
+        return false;
+    }
 }

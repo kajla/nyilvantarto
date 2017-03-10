@@ -100,7 +100,7 @@ public class Hibauzenetek {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Nyilvántartó");
         alert.setHeaderText("Az alkalmazást feltehetően először indítják.");
-        alert.setContentText("Nem található a felhasznalok.dat fájl, ami arra enged következtetni, hogy ez a program első indítása.\nAlapértelmezett belépés engedélyezve: admin / admin");
+        alert.setContentText("Csak admin felhasználó található, ami arra enged következtetni, hogy ez a program első indítása.\nAlapértelmezett belépési adatok: admin / admin");
         alert.showAndWait();
     }
 

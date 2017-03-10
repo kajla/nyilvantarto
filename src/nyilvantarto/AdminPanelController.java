@@ -170,7 +170,7 @@ public class AdminPanelController implements Initializable {
                 hiba = true;
                 hibauzenet += "Típus üres! ";
             } else {
-                if (cbTipus.getSelectionModel().getSelectedItem().toString() == "Admin") {
+                if ("Admin".equals(cbTipus.getSelectionModel().getSelectedItem().toString())) {
                     tipus = 0;
                 } else {
                     tipus = 1;
@@ -179,7 +179,14 @@ public class AdminPanelController implements Initializable {
             // Ha bármi hiba van, NEM hajtjuk végre
             if (!hiba) {
                 // Felvesszük az új elemet
-                felhasznalok.add(new Felhasznalo(fnev, jelszo, nev, telefon, tipus));
+                Felhasznalo ujfelh = new Felhasznalo(fnev, jelszo, nev, telefon, tipus);
+                felhasznalok.add(ujfelh);
+
+                // Adatbáziskezelés
+                if (nyilvantarto.getAdatbaziskezeles().felhasznaloHozzaad(ujfelh)) {
+                    nyilvantarto.getHiba().adatbazisHiba();
+                }
+
                 // Egyből be is rendezzük ;)
                 Collections.sort(felhasznalok);
                 // Felülcsapjuk a globális listát
@@ -221,7 +228,13 @@ public class AdminPanelController implements Initializable {
                 Optional<ButtonType> eredmeny = biztosan.showAndWait();
                 if (eredmeny.get() == ButtonType.YES) {
                     // Sajnos ezt a felhasználót elveszítettük...
-                    felhasznalok.remove((Felhasznalo) tvFelhasznalok.getSelectionModel().getSelectedItem());
+                    Felhasznalo toroltFelh = (Felhasznalo) tvFelhasznalok.getSelectionModel().getSelectedItem();
+                    felhasznalok.remove(toroltFelh);
+
+                    // Adatbáziskezelés
+                    if (nyilvantarto.getAdatbaziskezeles().felhasznaloTorol(toroltFelh)) {
+                        nyilvantarto.getHiba().adatbazisHiba();
+                    }
 
                     // Felülcsapjuk a globális listát
                     ArrayList<Felhasznalo> ideiglenes = new ArrayList<>();

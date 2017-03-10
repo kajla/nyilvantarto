@@ -44,6 +44,14 @@ public class Felhasznalo implements Serializable, Comparable<Object> {
         }
     }
 
+    public Felhasznalo(String fnev, String nev, String telefon, int tipus, String hashJelszo) {
+        this.fnev = fnev;
+        this.jelszo = hashJelszo;
+        this.nev = nev;
+        this.telefon = telefon;
+        this.tipus = tipus;
+    }
+
     public String getFnev() {
         return fnev;
     }

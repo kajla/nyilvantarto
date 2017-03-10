@@ -99,6 +99,7 @@ public class Fajlkezeles {
                 Object o = ois.readObject();
                 if (o instanceof Felhasznalo) {
                     Felhasznalo júzer = (Felhasznalo) o;
+                    System.out.println(júzer.getJelszo());
                     lista.add(júzer);
                 }
             }
