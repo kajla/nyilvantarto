@@ -111,5 +111,13 @@ public class Hibauzenetek {
         alert.setContentText("A kérés végrehajtása közben váratlan adatbázis hiba történt.\nKérjük, ellenőrizze, hogy elérhető-e az adatbázis!");
         alert.showAndWait();
     }
+    
+    public void adatbazisKesobbModositva() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Nyilvántartó");
+        alert.setHeaderText("Adatbázisban módosítás történt");
+        alert.setContentText("Az adatbázisban időközben módosították az adott elemet.\nA kért művelet nem hajtódott végre.");
+        alert.showAndWait();
+    }
 
 }

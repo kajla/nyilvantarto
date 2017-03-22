@@ -6,6 +6,8 @@
 package nyilvantarto;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Calendar;
 
 /**
  *
@@ -18,6 +20,7 @@ public class aru implements Serializable, Comparable<Object> {
     private int ear;
     private int darab;
     private int id;
+    private Timestamp modositva;
 
     public aru(int id, String nev, String mertekegyseg, int ear, int darab) {
         this.id = id;
@@ -25,6 +28,16 @@ public class aru implements Serializable, Comparable<Object> {
         this.mertekegyseg = mertekegyseg;
         this.ear = ear;
         this.darab = darab;
+        this.modositva = new Timestamp(Calendar.getInstance().getTime().getTime());
+    }
+
+    public aru(int id, String nev, String mertekegyseg, int ear, int darab, Timestamp modositva) {
+        this.id = id;
+        this.nev = nev;
+        this.mertekegyseg = mertekegyseg;
+        this.ear = ear;
+        this.darab = darab;
+        this.modositva = modositva;
     }
 
     public int getId() {
@@ -63,16 +76,24 @@ public class aru implements Serializable, Comparable<Object> {
         this.darab = darab;
     }
 
+    public Timestamp getModositva() {
+        return modositva;
+    }
+
+    public void setModositva(Timestamp modositas) {
+        this.modositva = modositas;
+    }
+
     @Override
     public String toString() {
         return nev;
-                
+
     }
 
     public int getOsszErtek() {
         return ear * darab;
     }
-    
+
     @Override
     public int compareTo(Object o) {
         aru a = (aru) o;
@@ -106,5 +127,9 @@ public class aru implements Serializable, Comparable<Object> {
             return false;
         }
         return true;
+    }
+
+    public boolean modositasOsszehasonlit(Timestamp idopont) {
+        return modositva.equals(idopont);
     }
 }

@@ -250,7 +250,7 @@ public class MainController implements Initializable {
 
                     // Régi termék újrafelvétele
                     aruLista.add(mod);
-
+                    
                     // Adatbázis módosítás
                     if (nyilvantarto.getAdatbaziskezeles().aruModosit(mod)) {
                         nyilvantarto.getHiba().adatbazisHiba();
@@ -314,6 +314,8 @@ public class MainController implements Initializable {
                     // Kiválasztott elemet töröljük
                     cbTermék.getSelectionModel().select("Válasszon");
 
+                    // TESZT
+                    System.out.println(nyilvantarto.getAdatbaziskezeles().aruEllenoriz(akt));
                     // Adatbázis törlés
                     if (nyilvantarto.getAdatbaziskezeles().aruTorol(akt)) {
                         nyilvantarto.getHiba().adatbazisHiba();
@@ -386,7 +388,7 @@ public class MainController implements Initializable {
             if (!hiba) {
                 aru akt = new aru(nyilvantarto.getMaxID(), nev, megyseg, ar, darab);
                 lbUj.setVisible(false);
-
+                
                 // Adatbáziskezelés
                 if (nyilvantarto.getAdatbaziskezeles().aruHozzaad(akt)) {
                     nyilvantarto.getHiba().adatbazisHiba();

@@ -23,11 +23,13 @@ public interface AdatbazisKapcsolat {
             + "nev VARCHAR(120) NOT NULL,\n"
             + "mertekegyseg VARCHAR(64) NOT NULL,\n"
             + "egysegar INTEGER NOT NULL,\n"
-            + "darab INTEGER NOT NULL)";
+            + "darab INTEGER NOT NULL,\n"
+            + "modositva TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)";
     String SQLARUK = "SELECT * FROM ARUK ORDER BY nev";
-    String SQLARUHOZZAAD = "INSERT INTO ARUK VALUES (?, ?, ?, ?, ?)";
+    String SQLARUHOZZAAD = "INSERT INTO ARUK VALUES (?, ?, ?, ?, ?, ?)";
     String SQLARUTOROL = "DELETE FROM ARUK WHERE id = ?";
     String SQLARUMODOSIT = "UPDATE ARUK SET nev = ?, mertekegyseg = ?, egysegar = ?, darab = ? WHERE id = ?";
+    String SQLARUELLENORIZ = "SELECT modositva FROM ARUK WHERE id = ?";
     String SQLNAPLOLETREHOZ = "CREATE TABLE NAPLO (\n"
             + "azon INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),\n"
             + "mikor TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,\n"

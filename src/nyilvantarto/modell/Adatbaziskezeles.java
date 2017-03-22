@@ -73,7 +73,7 @@ public class Adatbaziskezeles implements AdatbazisKapcsolat {
         try (Connection kapcsolat = DriverManager.getConnection(URL, USER, PASSWORD)) {
             ResultSet eredmeny = kapcsolat.createStatement().executeQuery(SQLARUK);
             while (eredmeny.next()) {
-                lista.add(new aru(eredmeny.getInt(1), eredmeny.getString(2), eredmeny.getString(3), eredmeny.getInt(4), eredmeny.getInt(5)));
+                lista.add(new aru(eredmeny.getInt(1), eredmeny.getString(2), eredmeny.getString(3), eredmeny.getInt(4), eredmeny.getInt(5), eredmeny.getTimestamp(6)));
             }
         } catch (SQLException ex) {
             // FIXME: ezt hogy kellene normálisan kezelni? Alkalmazás elinduljon vagy sem?
@@ -85,7 +85,7 @@ public class Adatbaziskezeles implements AdatbazisKapcsolat {
             nyilvantarto.setMaxID(0);
         } else {
             int max = lista.get(0).getId();
-            for (int i = 1; i < lista.size(); i++) {
+            for (int i = 0; i < lista.size(); i++) {
                 if (lista.get(i).getId() > max) {
                     max = lista.get(i).getId();
                 }
@@ -107,12 +107,40 @@ public class Adatbaziskezeles implements AdatbazisKapcsolat {
             ps.setString(3, ujAru.getMertekegyseg());
             ps.setInt(4, ujAru.getEar());
             ps.setInt(5, ujAru.getDarab());
+            ps.setTimestamp(6, ujAru.getModositva());
             ps.execute();
         } catch (SQLException ex) {
             System.out.println(ex.getLocalizedMessage());
             return true;
         }
         return false;
+    }
+
+    public int aruEllenoriz(aru aktAru) {
+        // Ellenőrzi, hogy módosították-e az adott árut, mióta kiolvastuk azt
+        // Visszatérési értékek:
+        // 0: OK, stimmel; 1: nem stimmel; 2: nem kaptunk eredményt; -1: adatbázis hiba
+        try (Connection kapcsolat = DriverManager.getConnection(URL, USER, PASSWORD)) {
+            PreparedStatement ps = kapcsolat.prepareStatement(SQLARUELLENORIZ);
+            // azonosító --> utoljára módosítva
+            ps.setInt(1, aktAru.getId());
+            ResultSet eredmeny = ps.executeQuery();
+            if (eredmeny.next()) {
+                if (aktAru.modositasOsszehasonlit(eredmeny.getTimestamp("modositva"))) {
+//                    System.out.println("OK");
+                    return 0;
+                } else {
+//                    System.out.println("NEM OK");
+                    return 1;
+                }
+            } else {
+//                System.out.println("nincs eredmény");
+                return 2;
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getLocalizedMessage());
+            return -1;
+        }
     }
 
     public boolean aruTorol(aru ujAru) {
@@ -218,7 +246,7 @@ public class Adatbaziskezeles implements AdatbazisKapcsolat {
     }
     // TODO: NAPLÓ újragondolása
 //    public boolean naploHozzaad(Naplo naplo) {
-//        // Hozzáadja az újonnan felvitt árut az adatbázishoz.
+//        // Hozzáadja az újonnan felvitt naplót az adatbázishoz.
 //        // Ha nem sikerülne felvinni, true értékkel tér vissza
 //        try (Connection kapcsolat = DriverManager.getConnection(URL, USER, PASSWORD)) {
 //            PreparedStatement ps = kapcsolat.prepareStatement(SQLNAPLOHOZZAAD);
