@@ -98,9 +98,8 @@ public class Fajlkezeles {
             while (true) {
                 Object o = ois.readObject();
                 if (o instanceof Felhasznalo) {
-                    Felhasznalo júzer = (Felhasznalo) o;
-                    System.out.println(júzer.getJelszo());
-                    lista.add(júzer);
+                    Felhasznalo aktFelhasznalo = (Felhasznalo) o;
+                    lista.add(aktFelhasznalo);
                 }
             }
         } catch (EOFException e) {
@@ -163,8 +162,8 @@ public class Fajlkezeles {
         if (fajl != null) {
             try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fajl), "UTF-8"))) {
                 bw.write("Név (szöveg);Darabszám (szám);Mértékegység (szöveg);Ár (szám)\n");
-                for (aru termék : nyilvantarto.getAruk()) {
-                    bw.write(termék.getNev() + ";" + termék.getDarab() + ";" + termék.getMertekegyseg() + ";" + termék.getEar() + "\n");
+                for (aru termek : nyilvantarto.getAruk()) {
+                    bw.write(termek.getNev() + ";" + termek.getDarab() + ";" + termek.getMertekegyseg() + ";" + termek.getEar() + "\n");
                 }
             } catch (IOException ex) {
                 System.out.println("Váratlan I/O hiba történt!");
