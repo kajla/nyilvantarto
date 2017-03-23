@@ -123,8 +123,8 @@ public class Hibauzenetek {
     public void adatbazisNemtalalhato() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Nyilvántartó");
-        alert.setHeaderText("Elem nem található az adatbázisban");
-        alert.setContentText("Az adatbázisban nem található adott elemet.\nA kért művelet nem hajtódott végre.\nAz adatok újratöltve.");
+        alert.setHeaderText("A kiválasztott elem nem található");
+        alert.setContentText("Az adatbázisban nem található a kiválasztott elem,\nfeltehetően az alkalmazás indítása óta törölték.\nA kért művelet nem hajtódott végre.\nAz adatok újratöltve.");
         alert.showAndWait();
     }
 
