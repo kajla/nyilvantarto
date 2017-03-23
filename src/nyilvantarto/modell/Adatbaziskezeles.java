@@ -99,6 +99,7 @@ public class Adatbaziskezeles implements AdatbazisKapcsolat {
     public boolean aruHozzaad(aru ujAru) {
         // Hozzáadja az újonnan felvitt árut az adatbázishoz.
         // Ha sikerülne felvinni, true értékkel tér vissza
+        boolean allapot = false;
         try (Connection kapcsolat = DriverManager.getConnection(URL, USER, PASSWORD)) {
             PreparedStatement ps = kapcsolat.prepareStatement(SQLARUHOZZAAD);
             // aru(id, nev, mertekegyseg, ear, darab, letrehozva)
@@ -109,11 +110,11 @@ public class Adatbaziskezeles implements AdatbazisKapcsolat {
             ps.setInt(5, ujAru.getDarab());
             ps.setTimestamp(6, ujAru.getModositva());
             ps.execute();
+            allapot = true;
         } catch (SQLException ex) {
             System.out.println(ex.getLocalizedMessage());
-            return false;
         }
-        return true;
+        return allapot;
     }
 
     public int aruEllenoriz(aru aktAru) {
@@ -146,20 +147,22 @@ public class Adatbaziskezeles implements AdatbazisKapcsolat {
     public boolean aruTorol(aru ujAru) {
         // Törli az árut az adatbázisban.
         // Ha sikerülne törölni, true értékkel tér vissza
+        boolean allapot = false;
         try (Connection kapcsolat = DriverManager.getConnection(URL, USER, PASSWORD)) {
             PreparedStatement ps = kapcsolat.prepareStatement(SQLARUTOROL);
             ps.setInt(1, ujAru.getId());
             ps.execute();
+            allapot = true;
         } catch (SQLException ex) {
             System.out.println(ex.getLocalizedMessage());
-            return false;
         }
-        return true;
+        return allapot;
     }
 
     public boolean aruModosit(aru ujAru) {
         // Módosítja az árut az adatbázisban.
         // Ha sikerülne módosítani, true értékkel tér vissza
+        boolean allapot = false;
         try (Connection kapcsolat = DriverManager.getConnection(URL, USER, PASSWORD)) {
             PreparedStatement ps = kapcsolat.prepareStatement(SQLARUMODOSIT);
             // SQL bemenő értékek: nev, mertekegyseg, ear, darab, modositva, id
@@ -170,11 +173,11 @@ public class Adatbaziskezeles implements AdatbazisKapcsolat {
             ps.setTimestamp(5, ujAru.getModositva());
             ps.setInt(6, ujAru.getId());
             ps.execute();
+            allapot = true;
         } catch (SQLException ex) {
             System.out.println(ex.getLocalizedMessage());
-            return false;
         }
-        return true;
+        return allapot;
     }
 
     private boolean arukEldobas() {
@@ -183,9 +186,10 @@ public class Adatbaziskezeles implements AdatbazisKapcsolat {
         try (Connection kapcsolat = DriverManager.getConnection(URL, USER, PASSWORD)) {
             PreparedStatement ps = kapcsolat.prepareStatement(SQLARUKELDOBAS);
             ps.execute();
+            allapot = true;
         } catch (SQLException ex) {
             System.out.println(ex.getLocalizedMessage());
-            return true;
+            allapot = false;
         }
         return allapot;
     }
@@ -196,25 +200,26 @@ public class Adatbaziskezeles implements AdatbazisKapcsolat {
         try (Connection kapcsolat = DriverManager.getConnection(URL, USER, PASSWORD)) {
             PreparedStatement ps = kapcsolat.prepareStatement(SQLARUKLETREHOZ);
             ps.execute();
+            allapot = true;
         } catch (SQLException ex) {
             System.out.println(ex.getLocalizedMessage());
-            return true;
         }
         return allapot;
     }
 
     public boolean aruImport(Nyilvantarto nyilvantarto) {
         // Importáltak, azaz dobjuk el jelenlegi táblát, hozzuk létre, majd töltsük fel
-        boolean allapot = false;
-        if (arukEldobas()) {
-            allapot = true;
+        // Ha sikerül, true a visszatérési érték
+        boolean allapot = true;
+        if (!arukEldobas()) {
+            allapot = false;
         }
-        if (arukLetrehozas()) {
-            allapot = true;
+        if (!arukLetrehozas()) {
+            allapot = false;
         }
         for (aru akt : nyilvantarto.getAruk()) {
-            if (aruHozzaad(akt)) {
-                allapot = true;
+            if (!aruHozzaad(akt)) {
+                allapot = false;
             }
         }
         return allapot;
@@ -226,9 +231,9 @@ public class Adatbaziskezeles implements AdatbazisKapcsolat {
         try (Connection kapcsolat = DriverManager.getConnection(URL, USER, PASSWORD)) {
             PreparedStatement ps = kapcsolat.prepareStatement(SQLNAPLOLETREHOZ);
             ps.execute();
+            allapot = true;
         } catch (SQLException ex) {
             System.out.println(ex.getLocalizedMessage());
-            return true;
         }
         return allapot;
     }
@@ -239,9 +244,9 @@ public class Adatbaziskezeles implements AdatbazisKapcsolat {
         try (Connection kapcsolat = DriverManager.getConnection(URL, USER, PASSWORD)) {
             PreparedStatement ps = kapcsolat.prepareStatement(SQLNAPLOELDOBAS);
             ps.execute();
+            allapot = true;
         } catch (SQLException ex) {
             System.out.println(ex.getLocalizedMessage());
-            return true;
         }
         return allapot;
     }
@@ -249,16 +254,18 @@ public class Adatbaziskezeles implements AdatbazisKapcsolat {
 //    public boolean naploHozzaad(Naplo naplo) {
 //        // Hozzáadja az újonnan felvitt naplót az adatbázishoz.
 //        // Ha nem sikerülne felvinni, true értékkel tér vissza
+//    boolean allapot = false;
 //        try (Connection kapcsolat = DriverManager.getConnection(URL, USER, PASSWORD)) {
 //            PreparedStatement ps = kapcsolat.prepareStatement(SQLNAPLOHOZZAAD);
 //            // naplo(felhasznalo, muvelet)
 //            ps.setString(1, naplo.getFelhasznalo());
 //            ps.setString(2, naplo.getMuvelet());
 //            ps.execute();
+//    allapot = true;
 //        } catch (SQLException ex) {
-//            return true;
+//            System.out.println(ex.getLocalizedMessage());
 //        }
-//        return false;
+//        return allapot;
 //    }
 
     private boolean felhasznalokLetrehozas() {
@@ -267,9 +274,9 @@ public class Adatbaziskezeles implements AdatbazisKapcsolat {
         try (Connection kapcsolat = DriverManager.getConnection(URL, USER, PASSWORD)) {
             PreparedStatement ps = kapcsolat.prepareStatement(SQLFELHASZNALOKLETREHOZAS);
             ps.execute();
+            allapot = true;
         } catch (SQLException ex) {
             System.out.println(ex.getLocalizedMessage());
-            return true;
         }
         return allapot;
     }
@@ -281,9 +288,9 @@ public class Adatbaziskezeles implements AdatbazisKapcsolat {
         try (Connection kapcsolat = DriverManager.getConnection(URL, USER, PASSWORD)) {
             PreparedStatement ps = kapcsolat.prepareStatement(SQLFELHASZNALOKELDOBAS);
             ps.execute();
+            allapot = true;
         } catch (SQLException ex) {
             System.out.println(ex.getLocalizedMessage());
-            return true;
         }
         return allapot;
     }
@@ -315,6 +322,7 @@ public class Adatbaziskezeles implements AdatbazisKapcsolat {
     public boolean felhasznaloHozzaad(Felhasznalo ujFelhasznalo) {
         // Hozzáadja az újonnan felvitt felhasználót az adatbázishoz.
         // Ha nem sikerülne felvinni, true értékkel tér vissza
+        boolean allapot = false;
         try (Connection kapcsolat = DriverManager.getConnection(URL, USER, PASSWORD)) {
             PreparedStatement ps = kapcsolat.prepareStatement(SQLFELHASZNALOHOZZAAD);
             // felhasznalo SQL(fnev, jelszo, nev, telefon, tipus)
@@ -324,30 +332,32 @@ public class Adatbaziskezeles implements AdatbazisKapcsolat {
             ps.setString(4, ujFelhasznalo.getTelefon());
             ps.setInt(5, ujFelhasznalo.getTipus());
             ps.execute();
+            allapot = true;
         } catch (SQLException ex) {
             System.out.println(ex.getLocalizedMessage());
-            return true;
         }
-        return false;
+        return allapot;
     }
 
     public boolean felhasznaloTorol(Felhasznalo toroltFelhasznalo) {
         // Törli a felhasználót az adatbázisban.
         // Ha nem sikerülne törölni, true értékkel tér vissza
+        boolean allapot = false;
         try (Connection kapcsolat = DriverManager.getConnection(URL, USER, PASSWORD)) {
             PreparedStatement ps = kapcsolat.prepareStatement(SQLFELHASZNALOTOROL);
             ps.setString(1, toroltFelhasznalo.getFnev());
             ps.execute();
+            allapot = true;
         } catch (SQLException ex) {
             System.out.println(ex.getLocalizedMessage());
-            return true;
         }
-        return false;
+        return allapot;
     }
 
     public boolean felhasznaloModosit(Felhasznalo modositottFelhasznalo) {
         // Módosítja a felhasználót az adatbázisban.
         // Ha nem sikerülne módosítani, true értékkel tér vissza
+        boolean allapot = false;
         try (Connection kapcsolat = DriverManager.getConnection(URL, USER, PASSWORD)) {
             PreparedStatement ps = kapcsolat.prepareStatement(SQLFELHASZNALOMODOSIT);
             // SQL bemenő értékek: jelszo, nev, telefon, tipus, fnev
@@ -357,10 +367,10 @@ public class Adatbaziskezeles implements AdatbazisKapcsolat {
             ps.setInt(4, modositottFelhasznalo.getTipus());
             ps.setString(5, modositottFelhasznalo.getFnev());
             ps.execute();
+            allapot = true;
         } catch (SQLException ex) {
             System.out.println(ex.getLocalizedMessage());
-            return true;
         }
-        return false;
+        return allapot;
     }
 }
