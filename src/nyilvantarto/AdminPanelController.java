@@ -6,8 +6,6 @@
 package nyilvantarto;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -180,14 +178,13 @@ public class AdminPanelController implements Initializable {
                 Felhasznalo ujfelh = new Felhasznalo(fnev, jelszo, nev, telefon, tipus);
 
                 // Új felhasználó felvétele
-                if (nyilvantarto.felhasznaloHozzaad(ujfelh)) {
+                if (nyilvantarto.felhasznaloHozzaadas(ujfelh)) {
                     txtFNev.clear();
                     txtNev.clear();
                     pwJelszo.clear();
                     txtTelefon.clear();
                     obListaFrissit();
                 } else {
-                    nyilvantarto.getHiba().adatbazisHiba();
                     obListaFrissit();
                 }
 
@@ -197,13 +194,13 @@ public class AdminPanelController implements Initializable {
             }
         }
         if (e.getSource() == btTorles) {
-            Felhasznalo törlendő = (Felhasznalo) tvFelhasznalok.getSelectionModel().getSelectedItem();
-            if (nyilvantarto.getaktFelhasznalo().getFnev().equals(törlendő.getFnev())) {
+            Felhasznalo torlendo = (Felhasznalo) tvFelhasznalok.getSelectionModel().getSelectedItem();
+            if (nyilvantarto.getaktFelhasznalo().getFnev().equals(torlendo.getFnev())) {
                 nyilvantarto.getHiba().onmagunkHiba();
             } else {
                 Alert biztosan = new Alert(AlertType.CONFIRMATION);
                 biztosan.setTitle("Nyilvántartó");
-                biztosan.setHeaderText(törlendő.getNev() + " (" + törlendő.getFnev() + ") törlésére készül.");
+                biztosan.setHeaderText(torlendo.getNev() + " (" + torlendo.getFnev() + ") törlésére készül.");
                 biztosan.setContentText("Valóban törölni szeretné a felhasználót?");
                 // IGEN - NEM gombok hozzáadása, sajnos az igen lesz az alapértelmezett... ezt meg miért...
                 biztosan.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
@@ -222,10 +219,9 @@ public class AdminPanelController implements Initializable {
                     Felhasznalo toroltFelh = (Felhasznalo) tvFelhasznalok.getSelectionModel().getSelectedItem();
 
                     // Adatbáziskezelés
-                    if (nyilvantarto.felhasznaloTorol(toroltFelh)) {
+                    if (nyilvantarto.felhasznaloTorles(toroltFelh)) {
                         obListaFrissit();
                     } else {
-                        nyilvantarto.getHiba().adatbazisHiba();
                         obListaFrissit();
                     }
                 }

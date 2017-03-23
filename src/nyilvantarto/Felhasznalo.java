@@ -10,6 +10,8 @@ import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.SecretKeyFactory;
@@ -26,6 +28,7 @@ public class Felhasznalo implements Serializable, Comparable<Object> {
     private String nev;
     private String telefon;
     private int tipus;
+    private Timestamp modositva;
 
     public Felhasznalo(String fnev, String jelszo, String nev, String telefon, int tipus) {
         try {
@@ -34,6 +37,7 @@ public class Felhasznalo implements Serializable, Comparable<Object> {
             this.nev = nev;
             this.telefon = telefon;
             this.tipus = tipus;
+            this.modositva = new Timestamp(Calendar.getInstance().getTime().getTime());
 
             String generatedSecuredPasswordHash = generateStorngPasswordHash(jelszo);
             //System.out.println(generatedSecuredPasswordHash);
@@ -44,12 +48,13 @@ public class Felhasznalo implements Serializable, Comparable<Object> {
         }
     }
 
-    public Felhasznalo(String fnev, String nev, String telefon, int tipus, String hashJelszo) {
+    public Felhasznalo(String fnev, String nev, String telefon, int tipus, String hashJelszo, Timestamp modositva) {
         this.fnev = fnev;
         this.jelszo = hashJelszo;
         this.nev = nev;
         this.telefon = telefon;
         this.tipus = tipus;
+        this.modositva = modositva;
     }
 
     public String getFnev() {
@@ -95,6 +100,14 @@ public class Felhasznalo implements Serializable, Comparable<Object> {
 
     public void setTipus(int tipus) {
         this.tipus = tipus;
+    }
+
+    public Timestamp getModositva() {
+        return modositva;
+    }
+
+    public void setModositva(Timestamp modositva) {
+        this.modositva = modositva;
     }
 
     @Override
@@ -165,5 +178,9 @@ public class Felhasznalo implements Serializable, Comparable<Object> {
             res = fnev.compareTo(a.getFnev());
         }
         return res;
+    }
+
+    public boolean modositasOsszehasonlit(Timestamp idopont) {
+        return modositva.equals(idopont);
     }
 }
