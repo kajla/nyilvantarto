@@ -279,26 +279,6 @@ public class MainController implements Initializable {
                             }
                         }
                     }
-
-//                    // Egyből be is rendezzük ;) ... hátha változott a neve :)
-//                    Collections.sort(aruLista);
-//                    // Felülcsapjuk a globális listát
-//                    nyilvantarto.setAruk(aruLista);
-//                    // OB lista frissítése
-//                    obListaFrissit();
-//                    // Előzőt kiválasztjuk
-//                    cbTermék.getSelectionModel().select(elozo);
-//
-//                    txtNev.setEditable(false);
-//                    txtAr.setEditable(false);
-//                    txtMennyiseg.setEditable(false);
-//                    txtMEgyseg.setEditable(false);
-//                    //btSzerkesztes.setDisable(true);
-//                    //btHozzaad.setDisable(false);
-//                    btUj.setDisable(false);
-//                    btTorles.setDisable(false);
-//                    btSzerkesztes.setText("Szerkesztés");
-//                    btMegse.setVisible(false);
                 }
             } else {
                 btSzerkesztes.setText("Mentés");
