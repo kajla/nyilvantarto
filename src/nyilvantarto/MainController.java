@@ -159,15 +159,9 @@ public class MainController implements Initializable {
                 System.out.println("DEBUG: " + akt.getId() + " - " + akt.getNev());
                 for (aru termék : aruLista) {
                     if (termék.equals(akt)) {
-                        txtNev.setText(termék.getNev());
-                        txtMennyiseg.setText(termék.getDarab() + "");
-                        txtMEgyseg.setText(termék.getMertekegyseg());
-                        txtAr.setText(termék.getEar() + "");
+                        txtKitoltes(akt);
                         btSzerkesztes.setDisable(false);
-                        txtNev.setEditable(false);
-                        txtAr.setEditable(false);
-                        txtMennyiseg.setEditable(false);
-                        txtMEgyseg.setEditable(false);
+                        txtSzerk(false);
                         btSzerkesztes.setDisable(false);
                         btTorles.setDisable(false);
                         // FIX: Ha "Új" hozzáadása közben váltottunk, akkor aktívak maradtak a gombok
@@ -175,6 +169,8 @@ public class MainController implements Initializable {
                         btHozzaad.setDisable(true);
                         btMegse.setDisable(true);
                         lbUj.setVisible(false);
+                        // FIX: Ha szerkesztettünk, de időközben módosítottak és más elemet választottunk ki, akkor Mentés maradt
+                        btSzerkesztes.setText("Szerkesztés");
                     }
                 }
 
@@ -234,54 +230,79 @@ public class MainController implements Initializable {
                 // Ha bármi hiba van, NEM hajtjuk végre
                 if (!hiba) {
                     //lbUj.setVisible(false); //-->ez mit keresett itt?
-                    aru elozo = (aru) cbTermék.getSelectionModel().getSelectedItem();
-                    nyilvantarto.addLog(
-                            elozo.getNev()
-                            + " szerkesztve lett "
-                            + nyilvantarto.getaktFelhasznalo().getFnev() + " által"); //Ezt tovább lehet majd egyszer fejleszteni, hogy többet írjon ki
-
-                    // Alapértelmezett, üres elem
-                    cbTermék.getSelectionModel().select("Válasszon");
-                    // Előző termék törlése
-                    aruLista.remove(elozo);
-
+                    aru elozoAru = (aru) cbTermék.getSelectionModel().getSelectedItem();
                     // Új áru készítése, azonos azonosítóval
-                    aru mod = new aru(elozo.getId(), nev, megyseg, ar, darab);
+                    aru modositottAru = new aru(elozoAru.getId(), nev, megyseg, ar, darab);
+//                    nyilvantarto.addLog(
+//                            elozo.getNev()
+//                            + " szerkesztve lett "
+//                            + nyilvantarto.getaktFelhasznalo().getFnev() + " által"); //Ezt tovább lehet majd egyszer fejleszteni, hogy többet írjon ki
 
-                    // Régi termék újrafelvétele
-                    aruLista.add(mod);
-                    
                     // Adatbázis módosítás
-                    if (nyilvantarto.getAdatbaziskezeles().aruModosit(mod)) {
-                        nyilvantarto.getHiba().adatbazisHiba();
+                    if (nyilvantarto.aruModositas(modositottAru, elozoAru)) {
+                        // Alapértelmezett, üres elem
+                        cbTermék.getSelectionModel().select("Válasszon");
+                        // Előző termék törlése
+                        aruLista.remove(elozoAru);
+
+                        // Régi termék újrafelvétele
+                        aruLista.add(modositottAru);
+                        // Egyből be is rendezzük ;) ... hátha változott a neve :)
+                        Collections.sort(aruLista);
+                        // Felülcsapjuk a globális listát
+                        nyilvantarto.setAruk(aruLista);
+                        // OB lista frissítése
+                        obListaFrissit();
+                        // Előzőt kiválasztjuk
+                        cbTermék.getSelectionModel().select(elozoAru);
+
+                        txtSzerk(false);
+                        //btSzerkesztes.setDisable(true);
+                        //btHozzaad.setDisable(false);
+                        btUj.setDisable(false);
+                        btTorles.setDisable(false);
+                        btSzerkesztes.setText("Szerkesztés");
+                        btMegse.setVisible(false);
+                    } else {
+                        aruLista = nyilvantarto.getAruk();
+                        System.out.println(modositottAru.getModositva());
+                        obListaFrissit();
+                        for (aru termek : aruLista) {
+                            if (termek.getId() == elozoAru.getId()) {
+                                txtKitoltes(termek);
+                                cbTermék.getSelectionModel().select(termek);
+                                txtSzerk(true);
+                                btUj.setDisable(true);
+                                btTorles.setDisable(true);
+                                btMegse.setDisable(false);
+                                btSzerkesztes.setText("Mentés");
+                            }
+                        }
                     }
 
-                    // Egyből be is rendezzük ;) ... hátha változott a neve :)
-                    Collections.sort(aruLista);
-                    // Felülcsapjuk a globális listát
-                    nyilvantarto.setAruk(aruLista);
-                    // OB lista frissítése
-                    obListaFrissit();
-                    // Előzőt kiválasztjuk
-                    cbTermék.getSelectionModel().select(elozo);
-
-                    txtNev.setEditable(false);
-                    txtAr.setEditable(false);
-                    txtMennyiseg.setEditable(false);
-                    txtMEgyseg.setEditable(false);
-                    //btSzerkesztes.setDisable(true);
-                    //btHozzaad.setDisable(false);
-                    btUj.setDisable(false);
-                    btTorles.setDisable(false);
-                    btSzerkesztes.setText("Szerkesztés");
-                    btMegse.setVisible(false);
+//                    // Egyből be is rendezzük ;) ... hátha változott a neve :)
+//                    Collections.sort(aruLista);
+//                    // Felülcsapjuk a globális listát
+//                    nyilvantarto.setAruk(aruLista);
+//                    // OB lista frissítése
+//                    obListaFrissit();
+//                    // Előzőt kiválasztjuk
+//                    cbTermék.getSelectionModel().select(elozo);
+//
+//                    txtNev.setEditable(false);
+//                    txtAr.setEditable(false);
+//                    txtMennyiseg.setEditable(false);
+//                    txtMEgyseg.setEditable(false);
+//                    //btSzerkesztes.setDisable(true);
+//                    //btHozzaad.setDisable(false);
+//                    btUj.setDisable(false);
+//                    btTorles.setDisable(false);
+//                    btSzerkesztes.setText("Szerkesztés");
+//                    btMegse.setVisible(false);
                 }
             } else {
                 btSzerkesztes.setText("Mentés");
-                txtNev.setEditable(true);
-                txtAr.setEditable(true);
-                txtMennyiseg.setEditable(true);
-                txtMEgyseg.setEditable(true);
+                txtSzerk(true);
                 //btSzerkesztes.setDisable(true);
                 btHozzaad.setDisable(true);
                 btUj.setDisable(true);
@@ -314,22 +335,16 @@ public class MainController implements Initializable {
                     // Kiválasztott elemet töröljük
                     cbTermék.getSelectionModel().select("Válasszon");
 
-                    // TESZT
-                    System.out.println(nyilvantarto.getAdatbaziskezeles().aruEllenoriz(akt));
                     // Adatbázis törlés
-                    if (nyilvantarto.getAdatbaziskezeles().aruTorol(akt)) {
-                        nyilvantarto.getHiba().adatbazisHiba();
+                    if (nyilvantarto.aruTorles(akt)) {
+                        // Töröljük a listából az elemet
+                        aruLista.remove(akt);
+
+                        // Felülcsapjuk a globális listát
+                        nyilvantarto.setAruk(aruLista);
+
+                        obListaFrissit();
                     }
-
-                    // Töröljük a listából az elemet
-                    aruLista.remove(akt);
-
-                    nyilvantarto.addLog(akt.getNev() + " eltávolítva " + nyilvantarto.getaktFelhasznalo().getFnev() + " által");
-
-                    // Felülcsapjuk a globális listát
-                    nyilvantarto.setAruk(aruLista);
-
-                    obListaFrissit();
                 }
             }
         }
@@ -388,7 +403,7 @@ public class MainController implements Initializable {
             if (!hiba) {
                 aru akt = new aru(nyilvantarto.getMaxID(), nev, megyseg, ar, darab);
                 lbUj.setVisible(false);
-                
+
                 // Adatbáziskezelés
                 if (nyilvantarto.getAdatbaziskezeles().aruHozzaad(akt)) {
                     nyilvantarto.getHiba().adatbazisHiba();
@@ -427,10 +442,7 @@ public class MainController implements Initializable {
             btSzerkesztes.setDisable(true);
             btTorles.setDisable(true);
             txtNev.requestFocus();
-            txtNev.setEditable(true);
-            txtAr.setEditable(true);
-            txtMennyiseg.setEditable(true);
-            txtMEgyseg.setEditable(true);
+            txtSzerk(true);
             txtAr.clear();
             txtMEgyseg.clear();
             txtMennyiseg.clear();
@@ -450,10 +462,7 @@ public class MainController implements Initializable {
             btMegse.setVisible(false);
             btHozzaad.setDisable(true);
             btTorles.setDisable(true);
-            txtNev.setEditable(false);
-            txtAr.setEditable(false);
-            txtMennyiseg.setEditable(false);
-            txtMEgyseg.setEditable(false);
+            txtSzerk(false);
             lbUj.setVisible(false);
             btSzerkesztes.setText("Szerkesztés");
 
@@ -610,5 +619,19 @@ public class MainController implements Initializable {
         if (!e.getCharacter().matches("[0-9]")) {
             e.consume();
         }
+    }
+
+    private void txtKitoltes(aru akt) {
+        txtNev.setText(akt.getNev());
+        txtMennyiseg.setText(akt.getDarab() + "");
+        txtMEgyseg.setText(akt.getMertekegyseg());
+        txtAr.setText(akt.getEar() + "");
+    }
+
+    private void txtSzerk(boolean allapot) {
+        txtNev.setEditable(allapot);
+        txtAr.setEditable(allapot);
+        txtMennyiseg.setEditable(allapot);
+        txtMEgyseg.setEditable(allapot);
     }
 }

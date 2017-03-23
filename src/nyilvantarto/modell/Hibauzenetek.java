@@ -116,7 +116,15 @@ public class Hibauzenetek {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Nyilvántartó");
         alert.setHeaderText("Adatbázisban módosítás történt");
-        alert.setContentText("Az adatbázisban időközben módosították az adott elemet.\nA kért művelet nem hajtódott végre.");
+        alert.setContentText("Az adatbázisban időközben módosították az adott elemet.\nA kért művelet nem hajtódott végre.\nAz adatok újratöltve.");
+        alert.showAndWait();
+    }
+    
+    public void adatbazisNemtalalhato() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Nyilvántartó");
+        alert.setHeaderText("Elem nem található az adatbázisban");
+        alert.setContentText("Az adatbázisban nem található adott elemet.\nA kért művelet nem hajtódott végre.\nAz adatok újratöltve.");
         alert.showAndWait();
     }
 

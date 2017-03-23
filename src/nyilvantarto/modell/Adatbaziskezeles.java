@@ -126,11 +126,13 @@ public class Adatbaziskezeles implements AdatbazisKapcsolat {
             ps.setInt(1, aktAru.getId());
             ResultSet eredmeny = ps.executeQuery();
             if (eredmeny.next()) {
+                System.out.println(eredmeny.getTimestamp("modositva").toString());
+                System.out.println(aktAru.getModositva().toString());
                 if (aktAru.modositasOsszehasonlit(eredmeny.getTimestamp("modositva"))) {
 //                    System.out.println("OK");
                     return 0;
                 } else {
-//                    System.out.println("NEM OK");
+                    System.out.println("NEM OK");
                     return 1;
                 }
             } else {
@@ -145,35 +147,36 @@ public class Adatbaziskezeles implements AdatbazisKapcsolat {
 
     public boolean aruTorol(aru ujAru) {
         // Törli az árut az adatbázisban.
-        // Ha nem sikerülne törölni, true értékkel tér vissza
+        // Ha sikerülne törölni, true értékkel tér vissza
         try (Connection kapcsolat = DriverManager.getConnection(URL, USER, PASSWORD)) {
             PreparedStatement ps = kapcsolat.prepareStatement(SQLARUTOROL);
             ps.setInt(1, ujAru.getId());
             ps.execute();
         } catch (SQLException ex) {
             System.out.println(ex.getLocalizedMessage());
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     public boolean aruModosit(aru ujAru) {
         // Módosítja az árut az adatbázisban.
-        // Ha nem sikerülne módosítani, true értékkel tér vissza
+        // Ha sikerülne módosítani, true értékkel tér vissza
         try (Connection kapcsolat = DriverManager.getConnection(URL, USER, PASSWORD)) {
             PreparedStatement ps = kapcsolat.prepareStatement(SQLARUMODOSIT);
-            // SQL bemenő értékek: nev, mertekegyseg, ear, darab, id
+            // SQL bemenő értékek: nev, mertekegyseg, ear, darab, modositva, id
             ps.setString(1, ujAru.getNev());
             ps.setString(2, ujAru.getMertekegyseg());
             ps.setInt(3, ujAru.getEar());
             ps.setInt(4, ujAru.getDarab());
-            ps.setInt(5, ujAru.getId());
+            ps.setTimestamp(5, ujAru.getModositva());
+            ps.setInt(6, ujAru.getId());
             ps.execute();
         } catch (SQLException ex) {
             System.out.println(ex.getLocalizedMessage());
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     private boolean arukEldobas() {

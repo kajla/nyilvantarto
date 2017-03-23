@@ -12,6 +12,7 @@ import java.sql.Timestamp;
  * @author Ádám
  */
 public class Naplo {
+
     private Timestamp mikor;
     private String felhasznalo;
     private String muvelet;

@@ -123,6 +123,67 @@ public class Nyilvantarto extends Application {
         }
     }
 
+    public boolean aruTorles(aru toroltAru) {
+        // Törli az adott árut az adatbázisból, true értékkel tér vissza, ha sikerült
+        boolean allapot = false;
+        switch (adatbaziskezeles.aruEllenoriz(toroltAru)) {
+            case 0:
+                // Adatbázis törlés
+                if (adatbaziskezeles.aruTorol(toroltAru)) {
+                    addLog(getaktFelhasznalo().getFnev() + " törölte: " + toroltAru.getNev());
+                    allapot = true;
+
+                } else {
+                    hiba.adatbazisHiba();
+                }
+                break;
+
+            case 1:
+                adatbaziskezeles.aruOlvasas(this);
+                hiba.adatbazisKesobbModositva();
+                break;
+
+            case 2:
+                adatbaziskezeles.aruOlvasas(this);
+                hiba.adatbazisNemtalalhato();
+                break;
+
+            default:
+                hiba.adatbazisHiba();
+        }
+        return allapot;
+    }
+
+    public boolean aruModositas(aru modositottAru, aru elozoAru) {
+        // Módosítja az adott árut az adatbázisból, true értékkel tér vissza, ha sikerült
+        boolean allapot = false;
+        switch (adatbaziskezeles.aruEllenoriz(elozoAru)) {
+            case 0:
+                // Adatbázis módosítás
+                if (adatbaziskezeles.aruModosit(modositottAru)) {
+                    addLog(getaktFelhasznalo().getFnev() + " módosította: " + modositottAru.getNev());
+                    allapot = true;
+                } else {
+                    hiba.adatbazisHiba();
+                }
+                break;
+
+            case 1:
+                adatbaziskezeles.aruOlvasas(this);
+                hiba.adatbazisKesobbModositva();
+                break;
+
+            case 2:
+                adatbaziskezeles.aruOlvasas(this);
+                hiba.adatbazisNemtalalhato();
+                break;
+
+            default:
+                hiba.adatbazisHiba();
+        }
+        return allapot;
+    }
+
     public Nyilvantarto() {
         this.scene = new Scene(new StackPane());
         this.fajlkezeles = new Fajlkezeles();

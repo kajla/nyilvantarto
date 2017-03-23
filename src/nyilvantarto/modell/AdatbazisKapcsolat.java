@@ -28,7 +28,7 @@ public interface AdatbazisKapcsolat {
     String SQLARUK = "SELECT * FROM ARUK ORDER BY nev";
     String SQLARUHOZZAAD = "INSERT INTO ARUK VALUES (?, ?, ?, ?, ?, ?)";
     String SQLARUTOROL = "DELETE FROM ARUK WHERE id = ?";
-    String SQLARUMODOSIT = "UPDATE ARUK SET nev = ?, mertekegyseg = ?, egysegar = ?, darab = ? WHERE id = ?";
+    String SQLARUMODOSIT = "UPDATE ARUK SET nev = ?, mertekegyseg = ?, egysegar = ?, darab = ?, modositva = ? WHERE id = ?";
     String SQLARUELLENORIZ = "SELECT modositva FROM ARUK WHERE id = ?";
     String SQLNAPLOLETREHOZ = "CREATE TABLE NAPLO (\n"
             + "azon INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),\n"
