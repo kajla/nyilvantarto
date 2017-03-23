@@ -6,10 +6,8 @@
 package nyilvantarto;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -33,7 +31,7 @@ public class Nyilvantarto extends Application {
     private final Hibauzenetek hiba;
     private ArrayList<Felhasznalo> felhasznalok;
     private ArrayList<aru> aruk;
-    private String log;
+//    private String log;
     private int maxID = 0;
 
     public int getMaxID() {
@@ -48,24 +46,22 @@ public class Nyilvantarto extends Application {
         this.maxID = maxID;
     }
 
-    public String getLog() {
-        return log;
-    }
-
-    public void setLog(String log) {
-        this.log = log;
-    }
-
-    public void addLog(String log) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd - kk:mm:ss");
-        sdf.format(new Date());
-        if (this.log.isEmpty()) {
-            this.log = sdf.format(new Date()) + ": " + log;
-        } else {
-            this.log = this.log + "\n" + sdf.format(new Date()) + ": " + log;
-        }
-    }
-
+//    public String getLog() {
+//        return log;
+//    }
+//
+//    public void setLog(String log) {
+//        this.log = log;
+//    }
+//    public void addLog(String log) {
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd - kk:mm:ss");
+//        sdf.format(new Date());
+//        if (this.log.isEmpty()) {
+//            this.log = sdf.format(new Date()) + ": " + log;
+//        } else {
+//            this.log = this.log + "\n" + sdf.format(new Date()) + ": " + log;
+//        }
+//    }
     public Felhasznalo getaktFelhasznalo() {
         return aktFelhasznalo;
     }
@@ -116,12 +112,18 @@ public class Nyilvantarto extends Application {
         if (importdb > 0) {
             // Ha nem volt probléma az adatbázis import közben, írjuk ki, hogy sikeres
             if (adatbaziskezeles.aruImport(this)) {
-                addLog(getaktFelhasznalo().getFnev() + " importálta az árucikkeket");
+//                addLog(getaktFelhasznalo().getFnev() + " importálta az árucikkeket");
+                addNaplo(new Naplo(getaktFelhasznalo().getFnev(), "Árucikkek importálása, importált elemek száma: " + importdb));
                 hiba.importEredmeny(importdb);
             } else {
                 hiba.adatbazisHiba();
             }
         }
+    }
+
+    public void aruExport() {
+        fajlkezeles.aruExport(this);
+        addNaplo(new Naplo(getaktFelhasznalo().getFnev(), "Árucikkek exportálása"));
     }
 
     public boolean aruTorles(aru toroltAru) {
@@ -132,7 +134,8 @@ public class Nyilvantarto extends Application {
                 // Adatbázis törlés
                 if (adatbaziskezeles.aruTorol(toroltAru)) {
                     aruk.remove(toroltAru);
-                    addLog(getaktFelhasznalo().getFnev() + " törölte: " + toroltAru.getNev());
+//                    addLog(getaktFelhasznalo().getFnev() + " törölte: " + toroltAru.getNev());
+                    addNaplo(new Naplo(getaktFelhasznalo().getFnev(), "Áru törlés: " + toroltAru.getNev()));
                     allapot = true;
 
                 } else {
@@ -169,7 +172,8 @@ public class Nyilvantarto extends Application {
                     aruk.add(modositottAru);
                     // Egyből be is rendezzük ;) ... hátha változott a neve :)
                     Collections.sort(aruk);
-                    addLog(getaktFelhasznalo().getFnev() + " módosította: " + modositottAru.getNev());
+//                    addLog(getaktFelhasznalo().getFnev() + " módosította: " + modositottAru.getNev());
+                    addNaplo(new Naplo(getaktFelhasznalo().getFnev(), "Áru módosítás: " + modositottAru.getNev()));
                     allapot = true;
                 } else {
                     hiba.adatbazisHiba();
@@ -199,7 +203,8 @@ public class Nyilvantarto extends Application {
             aruk.add(ujAru);
             // Egyből be is rendezzük ;)
             Collections.sort(aruk);
-            addLog(getaktFelhasznalo().getFnev() + " hozzáadta: " + ujAru.getNev());
+//            addLog(getaktFelhasznalo().getFnev() + " hozzáadta: " + ujAru.getNev());
+            addNaplo(new Naplo(getaktFelhasznalo().getFnev(), "Áru hozzáadás: " + ujAru.getNev()));
             allapot = true;
         } else {
             allapot = false;
@@ -211,14 +216,15 @@ public class Nyilvantarto extends Application {
         adatbaziskezeles.aruOlvasas(this);
     }
 
-    public boolean felhasznaloHozzaad(Felhasznalo ujFelhasznalo) {
+    public boolean felhasznaloHozzaadas(Felhasznalo ujFelhasznalo) {
         boolean allapot;
         if (adatbaziskezeles.felhasznaloHozzaad(ujFelhasznalo)) {
             // Felvesszük az új felhasználót
             felhasznalok.add(ujFelhasznalo);
             // Egyből be is rendezzük ;)
             Collections.sort(felhasznalok);
-            addLog(getaktFelhasznalo().getFnev() + " hozzáadott egy új felhasználót: " + ujFelhasznalo.getFnev());
+//            addLog(getaktFelhasznalo().getFnev() + " hozzáadott egy új felhasználót: " + ujFelhasznalo.getFnev());
+            addNaplo(new Naplo(getaktFelhasznalo().getFnev(), "Felhasználó hozzáadás: " + ujFelhasznalo.getFnev()));
             allapot = true;
         } else {
             allapot = false;
@@ -226,17 +232,48 @@ public class Nyilvantarto extends Application {
         return allapot;
     }
 
-    public boolean felhasznaloTorol(Felhasznalo toroltFelhasznalo) {
-        boolean allapot;
-        if (adatbaziskezeles.felhasznaloTorol(toroltFelhasznalo)) {
-            // Töröljük a felhasználót
-            felhasznalok.remove(toroltFelhasznalo);
-            addLog(getaktFelhasznalo().getFnev() + " törölt egy felhasználót: " + toroltFelhasznalo.getFnev());
-            allapot = true;
-        } else {
-            allapot = false;
+    public boolean felhasznaloTorles(Felhasznalo toroltFelhasznalo) {
+        // Törli az adott felhasználót az adatbázisból, true értékkel tér vissza, ha sikerült
+        boolean allapot = false;
+        switch (adatbaziskezeles.felhasznaloEllenoriz(toroltFelhasznalo)) {
+            case 0:
+                // Adatbázis törlés
+                if (adatbaziskezeles.felhasznaloTorol(toroltFelhasznalo)) {
+                    // Töröljük a felhasználót
+                    felhasznalok.remove(toroltFelhasznalo);
+//                    addLog(getaktFelhasznalo().getFnev() + " törölt egy felhasználót: " + toroltFelhasznalo.getFnev());
+                    addNaplo(new Naplo(getaktFelhasznalo().getFnev(), "Felhasználó törlés: " + toroltFelhasznalo.getFnev()));
+                    allapot = true;
+                }
+                break;
+
+            case 1:
+                adatbaziskezeles.felhasznaloOlvasas(this);
+                hiba.adatbazisKesobbModositva();
+                break;
+
+            case 2:
+                adatbaziskezeles.felhasznaloOlvasas(this);
+                hiba.adatbazisNemtalalhato();
+                break;
+
+            default:
+                hiba.adatbazisHiba();
         }
         return allapot;
+    }
+
+    public void addNaplo(Naplo ujNaplo) {
+        adatbaziskezeles.naploHozzaad(ujNaplo);
+    }
+
+    public ArrayList<Naplo> getNaplo() {
+        return adatbaziskezeles.naploOlvasas(this);
+    }
+
+    public void clearNaplo() {
+        adatbaziskezeles.naploTisztitas();
+        addNaplo(new Naplo(getaktFelhasznalo().getFnev(), "Törölte a naplót"));
     }
 
     public Nyilvantarto() {
@@ -247,7 +284,7 @@ public class Nyilvantarto extends Application {
         adatbaziskezeles.adatbazisInicializalas();
         adatbaziskezeles.aruOlvasas(this);
         adatbaziskezeles.felhasznaloOlvasas(this);
-        this.log = fajlkezeles.logOlvasas();
+//        this.log = fajlkezeles.logOlvasas();
     }
 
     @Override
@@ -315,7 +352,7 @@ public class Nyilvantarto extends Application {
     public void stop() {
 //        fajlkezeles.aruMentes(this);
 //        fajlkezeles.felhasznaloMentes(this);
-        fajlkezeles.logMentes(this);
+//        fajlkezeles.logMentes(this);
         System.exit(0);
     }
 

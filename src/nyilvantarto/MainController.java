@@ -27,7 +27,6 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
@@ -84,8 +83,10 @@ public class MainController implements Initializable {
     private TextField tfSzures;
 
     @FXML
-    private TextArea txLog;
+    private TextField tfNaploSzures;
 
+//    @FXML
+//    private TextArea txLog;
     // Lista tab elemei
     @FXML
     private Tab tbLista; // = new Tab();
@@ -111,8 +112,24 @@ public class MainController implements Initializable {
     @FXML
     TableColumn tcAr = new TableColumn();
 
+    // Napló tab elemei
+    @FXML
+    TableView tvNaplo = new TableView();
+
+    @FXML
+    TableColumn tcMikor = new TableColumn();
+
+    @FXML
+    TableColumn tcFelhasznalo = new TableColumn();
+
+    @FXML
+    TableColumn tcMuvelet = new TableColumn();
+
     @FXML
     ObservableList<aru> data = FXCollections.observableArrayList();
+
+    @FXML
+    ObservableList<Naplo> naploData = FXCollections.observableArrayList();
 
     @FXML
     private Menu mnAdmin;
@@ -383,8 +400,10 @@ public class MainController implements Initializable {
             btMegse.setVisible(true);
         }
         if (e.getSource() == btLogTorles) {
-            txLog.clear();
-            nyilvantarto.setLog("");
+//            txLog.clear();
+//            nyilvantarto.setLog("");
+            nyilvantarto.clearNaplo();
+            obNaploFrissit();
         }
         if (e.getSource() == btMegse) {
             cbTermék.getSelectionModel().select("Válasszon");
@@ -410,7 +429,8 @@ public class MainController implements Initializable {
             obListaFrissit();
         }
         if (tbLog.isSelected()) {
-            txLog.setText(nyilvantarto.getLog());
+//            txLog.setText(nyilvantarto.getLog());
+            obNaploFrissit();
         }
     }
 
@@ -429,12 +449,17 @@ public class MainController implements Initializable {
         lbUj.setVisible(false);
 
         obListaFrissit();
+        obNaploFrissit();
         cbTermék.setItems(data);
         tcNev.setCellValueFactory(new PropertyValueFactory("nev"));
         tcDarab.setCellValueFactory(new PropertyValueFactory("darab"));
         tcMertekegyseg.setCellValueFactory(new PropertyValueFactory("mertekegyseg"));
         tcAr.setCellValueFactory(new PropertyValueFactory("ear"));
         tvLista.setItems(data);
+        tcMikor.setCellValueFactory(new PropertyValueFactory("mikor"));
+        tcFelhasznalo.setCellValueFactory(new PropertyValueFactory("felhasznalo"));
+        tcMuvelet.setCellValueFactory(new PropertyValueFactory("muvelet"));
+        tvNaplo.setItems(naploData);
         //tvLista.getColumns().addAll(tcNev, tcDarab, tcMertekegyseg, tcAr);
 
         // Csak adminisztrátor láthassa az adminisztrációs menüt és a log tabot
@@ -446,7 +471,7 @@ public class MainController implements Initializable {
             tbLog.setDisable(true);
         }
 
-        txLog.setText(nyilvantarto.getLog());
+        //txLog.setText(nyilvantarto.getLog());
     }
 
     @FXML
@@ -472,15 +497,40 @@ public class MainController implements Initializable {
     }
 
     @FXML
+    public void naploSzures() {
+        FilteredList<Naplo> fList = new FilteredList<>(naploData, p -> true);
+        tfNaploSzures.textProperty().addListener((observable, oldValue, newValue)
+                -> {
+            fList.setPredicate(tfNaploSzures -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String lowerCaseFilter = newValue.toLowerCase();
+                if (tfNaploSzures.toString().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                }
+                return false;
+
+            });
+        });
+        SortedList<Naplo> sortedData = new SortedList<>(fList);
+        sortedData.comparatorProperty().bind(tvNaplo.comparatorProperty());
+        tvNaplo.setItems(sortedData);
+    }
+
+    @FXML
     public void tfSzuresFocus() {
-        tfSzures.requestFocus();
+        if (tbLista.isSelected()) {
+            tfSzures.requestFocus();
+        } else if (tbLog.isSelected()) {
+            tfNaploSzures.requestFocus();
+        }
         //Egyszerűbbnek találtam, hogy kiszervezem külön metódusba. Talán erőforráskímélőbb. Vagy nem. :D
     }
 
     @FXML
     private void aruExport() {
-        nyilvantarto.getFajlkezeles().aruExport(nyilvantarto);
-        nyilvantarto.addLog(nyilvantarto.getaktFelhasznalo().getFnev() + " exportálta az árucikkeket");
+        nyilvantarto.aruExport();
     }
 
     @FXML
@@ -500,6 +550,13 @@ public class MainController implements Initializable {
         data.removeAll(data);
         for (aru object : nyilvantarto.getAruk()) {
             data.add(object);
+        }
+    }
+
+    private void obNaploFrissit() {
+        naploData.removeAll(naploData);
+        for (Naplo bejegyzes : nyilvantarto.getNaplo()) {
+            naploData.add(bejegyzes);
         }
     }
 

@@ -37,7 +37,7 @@ public interface AdatbazisKapcsolat {
             + "muvelet VARCHAR(255) NOT NULL)";
     String SQLNAPLOELDOBAS = "DROP TABLE NAPLO";
     String SQLNAPLOHOZZAAD = "INSERT INTO NAPLO (MIKOR, FELHASZNALO, MUVELET) \n"
-            + "	VALUES (DEFAULT, ?, ?)";
+            + "	VALUES (?, ?, ?)";
     String SQLNAPLOK = "SELECT * FROM NAPLO ORDER BY azon";
     String SQLFELHASZNALOKELDOBAS = "DROP TABLE FELHASZNALOK";
     String SQLFELHASZNALOKLETREHOZAS = "CREATE TABLE FELHASZNALOK (\n"
@@ -45,9 +45,11 @@ public interface AdatbazisKapcsolat {
             + "jelszo VARCHAR(166) NOT NULL,\n"
             + "nev VARCHAR(160) NOT NULL,\n"
             + "telefon VARCHAR(20),\n"
-            + "tipus NUMERIC(1) NOT NULL)";
+            + "tipus NUMERIC(1) NOT NULL,\n"
+            + "modositva TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)";
     String SQLFELHASZNALOK = "SELECT * FROM FELHASZNALOK ORDER BY fnev";
-    String SQLFELHASZNALOHOZZAAD = "INSERT INTO FELHASZNALOK VALUES (?, ?, ?, ?, ?)";
-    String SQLFELHASZNALOMODOSIT = "UPDATE FELHASZNALOK SET jelszo = ?, nev = ?, telefon = ?, tipus = ? WHERE fnev = ?"; // fnév nem változhat!
+    String SQLFELHASZNALOHOZZAAD = "INSERT INTO FELHASZNALOK VALUES (?, ?, ?, ?, ?, ?)";
+    String SQLFELHASZNALOMODOSIT = "UPDATE FELHASZNALOK SET jelszo = ?, nev = ?, telefon = ?, tipus = ?, modositva = ? WHERE fnev = ?"; // fnév nem változhat!
     String SQLFELHASZNALOTOROL = "DELETE FROM FELHASZNALOK WHERE fnev = ?";
+    String SQLFELHASZNALOELLENORIZ = "SELECT modositva FROM FELHASZNALOK WHERE fnev = ?";
 }

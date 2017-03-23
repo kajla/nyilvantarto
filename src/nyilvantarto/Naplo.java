@@ -6,6 +6,7 @@
 package nyilvantarto;
 
 import java.sql.Timestamp;
+import java.util.Calendar;
 
 /**
  *
@@ -20,6 +21,7 @@ public class Naplo {
     public Naplo(String felhasznalo, String muvelet) {
         this.felhasznalo = felhasznalo;
         this.muvelet = muvelet;
+        this.mikor = new Timestamp(Calendar.getInstance().getTime().getTime());
     }
 
     public Naplo(Timestamp mikor, String felhasznalo, String muvelet) {
@@ -50,5 +52,10 @@ public class Naplo {
 
     public String getMuvelet() {
         return muvelet;
+    }
+
+    @Override
+    public String toString() {
+        return "Naplo{" + "mikor=" + mikor + ", felhasznalo=" + felhasznalo + ", muvelet=" + muvelet + '}';
     }
 }

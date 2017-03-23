@@ -121,7 +121,8 @@ public class Fajlkezeles {
 
     public void logMentes(Nyilvantarto nyilvantarto) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(logFile)))) {
-            oos.writeObject(nyilvantarto.getLog());
+            // Emlékkép maradt itt
+//            oos.writeObject(nyilvantarto.getLog());
         } catch (IOException ex) {
             System.out.println("Váratlan I/O hiba történt!");
         }
