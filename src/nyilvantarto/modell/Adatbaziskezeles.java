@@ -126,13 +126,11 @@ public class Adatbaziskezeles implements AdatbazisKapcsolat {
             ps.setInt(1, aktAru.getId());
             ResultSet eredmeny = ps.executeQuery();
             if (eredmeny.next()) {
-                System.out.println(eredmeny.getTimestamp("modositva").toString());
-                System.out.println(aktAru.getModositva().toString());
                 if (aktAru.modositasOsszehasonlit(eredmeny.getTimestamp("modositva"))) {
 //                    System.out.println("OK");
                     return 0;
                 } else {
-                    System.out.println("NEM OK");
+//                    System.out.println("NEM OK");
                     return 1;
                 }
             } else {
