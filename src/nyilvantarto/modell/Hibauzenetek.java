@@ -16,6 +16,14 @@ public class Hibauzenetek {
     public Hibauzenetek() {
     }
 
+    public void nevjegy() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Névjegy");
+        alert.setHeaderText("Nyilvántartó alkalmazás");
+        alert.setContentText("Ez egy nyilvántartó alkalmazás.\n\nKészítők:\nSzabó Gábor\nRadovits Ádám");
+        alert.showAndWait();
+    }
+
     public void fajlHiba(String s) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Nyilvántartó");
@@ -111,7 +119,7 @@ public class Hibauzenetek {
         alert.setContentText("A kérés végrehajtása közben váratlan adatbázis hiba történt.\nKérjük, ellenőrizze, hogy elérhető-e az adatbázis!");
         alert.showAndWait();
     }
-    
+
     public void adatbazisKesobbModositva() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Nyilvántartó");
@@ -119,7 +127,7 @@ public class Hibauzenetek {
         alert.setContentText("Az adatbázisban időközben módosították az adott elemet.\nA kért művelet nem hajtódott végre.\nAz adatok újratöltve.");
         alert.showAndWait();
     }
-    
+
     public void adatbazisNemtalalhato() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Nyilvántartó");
