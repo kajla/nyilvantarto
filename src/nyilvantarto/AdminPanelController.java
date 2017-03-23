@@ -103,8 +103,8 @@ public class AdminPanelController implements Initializable {
     void initManager(Nyilvantarto aThis, Stage stage) {
         this.nyilvantarto = aThis;
         this.stage = stage;
-        for (Felhasznalo júzer : aThis.getFelhasznalok()) {
-            felhasznalok.add(júzer);
+        for (Felhasznalo felh : aThis.getFelhasznalok()) {
+            felhasznalok.add(felh);
         }
         tcFNev.setCellValueFactory(new PropertyValueFactory("fnev"));
         tcNev.setCellValueFactory(new PropertyValueFactory("nev"));
@@ -183,7 +183,7 @@ public class AdminPanelController implements Initializable {
                 felhasznalok.add(ujfelh);
 
                 // Adatbáziskezelés
-                if (nyilvantarto.getAdatbaziskezeles().felhasznaloHozzaad(ujfelh)) {
+                if (!nyilvantarto.getAdatbaziskezeles().felhasznaloHozzaad(ujfelh)) {
                     nyilvantarto.getHiba().adatbazisHiba();
                 }
 
@@ -232,7 +232,7 @@ public class AdminPanelController implements Initializable {
                     felhasznalok.remove(toroltFelh);
 
                     // Adatbáziskezelés
-                    if (nyilvantarto.getAdatbaziskezeles().felhasznaloTorol(toroltFelh)) {
+                    if (!nyilvantarto.getAdatbaziskezeles().felhasznaloTorol(toroltFelh)) {
                         nyilvantarto.getHiba().adatbazisHiba();
                     }
 
