@@ -160,9 +160,9 @@ public class Felhasznalo implements Serializable, Comparable<Object> {
     @Override
     public int compareTo(Object o) {
         Felhasznalo a = (Felhasznalo) o;
-        int res = String.CASE_INSENSITIVE_ORDER.compare(nev, a.getNev());
+        int res = String.CASE_INSENSITIVE_ORDER.compare(fnev, a.getFnev());
         if (res == 0) {
-            res = nev.compareTo(a.getNev());
+            res = fnev.compareTo(a.getFnev());
         }
         return res;
     }

@@ -103,9 +103,7 @@ public class AdminPanelController implements Initializable {
     void initManager(Nyilvantarto aThis, Stage stage) {
         this.nyilvantarto = aThis;
         this.stage = stage;
-        for (Felhasznalo felh : aThis.getFelhasznalok()) {
-            felhasznalok.add(felh);
-        }
+        obListaFrissit();
         tcFNev.setCellValueFactory(new PropertyValueFactory("fnev"));
         tcNev.setCellValueFactory(new PropertyValueFactory("nev"));
         tcJelszo.setCellValueFactory(new PropertyValueFactory("*****"));
@@ -178,28 +176,21 @@ public class AdminPanelController implements Initializable {
             }
             // Ha bármi hiba van, NEM hajtjuk végre
             if (!hiba) {
-                // Felvesszük az új elemet
+                // Felvesszünk egy új elemet
                 Felhasznalo ujfelh = new Felhasznalo(fnev, jelszo, nev, telefon, tipus);
-                felhasznalok.add(ujfelh);
 
-                // Adatbáziskezelés
-                if (!nyilvantarto.getAdatbaziskezeles().felhasznaloHozzaad(ujfelh)) {
+                // Új felhasználó felvétele
+                if (nyilvantarto.felhasznaloHozzaad(ujfelh)) {
+                    txtFNev.clear();
+                    txtNev.clear();
+                    pwJelszo.clear();
+                    txtTelefon.clear();
+                    obListaFrissit();
+                } else {
                     nyilvantarto.getHiba().adatbazisHiba();
+                    obListaFrissit();
                 }
 
-                // Egyből be is rendezzük ;)
-                Collections.sort(felhasznalok);
-                // Felülcsapjuk a globális listát
-                ArrayList<Felhasznalo> ideiglenes = new ArrayList<>();
-                for (Felhasznalo felhasznalo : felhasznalok) {
-                    ideiglenes.add(felhasznalo);
-                }
-                nyilvantarto.setFelhasznalok(ideiglenes);
-                txtFNev.clear();
-                txtNev.clear();
-                pwJelszo.clear();
-                txtTelefon.clear();
-                nyilvantarto.addLog(nyilvantarto.getaktFelhasznalo().getFnev() + " hozzáadott egy új felhasználót: " + fnev);
             } else {
                 lblHiba.setText(hibauzenet);
                 lblHiba.setVisible(true);
@@ -229,20 +220,14 @@ public class AdminPanelController implements Initializable {
                 if (eredmeny.get() == ButtonType.YES) {
                     // Sajnos ezt a felhasználót elveszítettük...
                     Felhasznalo toroltFelh = (Felhasznalo) tvFelhasznalok.getSelectionModel().getSelectedItem();
-                    felhasznalok.remove(toroltFelh);
 
                     // Adatbáziskezelés
-                    if (!nyilvantarto.getAdatbaziskezeles().felhasznaloTorol(toroltFelh)) {
+                    if (nyilvantarto.felhasznaloTorol(toroltFelh)) {
+                        obListaFrissit();
+                    } else {
                         nyilvantarto.getHiba().adatbazisHiba();
+                        obListaFrissit();
                     }
-
-                    // Felülcsapjuk a globális listát
-                    ArrayList<Felhasznalo> ideiglenes = new ArrayList<>();
-                    for (Felhasznalo felhasznalo : felhasznalok) {
-                        ideiglenes.add(felhasznalo);
-                    }
-                    nyilvantarto.setFelhasznalok(ideiglenes);
-                    nyilvantarto.addLog(nyilvantarto.getaktFelhasznalo().getFnev() + " törölt egy felhasználót: " + törlendő.getFnev());
                 }
             }
         }
@@ -283,4 +268,10 @@ public class AdminPanelController implements Initializable {
         tvFelhasznalok.setItems(sortedData);
     }
 
+    private void obListaFrissit() {
+        felhasznalok.removeAll(felhasznalok);
+        for (Felhasznalo felh : nyilvantarto.getFelhasznalok()) {
+            felhasznalok.add(felh);
+        }
+    }
 }

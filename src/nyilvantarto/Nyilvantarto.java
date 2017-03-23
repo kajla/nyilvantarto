@@ -211,6 +211,36 @@ public class Nyilvantarto extends Application {
         adatbaziskezeles.aruOlvasas(this);
     }
 
+    public boolean felhasznaloHozzaad(Felhasznalo ujFelhasznalo) {
+        boolean allapot;
+        if (adatbaziskezeles.felhasznaloHozzaad(ujFelhasznalo)) {
+            // Felvesszük az új felhasználót
+            felhasznalok.add(ujFelhasznalo);
+            // Egyből be is rendezzük ;)
+            Collections.sort(felhasznalok);
+            addLog(getaktFelhasznalo().getFnev() + " hozzáadott egy új felhasználót: " + ujFelhasznalo.getFnev());
+            allapot = true;
+        } else {
+            allapot = false;
+        }
+        return allapot;
+    }
+
+    public boolean felhasznaloTorol(Felhasznalo toroltFelhasznalo) {
+        boolean allapot;
+        if (adatbaziskezeles.felhasznaloTorol(toroltFelhasznalo)) {
+            // Töröljük a felhasználót
+            felhasznalok.remove(toroltFelhasznalo);
+            // Egyből be is rendezzük ;)
+            Collections.sort(felhasznalok);
+            addLog(getaktFelhasznalo().getFnev() + " törölt egy felhasználót: " + toroltFelhasznalo.getFnev());
+            allapot = true;
+        } else {
+            allapot = false;
+        }
+        return allapot;
+    }
+
     public Nyilvantarto() {
         this.scene = new Scene(new StackPane());
         this.fajlkezeles = new Fajlkezeles();
