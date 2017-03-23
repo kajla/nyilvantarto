@@ -231,8 +231,6 @@ public class Nyilvantarto extends Application {
         if (adatbaziskezeles.felhasznaloTorol(toroltFelhasznalo)) {
             // Töröljük a felhasználót
             felhasznalok.remove(toroltFelhasznalo);
-            // Egyből be is rendezzük ;)
-            Collections.sort(felhasznalok);
             addLog(getaktFelhasznalo().getFnev() + " törölt egy felhasználót: " + toroltFelhasznalo.getFnev());
             allapot = true;
         } else {
