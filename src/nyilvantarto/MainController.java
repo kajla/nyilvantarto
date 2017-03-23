@@ -6,8 +6,6 @@
 package nyilvantarto;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
@@ -42,9 +40,6 @@ import javafx.stage.Stage;
 public class MainController implements Initializable {
 
     private Nyilvantarto nyilvantarto;
-    //private nyilvantarto.modell.Fajlkezeles fajlkezeles;
-
-    ArrayList<aru> aruLista; // = new ArrayList<>();
 
     @FXML
     private ComboBox cbTermék;
@@ -126,8 +121,6 @@ public class MainController implements Initializable {
     private void kilepes() {
         // talán legegyszerűbb rész... :D
         Platform.exit();
-        // Átadjuk a módosított listát
-        //nyilvantarto.setAruk(aruLista);        
     }
 
     @FXML
@@ -144,20 +137,13 @@ public class MainController implements Initializable {
             // Ha üres vagy alapértelmezett, akkor SEMMIT se válasszunk ki, különben NullPointException... ;)
             // Ilyenkor csak töröljük ki a mezők tartalmát (valószínűleg ekkor törlünk)
             if (cbTermék.getSelectionModel().isEmpty() || cbTermék.getSelectionModel().getSelectedItem().equals("Válasszon")) {
-//                txtNev.setEditable(false);
-//                txtMEgyseg.setEditable(false);
-//                txtAr.setEditable(false);
-//                txtMennyiseg.setEditable(false);
-                txtNev.clear();
-                txtMEgyseg.clear();
-                txtAr.clear();
-                txtMennyiseg.clear();
+                txtTorles();
                 btSzerkesztes.setDisable(true);
                 btTorles.setDisable(true);
             } else {
                 aru akt = (aru) cbTermék.getSelectionModel().getSelectedItem();
                 System.out.println("DEBUG: " + akt.getId() + " - " + akt.getNev());
-                for (aru termék : aruLista) {
+                for (aru termék : nyilvantarto.getAruk()) {
                     if (termék.equals(akt)) {
                         txtKitoltes(akt);
                         btSzerkesztes.setDisable(false);
@@ -229,30 +215,15 @@ public class MainController implements Initializable {
                 }
                 // Ha bármi hiba van, NEM hajtjuk végre
                 if (!hiba) {
-                    //lbUj.setVisible(false); //-->ez mit keresett itt?
+                    // Előző áru eltárolása
                     aru elozoAru = (aru) cbTermék.getSelectionModel().getSelectedItem();
                     // Új áru készítése, azonos azonosítóval
                     aru modositottAru = new aru(elozoAru.getId(), nev, megyseg, ar, darab);
-//                    nyilvantarto.addLog(
-//                            elozo.getNev()
-//                            + " szerkesztve lett "
-//                            + nyilvantarto.getaktFelhasznalo().getFnev() + " által"); //Ezt tovább lehet majd egyszer fejleszteni, hogy többet írjon ki
-
-                    // Adatbázis módosítás
+                    // Áru módosítása
                     if (nyilvantarto.aruModositas(modositottAru, elozoAru)) {
-                        // Alapértelmezett, üres elem
-                        cbTermék.getSelectionModel().select("Válasszon");
-                        // Előző termék törlése
-                        aruLista.remove(elozoAru);
-
-                        // Régi termék újrafelvétele
-                        aruLista.add(modositottAru);
-                        // Egyből be is rendezzük ;) ... hátha változott a neve :)
-                        Collections.sort(aruLista);
-                        // Felülcsapjuk a globális listát
-                        nyilvantarto.setAruk(aruLista);
                         // OB lista frissítése
                         obListaFrissit();
+
                         // Előzőt kiválasztjuk
                         cbTermék.getSelectionModel().select(elozoAru);
 
@@ -264,10 +235,9 @@ public class MainController implements Initializable {
                         btSzerkesztes.setText("Szerkesztés");
                         btMegse.setVisible(false);
                     } else {
-                        aruLista = nyilvantarto.getAruk();
                         System.out.println(modositottAru.getModositva());
                         obListaFrissit();
-                        for (aru termek : aruLista) {
+                        for (aru termek : nyilvantarto.getAruk()) {
                             if (termek.getId() == elozoAru.getId()) {
                                 txtKitoltes(termek);
                                 cbTermék.getSelectionModel().select(termek);
@@ -312,25 +282,18 @@ public class MainController implements Initializable {
 
                 Optional<ButtonType> eredmeny = biztosan.showAndWait();
                 if (eredmeny.get() == ButtonType.YES) {
-                    // Kiválasztott elemet töröljük
-                    cbTermék.getSelectionModel().select("Válasszon");
-
-                    // Adatbázis törlés
+                    // Áru törlése
                     if (nyilvantarto.aruTorles(akt)) {
-                        // Töröljük a listából az elemet
-                        aruLista.remove(akt);
-
-                        // Felülcsapjuk a globális listát
-                        nyilvantarto.setAruk(aruLista);
-
+                        obListaFrissit();
+                        cbTermék.getSelectionModel().select("Válasszon");
+                    } else {
                         obListaFrissit();
                     }
+
                 }
             }
         }
         if (e.getSource() == btHozzaad) {
-            //aruLista.add(e)
-
             String nev = "";
             String megyseg = "";
             int ar = 0;
@@ -343,7 +306,6 @@ public class MainController implements Initializable {
                 hiba = true;
             } else {
                 nev = txtNev.getText();
-
             }
 
             if (txtAr.getText().isEmpty()) {
@@ -356,7 +318,6 @@ public class MainController implements Initializable {
                     System.out.println("Ár nem szám!");
                     nyilvantarto.getHiba().nemszamHiba("ár");
                     hiba = true;
-
                 }
             }
             if (txtMennyiseg.getText().isEmpty()) {
@@ -379,43 +340,34 @@ public class MainController implements Initializable {
             } else {
                 megyseg = txtMEgyseg.getText();
             }
+
             // Ha bármi hiba van, NEM hajtjuk végre
             if (!hiba) {
-                aru akt = new aru(nyilvantarto.getMaxID(), nev, megyseg, ar, darab);
+                aru ujAru = new aru(nyilvantarto.getMaxID(), nev, megyseg, ar, darab);
 
-                // Adatbáziskezelés
-                if (nyilvantarto.getAdatbaziskezeles().aruHozzaad(akt)) {
+                // Új áru hozzáadása
+                if (nyilvantarto.aruHozzaad(ujAru)) {
                     lbUj.setVisible(false);
-
-                    // Alapértelmezett, üres elem
-                    cbTermék.getSelectionModel().select("Válasszon");
-
-                    // Felvesszük az új elemet
-                    aruLista.add(akt);
-
-                    // Egyből be is rendezzük ;)
-                    Collections.sort(aruLista);
-
-                    // Felülcsapjuk a globális listát
-                    nyilvantarto.setAruk(aruLista);
 
                     // OB lista frissítése
                     obListaFrissit();
 
+                    // Alapértelmezett, üres elem
+                    cbTermék.getSelectionModel().select("Válasszon");
+
                     // Jelenlegit kiválasztjuk
-                    cbTermék.getSelectionModel().select(akt); //cbTermék.getSelectionModel().select(nev);
+                    cbTermék.getSelectionModel().select(ujAru); //cbTermék.getSelectionModel().select(nev);
 
                     btMegse.setVisible(false);
                     btUj.setDisable(false);
                     btHozzaad.setDisable(true);
                     btTorles.setDisable(false);
-                    nyilvantarto.addLog(akt.getNev() + " hozzáadva " + nyilvantarto.getaktFelhasznalo().getFnev() + " által");
+
                 } else {
-                    nyilvantarto.getHiba().adatbazisHiba();
+                    obListaFrissit();
                 }
             }
         }
-        //nyilvantarto.setLog(txLog.getText());
 
         if (e.getSource() == btUj) {
             btUj.setDisable(true);
@@ -424,10 +376,7 @@ public class MainController implements Initializable {
             btTorles.setDisable(true);
             txtNev.requestFocus();
             txtSzerk(true);
-            txtAr.clear();
-            txtMEgyseg.clear();
-            txtMennyiseg.clear();
-            txtNev.clear();
+            txtTorles();
             cbTermék.getSelectionModel().clearSelection();
             lbUj.setVisible(true);
             btMegse.setDisable(false);
@@ -452,33 +401,17 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //btMegse.setVisible(false);
+        // nothing
     }
 
     @FXML
     private void tabKivalaszt(Event e) {
         if (tbLista.isSelected()) {
-            //System.out.println("bojler");            
             obListaFrissit();
         }
         if (tbLog.isSelected()) {
             txLog.setText(nyilvantarto.getLog());
         }
-//        if (e.getSource() == tbLista)
-//            System.out.println("bojler");
-//        tpTab.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
-//            @Override
-//            public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
-//                if(newValue == tbLista)
-//                    data.rem
-//                    for (aru termék : aruLista) {
-//                        data.add(termék);
-//        }
-//                tvLista.setItems(data);
-//                System.out.println("bojler");
-//            }
-//        
-//            });
     }
 
     @FXML
@@ -488,25 +421,12 @@ public class MainController implements Initializable {
 
     @FXML
     private void nevjegy() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Névjegy");
-        alert.setHeaderText("Nyilvántartó alkalmazás");
-        alert.setContentText("Ez egy nyilvántartó alkalmazás.\n\nKészítők:\nSzabó Gábor\nRadovits Ádám");
-        alert.showAndWait();
+        nyilvantarto.getHiba().nevjegy();
     }
 
     public void initManager(final Nyilvantarto nyilvantarto) {
         this.nyilvantarto = nyilvantarto;
-        this.aruLista = nyilvantarto.getAruk();
-//        System.out.println(aruLista);
-//        Collections.sort(aruLista);
-//        for (aru termék : aruLista) {
-//            olTermék.add(termék.getNev());
-//        }
-        //olTermék.setAll(aruLista.toString());
-//        cbTermék.setItems(olTermék);
         lbUj.setVisible(false);
-        //txLog.setText(fajlkezeles.logOlvasas());
 
         obListaFrissit();
         cbTermék.setItems(data);
@@ -565,18 +485,15 @@ public class MainController implements Initializable {
 
     @FXML
     private void aruImport() {
-//        nyilvantarto.getFajlkezeles().aruImport(nyilvantarto);
-//        nyilvantarto.addLog(nyilvantarto.getaktFelhasznalo().getFnev() + " importálta az árucikkeket");
         nyilvantarto.aruImport();
-
-        // Törlés és újrafelvétel
-//        olTermék.clear();
-        this.aruLista = nyilvantarto.getAruk();
-//        for (aru termék : nyilvantarto.getAruk()) {
-//            olTermék.add(termék.getNev());
-//        }
         obListaFrissit();
         lbUj.setVisible(false);
+    }
+
+    @FXML
+    private void aruFrissites() {
+        nyilvantarto.aruFrissit();
+        obListaFrissit();
     }
 
     private void obListaFrissit() {
@@ -614,5 +531,12 @@ public class MainController implements Initializable {
         txtAr.setEditable(allapot);
         txtMennyiseg.setEditable(allapot);
         txtMEgyseg.setEditable(allapot);
+    }
+
+    private void txtTorles() {
+        txtAr.clear();
+        txtMEgyseg.clear();
+        txtMennyiseg.clear();
+        txtNev.clear();
     }
 }

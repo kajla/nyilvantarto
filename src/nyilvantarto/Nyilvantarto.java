@@ -8,6 +8,7 @@ package nyilvantarto;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -114,7 +115,7 @@ public class Nyilvantarto extends Application {
         Integer importdb = fajlkezeles.aruImport(this);
         if (importdb > 0) {
             // Ha nem volt probléma az adatbázis import közben, írjuk ki, hogy sikeres
-            if (!adatbaziskezeles.aruImport(this)) {
+            if (adatbaziskezeles.aruImport(this)) {
                 addLog(getaktFelhasznalo().getFnev() + " importálta az árucikkeket");
                 hiba.importEredmeny(importdb);
             } else {
@@ -130,6 +131,7 @@ public class Nyilvantarto extends Application {
             case 0:
                 // Adatbázis törlés
                 if (adatbaziskezeles.aruTorol(toroltAru)) {
+                    aruk.remove(toroltAru);
                     addLog(getaktFelhasznalo().getFnev() + " törölte: " + toroltAru.getNev());
                     allapot = true;
 
@@ -161,6 +163,12 @@ public class Nyilvantarto extends Application {
             case 0:
                 // Adatbázis módosítás
                 if (adatbaziskezeles.aruModosit(modositottAru)) {
+                    // Előző termék törlése
+                    aruk.remove(elozoAru);
+                    // Régi termék újrafelvétele
+                    aruk.add(modositottAru);
+                    // Egyből be is rendezzük ;) ... hátha változott a neve :)
+                    Collections.sort(aruk);
                     addLog(getaktFelhasznalo().getFnev() + " módosította: " + modositottAru.getNev());
                     allapot = true;
                 } else {
@@ -184,12 +192,30 @@ public class Nyilvantarto extends Application {
         return allapot;
     }
 
+    public boolean aruHozzaad(aru ujAru) {
+        boolean allapot;
+        if (adatbaziskezeles.aruHozzaad(ujAru)) {
+            // Felvesszük az új elemet
+            aruk.add(ujAru);
+            // Egyből be is rendezzük ;)
+            Collections.sort(aruk);
+            addLog(getaktFelhasznalo().getFnev() + " hozzáadta: " + ujAru.getNev());
+            allapot = true;
+        } else {
+            allapot = false;
+        }
+        return allapot;
+    }
+
+    public void aruFrissit() {
+        adatbaziskezeles.aruOlvasas(this);
+    }
+
     public Nyilvantarto() {
         this.scene = new Scene(new StackPane());
         this.fajlkezeles = new Fajlkezeles();
         this.hiba = new Hibauzenetek();
         this.adatbaziskezeles = new Adatbaziskezeles();
-        //fajlkezeles.felhasznaloOlvasas(this);
         adatbaziskezeles.adatbazisInicializalas();
         adatbaziskezeles.aruOlvasas(this);
         adatbaziskezeles.felhasznaloOlvasas(this);
@@ -198,7 +224,6 @@ public class Nyilvantarto extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-
         showLoginScreen(stage);
     }
 
