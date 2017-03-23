@@ -382,36 +382,37 @@ public class MainController implements Initializable {
             // Ha bármi hiba van, NEM hajtjuk végre
             if (!hiba) {
                 aru akt = new aru(nyilvantarto.getMaxID(), nev, megyseg, ar, darab);
-                lbUj.setVisible(false);
 
                 // Adatbáziskezelés
                 if (nyilvantarto.getAdatbaziskezeles().aruHozzaad(akt)) {
+                    lbUj.setVisible(false);
+
+                    // Alapértelmezett, üres elem
+                    cbTermék.getSelectionModel().select("Válasszon");
+
+                    // Felvesszük az új elemet
+                    aruLista.add(akt);
+
+                    // Egyből be is rendezzük ;)
+                    Collections.sort(aruLista);
+
+                    // Felülcsapjuk a globális listát
+                    nyilvantarto.setAruk(aruLista);
+
+                    // OB lista frissítése
+                    obListaFrissit();
+
+                    // Jelenlegit kiválasztjuk
+                    cbTermék.getSelectionModel().select(akt); //cbTermék.getSelectionModel().select(nev);
+
+                    btMegse.setVisible(false);
+                    btUj.setDisable(false);
+                    btHozzaad.setDisable(true);
+                    btTorles.setDisable(false);
+                    nyilvantarto.addLog(akt.getNev() + " hozzáadva " + nyilvantarto.getaktFelhasznalo().getFnev() + " által");
+                } else {
                     nyilvantarto.getHiba().adatbazisHiba();
                 }
-
-                // Alapértelmezett, üres elem
-                cbTermék.getSelectionModel().select("Válasszon");
-
-                // Felvesszük az új elemet
-                aruLista.add(akt);
-
-                // Egyből be is rendezzük ;)
-                Collections.sort(aruLista);
-
-                // Felülcsapjuk a globális listát
-                nyilvantarto.setAruk(aruLista);
-
-                // OB lista frissítése
-                obListaFrissit();
-
-                // Jelenlegit kiválasztjuk
-                cbTermék.getSelectionModel().select(akt); //cbTermék.getSelectionModel().select(nev);
-
-                btMegse.setVisible(false);
-                btUj.setDisable(false);
-                btHozzaad.setDisable(true);
-                btTorles.setDisable(false);
-                nyilvantarto.addLog(akt.getNev() + " hozzáadva " + nyilvantarto.getaktFelhasznalo().getFnev() + " által");
             }
         }
         //nyilvantarto.setLog(txLog.getText());

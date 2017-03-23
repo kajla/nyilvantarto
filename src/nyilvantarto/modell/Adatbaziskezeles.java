@@ -98,10 +98,10 @@ public class Adatbaziskezeles implements AdatbazisKapcsolat {
 
     public boolean aruHozzaad(aru ujAru) {
         // Hozzáadja az újonnan felvitt árut az adatbázishoz.
-        // Ha nem sikerülne felvinni, true értékkel tér vissza
+        // Ha sikerülne felvinni, true értékkel tér vissza
         try (Connection kapcsolat = DriverManager.getConnection(URL, USER, PASSWORD)) {
             PreparedStatement ps = kapcsolat.prepareStatement(SQLARUHOZZAAD);
-            // aru(id, nev, mertekegyseg, ear, darab)
+            // aru(id, nev, mertekegyseg, ear, darab, letrehozva)
             ps.setInt(1, ujAru.getId());
             ps.setString(2, ujAru.getNev());
             ps.setString(3, ujAru.getMertekegyseg());
@@ -111,9 +111,9 @@ public class Adatbaziskezeles implements AdatbazisKapcsolat {
             ps.execute();
         } catch (SQLException ex) {
             System.out.println(ex.getLocalizedMessage());
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     public int aruEllenoriz(aru aktAru) {
