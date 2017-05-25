@@ -135,5 +135,13 @@ public class Hibauzenetek {
         alert.setContentText("Az adatbázisban nem található a kiválasztott elem,\nfeltehetően az alkalmazás indítása óta törölték.\nA kért művelet nem hajtódott végre.\nAz adatok újratöltve.");
         alert.showAndWait();
     }
+    
+    public void szerverHiba() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Nyilvántartó");
+        alert.setHeaderText("Szerver hiba");
+        alert.setContentText("Szerver hiba történt. A változások nem léptek életbe.\nKérjük, ellenőrizze, hogy fut-e a szerver!");
+        alert.showAndWait();
+    }
 
 }

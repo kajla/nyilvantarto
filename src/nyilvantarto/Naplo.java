@@ -5,6 +5,7 @@
  */
 package nyilvantarto;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
@@ -12,7 +13,7 @@ import java.util.Calendar;
  *
  * @author Ádám
  */
-public class Naplo {
+public class Naplo implements Serializable {
 
     private Timestamp mikor;
     private String felhasznalo;

@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import nyilvantarto.modell.Adatbaziskezeles;
 import nyilvantarto.modell.Fajlkezeles;
 import nyilvantarto.modell.Hibauzenetek;
+import nyilvantarto.modell.SzerverKapcsolat;
 
 /**
  *
@@ -27,7 +28,8 @@ public class Nyilvantarto extends Application {
     private Scene scene;
     private Felhasznalo aktFelhasznalo;
     private final Fajlkezeles fajlkezeles;
-    private final Adatbaziskezeles adatbaziskezeles;
+//    private final Adatbaziskezeles adatbaziskezeles;
+    private final SzerverKapcsolat adatbaziskezeles;
     private final Hibauzenetek hiba;
     private ArrayList<Felhasznalo> felhasznalok;
     private ArrayList<aru> aruk;
@@ -102,10 +104,9 @@ public class Nyilvantarto extends Application {
         return fajlkezeles;
     }
 
-    public Adatbaziskezeles getAdatbaziskezeles() {
-        return adatbaziskezeles;
-    }
-
+//    public Adatbaziskezeles getAdatbaziskezeles() {
+//        return adatbaziskezeles;
+//    }
     public void aruImport() {
         // Ha sikerült az importálás (tehát többet importáltunk, mint 0), töltsük be az adatbázisba
         Integer importdb = fajlkezeles.aruImport(this);
@@ -268,7 +269,7 @@ public class Nyilvantarto extends Application {
     }
 
     public ArrayList<Naplo> getNaplo() {
-        return adatbaziskezeles.naploOlvasas(this);
+        return adatbaziskezeles.naploOlvasas();
     }
 
     public void clearNaplo() {
@@ -280,8 +281,9 @@ public class Nyilvantarto extends Application {
         this.scene = new Scene(new StackPane());
         this.fajlkezeles = new Fajlkezeles();
         this.hiba = new Hibauzenetek();
-        this.adatbaziskezeles = new Adatbaziskezeles();
-        adatbaziskezeles.adatbazisInicializalas();
+//        this.adatbaziskezeles = new Adatbaziskezeles();
+//        adatbaziskezeles.adatbazisInicializalas();
+        this.adatbaziskezeles = new SzerverKapcsolat();
         adatbaziskezeles.aruOlvasas(this);
         adatbaziskezeles.felhasznaloOlvasas(this);
 //        this.log = fajlkezeles.logOlvasas();
