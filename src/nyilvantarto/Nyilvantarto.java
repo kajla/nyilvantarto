@@ -14,7 +14,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import nyilvantarto.modell.Adatbaziskezeles;
 import nyilvantarto.modell.Fajlkezeles;
 import nyilvantarto.modell.Hibauzenetek;
 import nyilvantarto.modell.SzerverKapcsolat;
@@ -29,7 +28,7 @@ public class Nyilvantarto extends Application {
     private Felhasznalo aktFelhasznalo;
     private final Fajlkezeles fajlkezeles;
 //    private final Adatbaziskezeles adatbaziskezeles;
-    private final SzerverKapcsolat adatbaziskezeles;
+    private final SzerverKapcsolat szerver;
     private final Hibauzenetek hiba;
     private ArrayList<Felhasznalo> felhasznalok;
     private ArrayList<aru> aruk;
@@ -112,7 +111,7 @@ public class Nyilvantarto extends Application {
         Integer importdb = fajlkezeles.aruImport(this);
         if (importdb > 0) {
             // Ha nem volt probléma az adatbázis import közben, írjuk ki, hogy sikeres
-            if (adatbaziskezeles.aruImport(this)) {
+            if (szerver.aruImport(this)) {
 //                addLog(getaktFelhasznalo().getFnev() + " importálta az árucikkeket");
                 addNaplo(new Naplo(getaktFelhasznalo().getFnev(), "Árucikkek importálása, importált elemek száma: " + importdb));
                 hiba.importEredmeny(importdb);
@@ -130,10 +129,10 @@ public class Nyilvantarto extends Application {
     public boolean aruTorles(aru toroltAru) {
         // Törli az adott árut az adatbázisból, true értékkel tér vissza, ha sikerült
         boolean allapot = false;
-        switch (adatbaziskezeles.aruEllenoriz(toroltAru)) {
+        switch (szerver.aruEllenoriz(toroltAru)) {
             case 0:
                 // Adatbázis törlés
-                if (adatbaziskezeles.aruTorol(toroltAru)) {
+                if (szerver.aruTorol(toroltAru)) {
                     aruk.remove(toroltAru);
 //                    addLog(getaktFelhasznalo().getFnev() + " törölte: " + toroltAru.getNev());
                     addNaplo(new Naplo(getaktFelhasznalo().getFnev(), "Áru törlés: " + toroltAru.getNev()));
@@ -145,12 +144,12 @@ public class Nyilvantarto extends Application {
                 break;
 
             case 1:
-                adatbaziskezeles.aruOlvasas(this);
+                szerver.aruOlvasas(this);
                 hiba.adatbazisKesobbModositva();
                 break;
 
             case 2:
-                adatbaziskezeles.aruOlvasas(this);
+                szerver.aruOlvasas(this);
                 hiba.adatbazisNemtalalhato();
                 break;
 
@@ -163,10 +162,10 @@ public class Nyilvantarto extends Application {
     public boolean aruModositas(aru modositottAru, aru elozoAru) {
         // Módosítja az adott árut az adatbázisból, true értékkel tér vissza, ha sikerült
         boolean allapot = false;
-        switch (adatbaziskezeles.aruEllenoriz(elozoAru)) {
+        switch (szerver.aruEllenoriz(elozoAru)) {
             case 0:
                 // Adatbázis módosítás
-                if (adatbaziskezeles.aruModosit(modositottAru)) {
+                if (szerver.aruModosit(modositottAru)) {
                     // Előző termék törlése
                     aruk.remove(elozoAru);
                     // Régi termék újrafelvétele
@@ -182,12 +181,12 @@ public class Nyilvantarto extends Application {
                 break;
 
             case 1:
-                adatbaziskezeles.aruOlvasas(this);
+                szerver.aruOlvasas(this);
                 hiba.adatbazisKesobbModositva();
                 break;
 
             case 2:
-                adatbaziskezeles.aruOlvasas(this);
+                szerver.aruOlvasas(this);
                 hiba.adatbazisNemtalalhato();
                 break;
 
@@ -199,7 +198,7 @@ public class Nyilvantarto extends Application {
 
     public boolean aruHozzaad(aru ujAru) {
         boolean allapot;
-        if (adatbaziskezeles.aruHozzaad(ujAru)) {
+        if (szerver.aruHozzaad(ujAru)) {
             // Felvesszük az új elemet
             aruk.add(ujAru);
             // Egyből be is rendezzük ;)
@@ -214,12 +213,12 @@ public class Nyilvantarto extends Application {
     }
 
     public void aruFrissit() {
-        adatbaziskezeles.aruOlvasas(this);
+        szerver.aruOlvasas(this);
     }
 
     public boolean felhasznaloHozzaadas(Felhasznalo ujFelhasznalo) {
         boolean allapot;
-        if (adatbaziskezeles.felhasznaloHozzaad(ujFelhasznalo)) {
+        if (szerver.felhasznaloHozzaad(ujFelhasznalo)) {
             // Felvesszük az új felhasználót
             felhasznalok.add(ujFelhasznalo);
             // Egyből be is rendezzük ;)
@@ -236,10 +235,10 @@ public class Nyilvantarto extends Application {
     public boolean felhasznaloTorles(Felhasznalo toroltFelhasznalo) {
         // Törli az adott felhasználót az adatbázisból, true értékkel tér vissza, ha sikerült
         boolean allapot = false;
-        switch (adatbaziskezeles.felhasznaloEllenoriz(toroltFelhasznalo)) {
+        switch (szerver.felhasznaloEllenoriz(toroltFelhasznalo)) {
             case 0:
                 // Adatbázis törlés
-                if (adatbaziskezeles.felhasznaloTorol(toroltFelhasznalo)) {
+                if (szerver.felhasznaloTorol(toroltFelhasznalo)) {
                     // Töröljük a felhasználót
                     felhasznalok.remove(toroltFelhasznalo);
 //                    addLog(getaktFelhasznalo().getFnev() + " törölt egy felhasználót: " + toroltFelhasznalo.getFnev());
@@ -249,12 +248,12 @@ public class Nyilvantarto extends Application {
                 break;
 
             case 1:
-                adatbaziskezeles.felhasznaloOlvasas(this);
+                szerver.felhasznaloOlvasas(this);
                 hiba.adatbazisKesobbModositva();
                 break;
 
             case 2:
-                adatbaziskezeles.felhasznaloOlvasas(this);
+                szerver.felhasznaloOlvasas(this);
                 hiba.adatbazisNemtalalhato();
                 break;
 
@@ -265,15 +264,15 @@ public class Nyilvantarto extends Application {
     }
 
     public void addNaplo(Naplo ujNaplo) {
-        adatbaziskezeles.naploHozzaad(ujNaplo);
+        szerver.naploHozzaad(ujNaplo);
     }
 
     public ArrayList<Naplo> getNaplo() {
-        return adatbaziskezeles.naploOlvasas();
+        return szerver.naploOlvasas();
     }
 
     public void clearNaplo() {
-        adatbaziskezeles.naploTisztitas();
+        szerver.naploTisztitas();
         addNaplo(new Naplo(getaktFelhasznalo().getFnev(), "Törölte a naplót"));
     }
 
@@ -283,9 +282,9 @@ public class Nyilvantarto extends Application {
         this.hiba = new Hibauzenetek();
 //        this.adatbaziskezeles = new Adatbaziskezeles();
 //        adatbaziskezeles.adatbazisInicializalas();
-        this.adatbaziskezeles = new SzerverKapcsolat();
-        adatbaziskezeles.aruOlvasas(this);
-        adatbaziskezeles.felhasznaloOlvasas(this);
+        this.szerver = new SzerverKapcsolat();
+        szerver.aruOlvasas(this);
+        szerver.felhasznaloOlvasas(this);
 //        this.log = fajlkezeles.logOlvasas();
     }
 

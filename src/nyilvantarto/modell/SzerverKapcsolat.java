@@ -25,7 +25,7 @@ import nyilvantarto.aru;
  */
 public class SzerverKapcsolat {
 
-    NyilvantartoService service;
+    private NyilvantartoService service;
 
     public SzerverKapcsolat() {
         try {
@@ -34,7 +34,8 @@ public class SzerverKapcsolat {
         } catch (AccessException ex) {
             Logger.getLogger(SzerverKapcsolat.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RemoteException ex) {
-            Logger.getLogger(SzerverKapcsolat.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Kritikus hiba történt! A szerver nem elérhető!\nKilépés...");
+            System.exit(1);
         } catch (NotBoundException ex) {
             Logger.getLogger(SzerverKapcsolat.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -45,7 +46,7 @@ public class SzerverKapcsolat {
             nyilvantarto.setAruk(service.aruLista());
             nyilvantarto.setMaxID(service.aruMaxID());
         } catch (RemoteException ex) {
-            Logger.getLogger(SzerverKapcsolat.class.getName()).log(Level.SEVERE, null, ex);
+            nyilvantarto.getHiba().szerverHiba();
         }
     }
 
