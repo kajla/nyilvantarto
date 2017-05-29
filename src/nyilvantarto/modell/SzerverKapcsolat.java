@@ -41,6 +41,11 @@ public class SzerverKapcsolat {
                 System.exit(1);
             });
             while (true) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex1) {
+                    Logger.getLogger(SzerverKapcsolat.class.getName()).log(Level.SEVERE, null, ex1);
+                }
             }
         } catch (NotBoundException ex) {
             Logger.getLogger(SzerverKapcsolat.class.getName()).log(Level.SEVERE, null, ex);
