@@ -13,6 +13,7 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import nyilvantarto.Felhasznalo;
 import nyilvantarto.Naplo;
 import nyilvantarto.Nyilvantarto;
@@ -34,8 +35,13 @@ public class SzerverKapcsolat {
         } catch (AccessException ex) {
             Logger.getLogger(SzerverKapcsolat.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RemoteException ex) {
-            System.out.println("Kritikus hiba történt! A szerver nem elérhető!\nKilépés...");
-            System.exit(1);
+            Platform.runLater(() -> {
+                Hibauzenetek.szerverHiba();
+                System.out.println("Kritikus hiba történt! A szerver nem elérhető!\nKilépés...");
+                System.exit(1);
+            });
+            while (true) {
+            }
         } catch (NotBoundException ex) {
             Logger.getLogger(SzerverKapcsolat.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -46,7 +52,7 @@ public class SzerverKapcsolat {
             nyilvantarto.setAruk(service.aruLista());
             nyilvantarto.setMaxID(service.aruMaxID());
         } catch (RemoteException ex) {
-            nyilvantarto.getHiba().szerverHiba();
+            Hibauzenetek.szerverHiba();
         }
     }
 
@@ -57,7 +63,8 @@ public class SzerverKapcsolat {
         try {
             allapot = service.aruHozzaad(ujAru);
         } catch (RemoteException ex) {
-            Logger.getLogger(SzerverKapcsolat.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Hiba: A szerver nem reagált!");
+            Hibauzenetek.szerverHiba();
         }
         return allapot;
     }
@@ -70,7 +77,8 @@ public class SzerverKapcsolat {
         try {
             x = service.aruEllenoriz(aktAru);
         } catch (RemoteException ex) {
-            Logger.getLogger(SzerverKapcsolat.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Hiba: A szerver nem reagált!");
+            Hibauzenetek.szerverHiba();
         }
         return x;
     }
@@ -82,7 +90,8 @@ public class SzerverKapcsolat {
         try {
             allapot = service.aruTorol(ujAru);
         } catch (RemoteException ex) {
-            Logger.getLogger(SzerverKapcsolat.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Hiba: A szerver nem reagált!");
+            Hibauzenetek.szerverHiba();
         }
         return allapot;
     }
@@ -94,7 +103,8 @@ public class SzerverKapcsolat {
         try {
             allapot = service.aruModosit(ujAru);
         } catch (RemoteException ex) {
-            Logger.getLogger(SzerverKapcsolat.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Hiba: A szerver nem reagált!");
+            Hibauzenetek.szerverHiba();
         }
         return allapot;
     }
@@ -106,7 +116,8 @@ public class SzerverKapcsolat {
         try {
             allapot = service.aruImport(nyilvantarto.getAruk());
         } catch (RemoteException ex) {
-            Logger.getLogger(SzerverKapcsolat.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Hiba: A szerver nem reagált!");
+            Hibauzenetek.szerverHiba();
         }
         return allapot;
     }
@@ -118,7 +129,8 @@ public class SzerverKapcsolat {
         try {
             allapot = service.naploHozzaad(naplo);
         } catch (RemoteException ex) {
-            Logger.getLogger(SzerverKapcsolat.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Hiba: A szerver nem reagált!");
+            Hibauzenetek.szerverHiba();
         }
         return allapot;
     }
@@ -129,7 +141,8 @@ public class SzerverKapcsolat {
         try {
             naplok = service.naploOlvasas();
         } catch (RemoteException ex) {
-            Logger.getLogger(SzerverKapcsolat.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Hiba: A szerver nem reagált!");
+            Hibauzenetek.szerverHiba();
         }
         return naplok;
     }
@@ -139,7 +152,8 @@ public class SzerverKapcsolat {
         try {
             service.naploTisztitas();
         } catch (RemoteException ex) {
-            Logger.getLogger(SzerverKapcsolat.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Hiba: A szerver nem reagált!");
+            Hibauzenetek.szerverHiba();
         }
     }
 
@@ -149,7 +163,8 @@ public class SzerverKapcsolat {
             nyilvantarto.setFelhasznalok(service.felhasznaloLista());
             nyilvantarto.setaktFelhasznalo(service.aktFelhasznalo());
         } catch (RemoteException ex) {
-            Logger.getLogger(SzerverKapcsolat.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Hiba: A szerver nem reagált!");
+            Hibauzenetek.szerverHiba();
         }
         if (nyilvantarto.getFelhasznalok().isEmpty()) {
             Felhasznalo kezdetiFelh = new Felhasznalo("admin", "admin", "Admin Felhasználó", "+36 1 123 4567", 0);
@@ -168,7 +183,8 @@ public class SzerverKapcsolat {
         try {
             allapot = service.felhasznaloHozzaad(ujFelhasznalo);
         } catch (RemoteException ex) {
-            Logger.getLogger(SzerverKapcsolat.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Hiba: A szerver nem reagált!");
+            Hibauzenetek.szerverHiba();
         }
         return allapot;
     }
@@ -180,7 +196,8 @@ public class SzerverKapcsolat {
         try {
             allapot = service.felhasznaloTorol(toroltFelhasznalo);
         } catch (RemoteException ex) {
-            Logger.getLogger(SzerverKapcsolat.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Hiba: A szerver nem reagált!");
+            Hibauzenetek.szerverHiba();
         }
         return allapot;
     }
@@ -192,7 +209,8 @@ public class SzerverKapcsolat {
         try {
             allapot = service.felhasznaloModosit(modositottFelhasznalo);
         } catch (RemoteException ex) {
-            Logger.getLogger(SzerverKapcsolat.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Hiba: A szerver nem reagált!");
+            Hibauzenetek.szerverHiba();
         }
         return allapot;
     }
@@ -204,7 +222,8 @@ public class SzerverKapcsolat {
         try {
             return service.felhasznaloEllenoriz(aktFelhasznalo);
         } catch (RemoteException ex) {
-            Logger.getLogger(SzerverKapcsolat.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Hiba: A szerver nem reagált!");
+            Hibauzenetek.szerverHiba();
             return -1;
         }
     }

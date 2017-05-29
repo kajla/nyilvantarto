@@ -136,7 +136,7 @@ public class Hibauzenetek {
         alert.showAndWait();
     }
     
-    public void szerverHiba() {
+    public static void szerverHiba() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Nyilvántartó");
         alert.setHeaderText("Szerver hiba");
